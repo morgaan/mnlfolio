@@ -1,0 +1,85 @@
+body {
+	color: #888888;
+	font-size: 12px;
+	font-family: "Trebuchet MS", "Lucida Grande", "Verdana", "sans-serif";
+}
+
+ul#admintab {
+    font: bold 12px "Trebuchet MS", "Lucida Grande", "Verdana", "sans-serif";
+    list-style-type: none;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #51555C;
+    margin: 0;
+}
+
+ul#admintab li {
+    float: left;
+    height: 21px;
+    background-color: #F2EBEC;
+    margin: 2px 2px 0 2px;
+    border: 1px solid #51555C;
+}
+
+ul#admintab li.active {
+    border-bottom: 1px solid #ffffff;
+    background-color: #fff;
+}
+
+ul#admintab li.signout {
+	float: right;
+    border: 0px solid #ffffff;
+    background-color: #ffffff;
+}
+
+ul#admintab li.more {
+	float: right;
+    margin: 2px 20px 0 10px;
+	background-color: #fff;
+}
+
+ul#admintab li.active a {
+    color: #ff0084;
+}
+
+#admintab a {
+    float: left;
+    display: block;
+    color: #888888;
+    text-decoration: none;
+    padding: 4px;
+}
+
+#admintab a:hover {
+    background: #ffffff;
+}
+
+table.normal {
+	font-size: 13px;	
+}
+
+p.warning-left {
+	color: #f00;
+}
+
+p.warning {
+	color: #f00;
+	text-align: center;
+}
+
+p.succeed {
+	color: #0a0;
+	text-align: center;
+}
+
+td.comment {
+	color: #0063dc;
+}
+
+td.header {   
+	background: #E1EEEE;
+	color: #888888;
+	border: 1px solid #888888;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+}

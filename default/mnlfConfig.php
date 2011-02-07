@@ -54,7 +54,7 @@ $strPreviousThumbnailsPageControlLabel="&uarr;";
 $strNextThumbnailsPageControlLabel="&darr;";
 
 //webPromotion
-$strMetaDescription="minimalist flick-based portfolio";
+$strMetaDescription="minimalist flickr-based portfolio";
 $strMetaAuthor="mnlfolio";
 $strMetaKeywords="mnlfolio,portfolio,book,photobook";
 

@@ -77,7 +77,6 @@
 	$layout .="				<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" align=\"center\" width=\"$size[width]\">";
 	$layout .="					<!-- START: PHOTO -->";
 	$layout .="					<tr>";
-	if($tweakSaveImageAs == "false") {
 	$layout .="						<td align=\"center\" valign=\"top\">";
 	$layout .="							<a href=\"javascript:nextPhoto();\">";
 	$layout .="								<div class=\"photo\">";
@@ -85,15 +84,6 @@
 	$layout .="								</div>";
 	$layout .="							</a>";
 	$layout .="						</td>";
-	} else {
-	$layout .="						<td align=\"center\" valign=\"top\" "."background=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\" >";
-	$layout .="							<a href=\"javascript:nextPhoto();\">";
-	$layout .="								<div class=\"photo\" >";
-	$layout .="									<img class=\"photo\" border=\"0\" alt=\"$photoInfo[title]\" src=\"design/images/spaceball.gif\" width=\"$widthImg\" height=\"$heightImg\">";
-	$layout .="								</div>";
-	$layout .="							</a>";
-	$layout .="						</td>";
-	}
 	$layout .="					</tr>";
 	$layout .="					<!-- END: PHOTO -->";
 	$layout .="					<!-- START: PHOTO INFOS -->";

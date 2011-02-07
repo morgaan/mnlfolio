@@ -439,6 +439,19 @@ function init() {
  if (window.addEventListener)
 	window.addEventListener('DOMMouseScroll', wheel, false);
   document.onmousewheel = wheel; */
+
+<?
+	if($boolTweakSaveImageAs) {
+?>
+
+	if(document.getElementById('gallery') != null) {
+	 document.oncontextmenu=new Function("return false");
+	}
+
+<?
+	}
+?>
+
 }
 
 function changeBackgroundColor(color) {
@@ -452,5 +465,19 @@ function changeBackgroundColor(color) {
 		currentBackgroundColor = <? echo "'#$mnlfbodybgcolor'"; ?>;
 	}
 }
+
+<?
+	if($boolTweakSaveImageAs) {
+?>
+
+		window.onload=function () { 
+			if(document.getElementById('image') != null) {
+				document.oncontextmenu=new Function("return false");
+			}
+		}
+
+<?
+	}
+?>
 
 </script>

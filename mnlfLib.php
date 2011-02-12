@@ -19,10 +19,41 @@
 require_once("phpFlickr.php");
 require_once("config/mnlfConfig.php");
 
-// ==================================
-// = Designs the appropriate layout =
-// ==================================
-function getLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNextPhoto, $showPreviousThumbnailsPage, $showNextThumbnailsPage) {
+
+// =============================================
+// = Designs the appropriate navigation layout =
+// =============================================
+function getNavigationLayout($setid = NULL) {
+
+	$layout = "";
+	
+	if(getConf("AuthToken") != NULL && getConf("ShowNavigationMenu") == "true") {
+
+		$f = getFlickrObjectInstance();
+		$photosets = $f->photosets_getList();
+		$delimiter = getConf("DelimiterSetsTitles");		
+		$activeSet = "";
+
+		foreach ($photosets['photoset'] as $set) {
+			$setId = $set['id'];
+			if(isset($setId) && $setid == $set['id']) {
+				$activeSet = $set;
+				break;
+			}
+		}
+
+		include("design/layouts/navigation/".getFileListSelectedValue("NavigationLayout"));
+
+	}
+
+	return $layout;
+
+}
+
+// =========================================
+// = Designs the appropriate viewer layout =
+// =========================================
+function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNextPhoto, $showPreviousThumbnailsPage, $showNextThumbnailsPage) {
 
 	$layout = "";
 
@@ -64,7 +95,7 @@ function getLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNextPhot
 		$nGUIWidth = getConf("GUIWidth");
 		$nGUIHeight = getConf("GUIHeight");
 
-		include("design/layouts/".getFileListSelectedValue("Layout"));
+		include("design/layouts/viewer/".getFileListSelectedValue("ViewerLayout"));
 	
 	}
 	
@@ -567,7 +598,7 @@ function curPageURL() {
 // ========================
 function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $uploadButtonLabel, $deleteLabel, $extensionFilter = NULL) {
 	
-	echo "<br/><br/>";
+	echo "<br/><br/><table bgcolor=\"EEEEEE\"><tr><td align=\"center\">";
 	echo "<input type=\"hidden\" name=\"uploadFile\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"removeFile\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"targetDirectory\" value=\"$targetDirectory\" />";
@@ -587,7 +618,7 @@ function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $upl
 		closedir($mydir);
 	}
 	echo "</select><br/>";
-	echo "<input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile.value=true;this.form.submit();\" />";
+	echo "<input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile.value=true;this.form.submit();\" /></td></tr></table>";
 	
 }
 
@@ -677,33 +708,6 @@ function resetCache() {
 	   echo "<p class=\"succeed\">".getResource("messageCleanCacheSucceed")."</p>";
 	}
 }
-
-function getNavigationMenu($setid = NULL) {
-	
-	if(getConf("AuthToken") != NULL && getConf("ShowNavigationMenu") == "true") {
-
-		$f = getFlickrObjectInstance();
-
-		$photosets = $f->photosets_getList();
-
-		$delimiter = getConf("DelimiterSetsTitles");
-
-		echo "<p class=\"body\"><b>$delimiter</b> ";
-		foreach ($photosets['photoset'] as $set) {
-			$setId = $set['id'];
-			if(substr_count(getConf("SelectedSets"),$setId) > 0) {
-			  if(isset($setId) && $setid == $set['id'])
-					echo $set['title']." <b>$delimiter</b> ";
-				else
-					echo "<a href='index.php?setid=".$set['id']."'>".$set['title']."</a> <b>$delimiter</b> ";
-			}
-		}
-		echo "</center>";
-
-	}
-	
-}
-
 
 function getFontFamilyForm($var,$name,$id,$onChangeFunction) {
 	

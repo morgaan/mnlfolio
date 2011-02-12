@@ -28,7 +28,8 @@ $nGUIWidth=600;
 $nGUIHeight=600;
 $nColumns=3; 
 $nRows=4; 
-$filelistLayout = "thumbnails_on_left|design/layouts";
+$filelistNavigationLayout = "sets_titles_only|design/layouts/navigation"; 
+$filelistViewerLayout = "thumbnails_on_left|design/layouts/viewer";
 
 //footerParams
 $boolShowCopyright=true; 

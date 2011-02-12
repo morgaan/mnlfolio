@@ -173,9 +173,9 @@ include("js.php");
    <center>
 <?
 		if(!isset($setid))
-			getNavigationMenu();
+			echo getNavigationLayout();
 		else
-			getNavigationMenu($setid);
+			echo getNavigationLayout($setid);
 		
 ?>
    </center>

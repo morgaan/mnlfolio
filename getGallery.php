@@ -30,7 +30,7 @@ if(isset($photoid)) {
 	<center><br /><br />
 <? 		
 		if(isset($setPage))
-		 echo getLayout($setId,$setPage,$photoid,$p,$n,$u,$d);
+		 echo getViewerLayout($setId,$setPage,$photoid,$p,$n,$u,$d);
 ?>
 
 	</center>

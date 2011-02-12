@@ -587,8 +587,10 @@ if(!((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("Auth
 		if(!isset($view) && getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL && !isset($_REQUEST["frob"]))
 			getFormConf();
 
-		elseif(isset($view) && $view == "layouts" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL))
-			getUploader("design/layouts", "", getResource("layout"), getResource("messageUploadLayout"), getResource("btnUpload"), getResource("messageDeleteLayout"));
+		elseif(isset($view) && $view == "layouts" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL)) {
+			getUploader("design/layouts/navigation", "", getResource("navigation"), getResource("messageUploadNavigationLayout"), getResource("btnUpload"), getResource("messageDeleteNavigationLayout"));
+			getUploader("design/layouts/viewer", "", getResource("layout"), getResource("messageUploadViewerLayout"), getResource("btnUpload"), getResource("messageDeleteViewerLayout"));
+		}
 
 		elseif(isset($view) && $view == "logos" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL))
 			getUploader("design/images/logos", "", getResource("logo"), getResource("messageUploadLogo"), getResource("btnUpload"), getResource("messageDeleteLogo"));

@@ -1,0 +1,47 @@
+<?
+	/* 
+		DESCRIPTION: A very simple layout with the set thumbnails as navigation items
+		AUTHOR: morgan cugerone
+		VERSION: 1.0 
+	*/
+
+	$layout = "";
+
+	$layout .="	<table border=\"0\" cellpadding=\"1\" align=\"center\" >";
+	$layout .="		<tr>";
+	$layout .="			<td align=\"center\">";
+	$layout .="		    	&nbsp;<b>$delimiter</b>&nbsp;";
+	$layout .="		    </td>";
+	
+	foreach ($photosets['photoset'] as $set) {
+		$setId = $set['id'];
+		if(substr_count(getConf("SelectedSets"),$setId) > 0) {
+		  $photoInfo = $f->photos_getInfo($set['primary'],NULL);
+		  if(isset($setId) && $setid == $set['id']) {
+	
+	$layout .="			<td>";
+	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";
+	$layout .="			</td>";
+	$layout .="			<td valign=\"middle\">";
+	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;</td>";
+	$layout .="			</td>";
+
+	  		} else {
+		
+	$layout .="			<td>";
+	$layout .="				<a href='index.php?setid=".$set['id']."'>";
+	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";	
+	$layout .="				</a>";
+	$layout .="			</td>";
+	$layout .="			<td valign=\"middle\">";
+	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;";
+	$layout .="			</td>";
+	
+	  		}
+		}
+	}	
+
+	$layout .="		</tr>";
+	$layout .="	</table>";
+	
+?>

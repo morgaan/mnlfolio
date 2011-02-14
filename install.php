@@ -1,11 +1,11 @@
 <?php
 /*
- *	mnlfolio v1.0.0
+ *	mnlfolio v1.1.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20010117
+ *	Last Modification: 20110214
  *
  *	For more information, visit:
- *	http://ipositives.net/mnlfolio
+ *	http://morgan.cugerone.com/mnlfolio
  *
  *	Licensed under the Creative Commons Attribution 2.5 License - http://creativecommons.org/licenses/by/2.5/
  *  	- Free for use in both personal and commercial projects

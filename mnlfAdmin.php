@@ -11,7 +11,7 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
@@ -27,7 +27,7 @@ foreach($_REQUEST as $key => $value) $$key=$value;
 // = Tells if the user is authenticated =
 // ======================================
 function isUserAuthenticated() {
-	return (isset($_SESSION["username"]) && isset($_SESSION["password"]) && $_SESSION["username"] == getConf("Username") && md5($_SESSION["password"]) == getConf("Password"));
+	return (isset($_SESSION["username"]) && isset($_SESSION["password"]) && $_SESSION["username"] == getTypedConf("Username") && md5($_SESSION["password"]) == getTypedConf("Password"));
 }
 
 // ======================================
@@ -45,13 +45,38 @@ if(isset($_POST["lang"]) || (isset($_POST["Language"]) && isset($_SESSION["lang"
 		unset($_SESSION["rsrc"]);
 	if(isset($_POST["lang"])) {	
 		$_SESSION["lang"] = $_POST["lang"];
-		setConf("Language",$_POST["lang"]);
+		setTypedConf("Language",$_POST["lang"]);
 	}
 	elseif(isset($_POST["Language"])) {
 		$_SESSION["lang"] = $_POST["Language"];
-		setConf("Language",$_POST["Language"]);
+		setTypedConf("Language",$_POST["Language"]);
 	}
 }
+
+// If asked, import config & apparence files
+if(isset($_POST["importConfigFiles"]) && $_POST["importConfigFiles"] == "true") {
+	
+	if(isset($_FILES["configFile"])) {
+		
+		$target_path = "config/".basename($_FILES['configFile']['name']).".old";
+		move_uploaded_file($_FILES['configFile']['tmp_name'], $target_path);
+		
+		importConf($target_path,"config/mnlfConfig.php");		
+		unlink($target_path);
+		unlink($target_path.".bak");
+
+	}
+	if(isset($_FILES["appearenceFile"])) {
+		$target_path = "config/".basename($_FILES['appearenceFile']['name']).".old";
+		move_uploaded_file($_FILES['appearenceFile']['tmp_name'], $target_path);
+		
+		importConf($target_path,"config/css.php");
+		unlink($target_path);
+		unlink($target_path.".bak");
+	}
+
+}
+
 
 // ======================
 // = Init admin account =
@@ -65,12 +90,12 @@ if(isset($_POST["password2"]) && isset($_POST["password"]) && isset($_POST["user
 	} else {
 		
 		// init admin account credentials
-		setConf("Username",$_POST["username"]);
-		setConf("Password",md5($_POST["password"]), true);
-		setConf("PwdQuestion",$_POST["pwdQuestion"]);
-		setConf("PwdAnswer",md5($_POST["pwdAnswer"]), true);
-		$strUsername = getConf("Username");
-		$strPassword = getConf("Password");
+		setTypedConf("Username",$_POST["username"]);
+		setTypedConf("Password",md5($_POST["password"]), true);
+		setTypedConf("PwdQuestion",$_POST["pwdQuestion"]);
+		setTypedConf("PwdAnswer",md5($_POST["pwdAnswer"]), true);
+		$strUsername = getTypedConf("Username");
+		$strPassword = getTypedConf("Password");
 		$_SESSION["username"] = $strUsername;
 		$_SESSION["password"] = $_POST["password"];
 		
@@ -83,7 +108,7 @@ if(isset($_POST["password2"]) && isset($_POST["password"]) && isset($_POST["user
 // ===========================
 if(isset($_POST["pwdRenewPassword2"]) && isset($_POST["pwdRenewPassword"]) && isset($_POST["pwdRenewAnswer"]) && strlen($_POST["pwdRenewPassword2"]) > 0 && strlen($_POST["pwdRenewPassword"]) > 0 && strlen($_POST["pwdRenewAnswer"]) > 0) {
 
-	if(md5($_POST["pwdRenewAnswer"]) == getConf("PwdAnswer")) {
+	if(md5($_POST["pwdRenewAnswer"]) == getTypedConf("PwdAnswer")) {
 		
 		if($_POST["pwdRenewPassword2"] != $_POST["pwdRenewPassword"]) {
 		  $_POST["pwdRenew"]="true";
@@ -93,7 +118,7 @@ if(isset($_POST["pwdRenewPassword2"]) && isset($_POST["pwdRenewPassword"]) && is
 		} else {
 
 			// set admin password
-			setConf("Password",md5($_POST["pwdRenewPassword"]), true);
+			setTypedConf("Password",md5($_POST["pwdRenewPassword"]), true);
 
 ?>
 			<p class="succeed"><? echo getResource("messagePasswordChanged"); ?></p>		
@@ -158,11 +183,11 @@ if(isUserAuthenticated()) {
 	
 		ob_start();
 		resetCache();
-		setConf("ApiKey", "");
-		setConf("ApiSecret", "");
-		setConf("AuthToken", "");
-		setConf("SelectedSets", "");
-		setConf("DefaultSet", "");
+		setTypedConf("ApiKey", "");
+		setTypedConf("ApiSecret", "");
+		setTypedConf("AuthTokens", "");
+		setTypedConf("SelectedSets", "");
+		setTypedConf("DefaultSet", "");
 		copy ("default/css.php", "config/css.php");
 		copy ("default/mnlfConfig.php", "config/mnlfConfig.php");
 		cleanSession();
@@ -176,18 +201,17 @@ if(isUserAuthenticated()) {
 	
 		ob_start();
 		resetCache();
-		setConf("ApiKey", "");
-		setConf("ApiSecret", "");
-		setConf("AuthToken", "");
+		setTypedConf("ApiKey", "");
+		setTypedConf("ApiSecret", "");
+		setTypedConf("AuthTokens", "");
 		header("Location: mnlfAdmin.php");
 		ob_flush();
 	
 	}
 
 	// On callback from Flickr, update the token
-	if(isset($_REQUEST["frob"]) && 	getConf("AuthToken") == NULL)  {
+	if((isset($_REQUEST["frob"]) && getTypedConf("AuthTokens") == NULL) || (isset($_REQUEST["frob"]) && getTypedConf("_TemporaryIsAddingExistingFlickrAccount")))  {
 		setFrob($_REQUEST["frob"]);
-	
 	}
 
 
@@ -195,51 +219,167 @@ if(isUserAuthenticated()) {
 	if(isset($_POST["resetCache"]) && $_POST["resetCache"] == "true") {
 		resetCache();
 	}
+	
+	// Export configuration file if explicitly asked
+	if(isset($_POST["exportConfig"]) && $_POST["exportConfig"] == "true") {
+		exportFile("config/mnlfConfig.php");
+	}
 
+	// Export appearence file if explicitly asked
+	if(isset($_POST["exportAppearence"]) && $_POST["exportAppearence"] == "true") {
+		exportFile("config/css.php");
+	}
+
+	// If asked, remove an account
+	if(isset($_POST["removeAccount"]) && $_POST["removeAccount"] == "true" && isset($_POST["accountIndex"])) {
+		
+		// remove selected sets from this account
+		$newSelected = getTypedConf("SelectedSets");
+		$newselectedSets = null;
+		$selectedSets = explode(",",$newSelected);
+
+		for($i = 0; $i < count($selectedSets); $i++) {
+			if(substr_count($selectedSets[$i],$_POST["accountIndex"].".") <= 0)
+				$newselectedSets[] = $selectedSets[$i];
+			else
+				if(substr_count(getTypedConf("DefaultSet"),$selectedSets[$i]) > 0) 
+					setTypedConf("DefaultSet", "");
+		}
+		
+		$newSelected = "";
+		for($i = 0; $i < count($newselectedSets); $i++) {
+			if($i == 0)
+				$newSelected .= $newselectedSets[$i];
+			else
+				$newSelected .= ",".$newselectedSets[$i];
+		}
+
+		setTypedConf("SelectedSets", $newSelected);
+		
+		//remove account
+		$newTokens = getTypedConf("AuthTokens");		
+		$newAccounts = null;
+		$existingTokens = explode("|",$newTokens);
+		$tokenToBeRemoved = $existingTokens[$_POST["accountIndex"]];
+
+		for($i = 0; $i < count($existingTokens); $i++) {
+			if(substr_count($existingTokens[$i],$tokenToBeRemoved) <= 0)
+				$newAccounts[] = $existingTokens[$i];
+		}
+
+		$newSelected = "";		
+		for($i = 0; $i < count($newAccounts); $i++) {
+			if($i == 0)
+				$newSelected .= $newAccounts[$i];
+			else
+				$newSelected .= "|".$newAccounts[$i];
+		}
+		
+		setTypedConf("AuthTokens", $newSelected);			
+
+	}
 
 	// If asked, add a set
-	if(isset($_POST["addSets"]) && $_POST["addSets"] == "true" && isset($_POST["unSelectedSets"])) {
-	
-		$newSelected = getConf("SelectedSets");
-		foreach ($_POST["unSelectedSets"] as $unselected) {
-			if(substr_count($newSelected,$unselected) == 0) 
-			 if($newSelected == NULL)
-				$newSelected .="$unselected";
-			 else
-				$newSelected .=",$unselected";
+	if(isset($_POST["addSets"]) && $_POST["addSets"] == "true" && isset($_POST["accountIndex"])) {
+		
+		if(isset($_POST["unSelectedSets".$_POST["accountIndex"]])) {
+			$newSelected = getTypedConf("SelectedSets");
+			foreach ($_POST["unSelectedSets".$_POST["accountIndex"]] as $unselected) {
+				if(substr_count($newSelected,$_POST["accountIndex"].".".$unselected) == 0) 
+				 if($newSelected == NULL)
+					$newSelected .= $_POST["accountIndex"].".".$unselected;
+				 else
+					$newSelected .=",".$_POST["accountIndex"].".".$unselected;
+			}
+			setTypedConf("SelectedSets", $newSelected);
 		}
-		setConf("SelectedSets", $newSelected);
 	
 	}
 
 	// If asked, remove from set
 	if(isset($_POST["removeSets"]) && $_POST["removeSets"] == "true" && isset($_POST["selectedSets"])) {
 	
-		$newSelected = getConf("SelectedSets");
+		$newSelected = getTypedConf("SelectedSets");
 		foreach ($_POST["selectedSets"] as $selected) {
+			if(substr_count($selected,getTypedConf("DefaultSet")) > 0) 
+				setTypedConf("DefaultSet", "");
 			if(substr_count($newSelected,",".$selected) > 0) 
 				$newSelected = str_replace(",".$selected,"",$newSelected);
 			elseif(substr_count($newSelected,$selected) > 0) 
 				$newSelected = str_replace($selected,"",$newSelected);
 		}
-		setConf("SelectedSets", $newSelected);
+		setTypedConf("SelectedSets", $newSelected);
+	
+	}
+
+	// If asked, move a set up
+	if(isset($_POST["moveUp"]) && $_POST["moveUp"] == "true" && isset($_POST["selectedSets"])) {
+	
+		$newSelected = getTypedConf("SelectedSets");
+		$selectedSet = $_POST["selectedSets"][0];
+		$selectedSets = explode(",",$newSelected);
+		$i = 0;
+		for($i = 0; $i < count($selectedSets); $i++) {
+			if($selectedSets[$i] == $selectedSet)
+				break;
+		}
+		
+		$selectedSets[$i] = $selectedSets[$i-1];
+		$selectedSets[$i-1] = $selectedSet;
+		
+		$newSelected = "";
+		for($i = 0; $i < count($selectedSets); $i++) {
+			if($i == 0)
+				$newSelected .= $selectedSets[$i];
+			else
+				$newSelected .= ",".$selectedSets[$i];
+		}		
+
+		setTypedConf("SelectedSets", $newSelected);
+	
+	}
+
+	// If asked, move a set down
+	if(isset($_POST["moveDown"]) && $_POST["moveDown"] == "true" && isset($_POST["selectedSets"])) {
+	
+		$newSelected = getTypedConf("SelectedSets");
+		$selectedSet = $_POST["selectedSets"][0];
+		$selectedSets = explode(",",$newSelected);
+		$i = 0;
+		for($i = 0; $i < count($selectedSets); $i++) {
+			if($selectedSets[$i] == $selectedSet)
+				break;
+		}
+		
+		$selectedSets[$i] = $selectedSets[$i+1];
+		$selectedSets[$i+1] = $selectedSet;
+		
+		$newSelected = "";
+		for($i = 0; $i < count($selectedSets); $i++) {
+			if($i == 0)
+				$newSelected .= $selectedSets[$i];
+			else
+				$newSelected .= ",".$selectedSets[$i];
+		}		
+
+		setTypedConf("SelectedSets", $newSelected);
 	
 	}
 
 	// If asked, set selected set as default
 	if(isset($_POST["clearDefault"]) && $_POST["clearDefault"] == "true")
-		setConf("DefaultSet", "");
+		setTypedConf("DefaultSet", "");
 
 
 	// If asked, set selected set as default
 	if(isset($_POST["setDefault"]) && $_POST["setDefault"] == "true" && isset($_POST["selectedSets"])) {
 	
-		$newDefault = getConf("DefaultSet");
+		$newDefault = getTypedConf("DefaultSet");
 		foreach ($_POST["selectedSets"] as $selected) {
 			$newDefault = $selected;
 			break;
 		}
-		setConf("DefaultSet", $newDefault);
+		setTypedConf("DefaultSet", $newDefault);
 	
 	}
 
@@ -342,86 +482,86 @@ if(isUserAuthenticated()) {
 		&& isset($_POST["mnlfdivphotoborderstyle"])
 		&& isset($_POST["mnlfdivphotobordercolor"])) {
 		
-			setCSSConf("unSelectedSets",$_POST["unSelectedSets"]);
-			setCSSConf("mnlfbodybgcolor",$_POST["mnlfbodybgcolor"]);
-			setCSSConf("mnlfbodyfontfamily",$_POST["mnlfbodyfontfamily"]);
-			setCSSConf("mnlfbodyfontsize",$_POST["mnlfbodyfontsize"]);
-			setCSSConf("mnlfbodyfontweight",$_POST["mnlfbodyfontweight"]);
-			setCSSConf("mnlfbodyfontstyle",$_POST["mnlfbodyfontweight"]);
-			setCSSConf("mnlfbodytextdecoration",$_POST["mnlfbodytextdecoration"]);
-			setCSSConf("mnlfbodytextalign",$_POST["mnlfbodytextalign"]);
-			setCSSConf("mnlfbodyfontcolor",$_POST["mnlfbodyfontcolor"]);
+			setConf("unSelectedSets",$_POST["unSelectedSets"]);
+			setConf("mnlfbodybgcolor",$_POST["mnlfbodybgcolor"]);
+			setConf("mnlfbodyfontfamily",$_POST["mnlfbodyfontfamily"]);
+			setConf("mnlfbodyfontsize",$_POST["mnlfbodyfontsize"]);
+			setConf("mnlfbodyfontweight",$_POST["mnlfbodyfontweight"]);
+			setConf("mnlfbodyfontstyle",$_POST["mnlfbodyfontweight"]);
+			setConf("mnlfbodytextdecoration",$_POST["mnlfbodytextdecoration"]);
+			setConf("mnlfbodytextalign",$_POST["mnlfbodytextalign"]);
+			setConf("mnlfbodyfontcolor",$_POST["mnlfbodyfontcolor"]);
 
-			setCSSConf("mnlflinksfontfamily",$_POST["mnlflinksfontfamily"]);
-			setCSSConf("mnlflinksfontsize",$_POST["mnlflinksfontsize"]);
-			setCSSConf("mnlflinksfontweight",$_POST["mnlflinksfontweight"]);
-			setCSSConf("mnlflinksfontstyle",$_POST["mnlflinksfontstyle"]);
-			setCSSConf("mnlflinkstextdecoration",$_POST["mnlflinkstextdecoration"]);
-			setCSSConf("mnlflinkstextalign",$_POST["mnlflinkstextalign"]);
-			setCSSConf("mnlflinksfontcolor",$_POST["mnlflinksfontcolor"]);
+			setConf("mnlflinksfontfamily",$_POST["mnlflinksfontfamily"]);
+			setConf("mnlflinksfontsize",$_POST["mnlflinksfontsize"]);
+			setConf("mnlflinksfontweight",$_POST["mnlflinksfontweight"]);
+			setConf("mnlflinksfontstyle",$_POST["mnlflinksfontstyle"]);
+			setConf("mnlflinkstextdecoration",$_POST["mnlflinkstextdecoration"]);
+			setConf("mnlflinkstextalign",$_POST["mnlflinkstextalign"]);
+			setConf("mnlflinksfontcolor",$_POST["mnlflinksfontcolor"]);
 
-			setCSSConf("mnlfcontactfontfamily",$_POST["mnlfcontactfontfamily"]);
-			setCSSConf("mnlfcontactfontsize",$_POST["mnlfcontactfontsize"]);
-			setCSSConf("mnlfcontactfontweight",$_POST["mnlfcontactfontweight"]);
-			setCSSConf("mnlfcontactfontstyle",$_POST["mnlfcontactfontstyle"]);
-			setCSSConf("mnlfcontacttextdecoration",$_POST["mnlfcontacttextdecoration"]);
-			setCSSConf("mnlfcontacttextalign",$_POST["mnlfcontacttextalign"]);
-			setCSSConf("mnlfcontactfontcolor",$_POST["mnlfcontactfontcolor"]);
+			setConf("mnlfcontactfontfamily",$_POST["mnlfcontactfontfamily"]);
+			setConf("mnlfcontactfontsize",$_POST["mnlfcontactfontsize"]);
+			setConf("mnlfcontactfontweight",$_POST["mnlfcontactfontweight"]);
+			setConf("mnlfcontactfontstyle",$_POST["mnlfcontactfontstyle"]);
+			setConf("mnlfcontacttextdecoration",$_POST["mnlfcontacttextdecoration"]);
+			setConf("mnlfcontacttextalign",$_POST["mnlfcontacttextalign"]);
+			setConf("mnlfcontactfontcolor",$_POST["mnlfcontactfontcolor"]);
 			
-			setCSSConf("mnlfcopyrightfontfamily",$_POST["mnlfcopyrightfontfamily"]);
-			setCSSConf("mnlfcopyrightfontsize",$_POST["mnlfcopyrightfontsize"]);
-			setCSSConf("mnlfcopyrightfontweight",$_POST["mnlfcopyrightfontweight"]);
-			setCSSConf("mnlfcopyrightfontstyle",$_POST["mnlfcopyrightfontstyle"]);
-			setCSSConf("mnlfcopyrighttextdecoration",$_POST["mnlfcopyrighttextdecoration"]);
-			setCSSConf("mnlfcopyrighttextalign",$_POST["mnlfcopyrighttextalign"]);
-			setCSSConf("mnlfcopyrightfontcolor",$_POST["mnlfcopyrightfontcolor"]);
+			setConf("mnlfcopyrightfontfamily",$_POST["mnlfcopyrightfontfamily"]);
+			setConf("mnlfcopyrightfontsize",$_POST["mnlfcopyrightfontsize"]);
+			setConf("mnlfcopyrightfontweight",$_POST["mnlfcopyrightfontweight"]);
+			setConf("mnlfcopyrightfontstyle",$_POST["mnlfcopyrightfontstyle"]);
+			setConf("mnlfcopyrighttextdecoration",$_POST["mnlfcopyrighttextdecoration"]);
+			setConf("mnlfcopyrighttextalign",$_POST["mnlfcopyrighttextalign"]);
+			setConf("mnlfcopyrightfontcolor",$_POST["mnlfcopyrightfontcolor"]);
 
-			setCSSConf("mnlfphototitlefontfamily",$_POST["mnlfphototitlefontfamily"]);
-			setCSSConf("mnlfphototitlefontsize",$_POST["mnlfphototitlefontsize"]);
-			setCSSConf("mnlfphototitlefontweight",$_POST["mnlfphototitlefontweight"]);
-			setCSSConf("mnlfphototitlefontstyle",$_POST["mnlfphototitlefontstyle"]);
-			setCSSConf("mnlfphototitletextdecoration",$_POST["mnlfphototitletextdecoration"]);
-			setCSSConf("mnlfphototitletextalign",$_POST["mnlfphototitletextalign"]);
-			setCSSConf("mnlfphototitlefontcolor",$_POST["mnlfphototitlefontcolor"]);
+			setConf("mnlfphototitlefontfamily",$_POST["mnlfphototitlefontfamily"]);
+			setConf("mnlfphototitlefontsize",$_POST["mnlfphototitlefontsize"]);
+			setConf("mnlfphototitlefontweight",$_POST["mnlfphototitlefontweight"]);
+			setConf("mnlfphototitlefontstyle",$_POST["mnlfphototitlefontstyle"]);
+			setConf("mnlfphototitletextdecoration",$_POST["mnlfphototitletextdecoration"]);
+			setConf("mnlfphototitletextalign",$_POST["mnlfphototitletextalign"]);
+			setConf("mnlfphototitlefontcolor",$_POST["mnlfphototitlefontcolor"]);
 		
-			setCSSConf("mnlfphotodescriptionfontfamily",$_POST["mnlfphotodescriptionfontfamily"]);
-			setCSSConf("mnlfphotodescriptionfontsize",$_POST["mnlfphotodescriptionfontsize"]);
-			setCSSConf("mnlfphotodescriptionfontweight",$_POST["mnlfphotodescriptionfontweight"]);
-			setCSSConf("mnlfphotodescriptionfontstyle",$_POST["mnlfphotodescriptionfontstyle"]);
-			setCSSConf("mnlfphotodescriptiontextdecoration",$_POST["mnlfphotodescriptiontextdecoration"]);
-			setCSSConf("mnlfphotodescriptiontextalign",$_POST["mnlfphotodescriptiontextalign"]);
-			setCSSConf("mnlfphotodescriptionfontcolor",$_POST["mnlfphotodescriptionfontcolor"]);
+			setConf("mnlfphotodescriptionfontfamily",$_POST["mnlfphotodescriptionfontfamily"]);
+			setConf("mnlfphotodescriptionfontsize",$_POST["mnlfphotodescriptionfontsize"]);
+			setConf("mnlfphotodescriptionfontweight",$_POST["mnlfphotodescriptionfontweight"]);
+			setConf("mnlfphotodescriptionfontstyle",$_POST["mnlfphotodescriptionfontstyle"]);
+			setConf("mnlfphotodescriptiontextdecoration",$_POST["mnlfphotodescriptiontextdecoration"]);
+			setConf("mnlfphotodescriptiontextalign",$_POST["mnlfphotodescriptiontextalign"]);
+			setConf("mnlfphotodescriptionfontcolor",$_POST["mnlfphotodescriptionfontcolor"]);
 
-			setCSSConf("mnlftdthumbborderwidth",$_POST["mnlftdthumbborderwidth"]);
-			setCSSConf("mnlftdthumbborderstyle",$_POST["mnlftdthumbborderstyle"]);
-			setCSSConf("mnlftdthumbbordercolor",$_POST["mnlftdthumbbordercolor"]);
+			setConf("mnlftdthumbborderwidth",$_POST["mnlftdthumbborderwidth"]);
+			setConf("mnlftdthumbborderstyle",$_POST["mnlftdthumbborderstyle"]);
+			setConf("mnlftdthumbbordercolor",$_POST["mnlftdthumbbordercolor"]);
 
-			setCSSConf("mnlftdthumbselectedborderwidth",$_POST["mnlftdthumbselectedborderwidth"]);
-			setCSSConf("mnlftdthumbselectedborderstyle",$_POST["mnlftdthumbselectedborderstyle"]);
-			setCSSConf("mnlftdthumbselectedbordercolor",$_POST["mnlftdthumbselectedbordercolor"]);
+			setConf("mnlftdthumbselectedborderwidth",$_POST["mnlftdthumbselectedborderwidth"]);
+			setConf("mnlftdthumbselectedborderstyle",$_POST["mnlftdthumbselectedborderstyle"]);
+			setConf("mnlftdthumbselectedbordercolor",$_POST["mnlftdthumbselectedbordercolor"]);
 
-			setCSSConf("mnlfimgthumbborderwidth",$_POST["mnlfimgthumbborderwidth"]);
-			setCSSConf("mnlfimgthumbborderstyle",$_POST["mnlfimgthumbborderstyle"]);
-			setCSSConf("mnlfimgthumbbordercolor",$_POST["mnlfimgthumbbordercolor"]);
-			setCSSConf("mnlfimgthumbopacity",$_POST["mnlfimgthumbopacity"]);
+			setConf("mnlfimgthumbborderwidth",$_POST["mnlfimgthumbborderwidth"]);
+			setConf("mnlfimgthumbborderstyle",$_POST["mnlfimgthumbborderstyle"]);
+			setConf("mnlfimgthumbbordercolor",$_POST["mnlfimgthumbbordercolor"]);
+			setConf("mnlfimgthumbopacity",$_POST["mnlfimgthumbopacity"]);
 
-			setCSSConf("mnlfimgthumbselectedborderwidth",$_POST["mnlfimgthumbselectedborderwidth"]);
-			setCSSConf("mnlfimgthumbselectedborderstyle",$_POST["mnlfimgthumbselectedborderstyle"]);
-			setCSSConf("mnlfimgthumbselectedbordercolor",$_POST["mnlfimgthumbselectedbordercolor"]);
-			setCSSConf("mnlfimgthumbselectedopacity",$_POST["mnlfimgthumbselectedopacity"]);
+			setConf("mnlfimgthumbselectedborderwidth",$_POST["mnlfimgthumbselectedborderwidth"]);
+			setConf("mnlfimgthumbselectedborderstyle",$_POST["mnlfimgthumbselectedborderstyle"]);
+			setConf("mnlfimgthumbselectedbordercolor",$_POST["mnlfimgthumbselectedbordercolor"]);
+			setConf("mnlfimgthumbselectedopacity",$_POST["mnlfimgthumbselectedopacity"]);
 
-			setCSSConf("mnlfimgthumbhoverborderwidth",$_POST["mnlfimgthumbhoverborderwidth"]);
-			setCSSConf("mnlfimgthumbhoverborderstyle",$_POST["mnlfimgthumbhoverborderstyle"]);
-			setCSSConf("mnlfimgthumbhoverbordercolor",$_POST["mnlfimgthumbhoverbordercolor"]);
-			setCSSConf("mnlfimgthumbhoveropacity",$_POST["mnlfimgthumbhoveropacity"]);
+			setConf("mnlfimgthumbhoverborderwidth",$_POST["mnlfimgthumbhoverborderwidth"]);
+			setConf("mnlfimgthumbhoverborderstyle",$_POST["mnlfimgthumbhoverborderstyle"]);
+			setConf("mnlfimgthumbhoverbordercolor",$_POST["mnlfimgthumbhoverbordercolor"]);
+			setConf("mnlfimgthumbhoveropacity",$_POST["mnlfimgthumbhoveropacity"]);
 
-			setCSSConf("mnlfimgphotoborderwidth",$_POST["mnlfimgphotoborderwidth"]);
-			setCSSConf("mnlfimgphotoborderstyle",$_POST["mnlfimgphotoborderstyle"]);
-			setCSSConf("mnlfimgphotobordercolor",$_POST["mnlfimgphotobordercolor"]);
+			setConf("mnlfimgphotoborderwidth",$_POST["mnlfimgphotoborderwidth"]);
+			setConf("mnlfimgphotoborderstyle",$_POST["mnlfimgphotoborderstyle"]);
+			setConf("mnlfimgphotobordercolor",$_POST["mnlfimgphotobordercolor"]);
 
-			setCSSConf("mnlfdivphotoborderwidth",$_POST["mnlfdivphotoborderwidth"]);
-			setCSSConf("mnlfdivphotoborderstyle",$_POST["mnlfdivphotoborderstyle"]);
-			setCSSConf("mnlfdivphotobordercolor",$_POST["mnlfdivphotobordercolor"]);
+			setConf("mnlfdivphotoborderwidth",$_POST["mnlfdivphotoborderwidth"]);
+			setConf("mnlfdivphotoborderstyle",$_POST["mnlfdivphotoborderstyle"]);
+			setConf("mnlfdivphotobordercolor",$_POST["mnlfdivphotobordercolor"]);
 
 	}
 }
@@ -438,7 +578,7 @@ if(isUserAuthenticated()) {
 <body <? if(isset($view) && $view == "css") echo "onLoad=\"javascript:UpdatePreview();\""  ?>>	
 	<script type="text/javascript" src="design/jscolor/jscolor.js"></script>
 
-	<form id="mnlform" <? if(isset($view) && ($view == "layouts" || $view == "logos")) echo "enctype=\"multipart/form-data\""; ?>  <? if(!isset($view)) echo "action=\"mnlfAdmin.php\""; else echo "action=\"mnlfAdmin.php?view=".$view."\""; ?>  method="post">
+	<form id="mnlform" <? if((isset($view) && ($view == "layouts" || $view == "logos")) || getTypedConf("Username") == NULL) echo "enctype=\"multipart/form-data\""; ?>  <? if(!isset($view)) echo "action=\"mnlfAdmin.php\""; else echo "action=\"mnlfAdmin.php?view=".$view."\""; ?>  method="post">
 
 <?
 
@@ -450,7 +590,7 @@ if(isset($_POST["pwdRenew"]) && $_POST["pwdRenew"] == "true") {
 	<table border="0" class="normal" align="center">
 		<tr>
 			<td><? echo getResource("pwdQuestion"); ?> :</td>
-			<td><? echo getConf("PwdQuestion"); ?> ?</td>
+			<td><? echo getTypedConf("PwdQuestion"); ?> ?</td>
 		</tr>
 		<tr>
 			<td><? echo getResource("pwdAnswer"); ?> :</td>
@@ -469,7 +609,7 @@ if(isset($_POST["pwdRenew"]) && $_POST["pwdRenew"] == "true") {
 }
 
 
-if(getConf("Username") == NULL) {
+if(getTypedConf("Username") == NULL) {
 ?>
 	<p class="warning"><? echo getResource("messageFolioNotInit"); ?></p>
 <?
@@ -509,7 +649,7 @@ if(!isset($_SESSION["username"]) && !(isset($_POST["pwdRenew"]) && $_POST["pwdRe
 
 <?
 
-		if(getConf("Username") != NULL) {
+		if(getTypedConf("Username") != NULL) {
 ?>
 					<tr>
 						<td colspan="2" align="right" style="font-size:10px;font-color:#0f0;font-style:italic;">
@@ -524,7 +664,7 @@ if(!isset($_SESSION["username"]) && !(isset($_POST["pwdRenew"]) && $_POST["pwdRe
 
 }
 
-if(!isset($_SESSION["username"]) && getConf("Username") == NULL) {
+if(!isset($_SESSION["username"]) && getTypedConf("Username") == NULL) {
 ?>
 		<tr>
 			<td><? echo getResource("password2"); ?> :</td>
@@ -540,9 +680,27 @@ if(!isset($_SESSION["username"]) && getConf("Username") == NULL) {
 		</tr>
 				
 <?
+
 }
 
 if(isUserAuthenticated()) {
+	
+		// If asked, add an existing flickr account
+		if(isset($_POST["addAnotherAccount"]) && $_POST["addAnotherAccount"] == "true") {
+			addTempConf("IsAddingExistingFlickrAccount","true","bool");
+		} else if(isset($_POST["addAnotherAccountCancel"]) && $_POST["addAnotherAccountCancel"] == "true") {
+			deleteTempConf("IsAddingExistingFlickrAccount");
+			
+?>
+
+			<SCRIPT language="JavaScript">
+				window.location="mnlfAdmin.php?view=sets";
+			</SCRIPT>
+				
+<?				
+				
+		}
+	
 ?>
 
 		<input type="hidden" name="signout" value="false" />
@@ -551,7 +709,7 @@ if(isUserAuthenticated()) {
 				     
 			<li <? if(!isset($view) && !isset($_REQUEST["frob"])) echo "class=\"active\""; ?>><a href="mnlfAdmin.php"><? echo getResource("tabLabelConfiguration"); ?></a></li>
 <?
-		if(getConf("AuthToken") != NULL) {
+		if(getTypedConf("AuthTokens") != NULL && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 ?>
 		     <li <? if(isset($view) && $view == "css") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=css"><? echo getResource("tabLabelAppearance"); ?></a></li>
 	     	 <li <? if(isset($view) && $view == "layouts") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=layouts"><? echo getResource("tabLayouts"); ?></a></li>
@@ -560,7 +718,7 @@ if(isUserAuthenticated()) {
 <?
 		}
 
-		if(getConf("AuthToken") != NULL) {
+		if(getTypedConf("AuthTokens") != NULL && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 ?>
 		     <li><a href="index.php"><? echo getResource("tabLabelSeeFolio"); ?></a></li>
 <?
@@ -572,7 +730,9 @@ if(isUserAuthenticated()) {
 
 		</ul>
 <?
-if(!((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("AuthToken") == NULL || isset($_REQUEST["frob"])))) {
+if(!((getTypedConf("ApiKey") == NULL || getTypedConf("ApiSecret") == NULL || getTypedConf("AuthTokens") == NULL || isset($_REQUEST["frob"])))) {
+	
+	
 ?>		
 		<center>
 <?
@@ -580,37 +740,63 @@ if(!((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("Auth
 ?>
 		<table border="0" class="normal">
 	<?
-		if((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("AuthToken") == NULL || isset($_REQUEST["frob"])))		
+	
+		if((getTypedConf("ApiKey") == NULL || getTypedConf("ApiSecret") == NULL || getTypedConf("AuthTokens") == NULL || isset($_REQUEST["frob"]))
+			|| getTypedConf("_TemporaryIsAddingExistingFlickrAccount"))		
 			include("install.php");
 
 
-		if(!isset($view) && getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL && !isset($_REQUEST["frob"]))
+		if(!isset($view) && getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL && !isset($_REQUEST["frob"])  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount"))
 			getFormConf();
 
-		elseif(isset($view) && $view == "layouts" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL)) {
+		elseif(isset($view) && $view == "layouts" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+?>
+		<br /><br />
+		<table cellpadding="15" cellspacing="2" border="1" bordercolor="#DDD">
+			<tr>
+				<td valign="top" align="center">
+<?
 			getUploader("design/layouts/navigation", "", getResource("navigation"), getResource("messageUploadNavigationLayout"), getResource("btnUpload"), getResource("messageDeleteNavigationLayout"));
+?>
+				</td>
+				<td valign="top" align="center">
+<?
 			getUploader("design/layouts/viewer", "", getResource("layout"), getResource("messageUploadViewerLayout"), getResource("btnUpload"), getResource("messageDeleteViewerLayout"));
+?>
+			 	</td>
+			</tr>
+		</table>
+<?
 		}
 
-		elseif(isset($view) && $view == "logos" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL))
+		elseif(isset($view) && $view == "logos" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+?>
+		<br /><br />
+		<table cellpadding="15" cellspacing="2" border="1" bordercolor="#DDD">
+			<tr>
+				<td valign="top" align="center">
+<?
 			getUploader("design/images/logos", "", getResource("logo"), getResource("messageUploadLogo"), getResource("btnUpload"), getResource("messageDeleteLogo"));
+?>
+				</td>
+			</tr>
+		</table>
+<?
+		}
 			
-		elseif(isset($view) && $view == "sets" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL)) {
+		elseif(isset($view) && $view == "sets" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 
 ?>			
 				<br /><br />
-				<input type="hidden" name="resetCache" value="false" />
-				<center><input type="button" onClick="javascript:this.form.resetCache.value=true;this.form.submit();" <? echo "value=\"".getResource("btnResetCache")."\""; ?>  /></center>
-
 <?
 				getSetsSelector();
 		}
 
-		elseif(isset($view) && $view == "more")
+		elseif(isset($view) && $view == "more"  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount"))
 			getMoreForm();
 
 		
-		elseif(isset($view) && $view == "css" && (getConf("ApiKey") != NULL && getConf("ApiSecret") != NULL && getConf("AuthToken") != NULL)) {
+		elseif(isset($view) && $view == "css" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 			include("design/css/cssgenerator.php");
 		}
 }
@@ -622,7 +808,7 @@ if(!((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("Auth
 		if(!isset($_SESSION["username"]) && !(isset($_POST["pwdRenew"]) && $_POST["pwdRenew"] == "true")) {
 ?>
 		<center>
-			<input type="submit" <? echo "value=\"".getResource("btnConnect")."\""; ?>>
+			<p class="button"><input type="submit" <? echo "value=\"".getResource("btnConnect")."\""; ?>></p>
 		</center>
 <?
 		}
@@ -630,18 +816,41 @@ if(!((getConf("ApiKey") == NULL || getConf("ApiSecret") == NULL || getConf("Auth
 		if(isset($_POST["pwdRenew"]) && $_POST["pwdRenew"] == "true") {
 ?>
 		<center>
-			<input type="submit" <? echo "value=\"".getResource("btnRenewPwd")."\""; ?>>
+			<p class="button"><input type="submit" <? echo "value=\"".getResource("btnRenewPwd")."\""; ?>></p>
 		</center>
 <?
 		}
-?>
 
+if(getTypedConf("Username") == NULL) {
+?>
+	<input type="hidden" name="importConfigFiles" value="false" />
+	<table class="normal" align="center" border="0">
+		<tr>
+			<td colspan="2"><br />
+				<p class="warning"><? echo getResource("messageImportConfiguration"); ?></p>
+			</td>
+		</tr>
+		<tr>
+			<td><? echo getResource("configFile"); ?> :</td>
+			<td><input name="configFile" type="file" /></td>
+		</tr>
+		<tr>
+			<td><? echo getResource("appearenceFile"); ?> :</td>
+			<td><input name="appearenceFile" type="file" /></td>
+		</tr>
+	</table>
+	<center>
+		<p class="button"><input type="button" <? echo "value=\"".getResource("btnImport")."\""; ?> onClick="javascript:this.form.importConfigFiles.value=true;this.form.submit();"></p>
+	</center>
+<?
+}
+?>
 
 		</form>
 	</center>	
 
 	<?
-			echo "<p align=\"center\">v.".getConf("Version")."</p>";
+			echo "<p align=\"center\">v.".getTypedConf("Version")."</p>";
 	?>
 
 </body>

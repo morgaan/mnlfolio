@@ -81,4 +81,6 @@ $mnlfdivphotoborderstyle = "solid";
 $mnlfdivphotobordercolor = "DBDBDB"; 
 
 $color="color {pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerPosition:'right'}";
+
+$strVersion="1.1.0";
 ?>

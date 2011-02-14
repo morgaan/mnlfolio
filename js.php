@@ -11,7 +11,7 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
@@ -43,33 +43,41 @@
   echo "var columns = $nColumns;";
  
 if (($boolSetIdByPost && !empty($_POST['setid'])) || (!$boolSetIdByPost && isset($setid)) ) {
-	
-		  if($boolSetIdByPost)
-		   $setId = $_POST['setid'];
-		  else
-		   $setId = $setid;
-		   
- 		  echo "setId='$setId';";
 
-		  $photos = $f->photosets_getPhotos($setId);
+		if($boolSetIdByPost)
+		   $setId = $_POST['setid'];
+		else
+		   $setId = $setid;
+
+		$accountSet = explode(".",$setId);
+
+		if(count($accountSet) == 2) {
+
+			  $account = $accountSet[0];
+			  $set = $accountSet[1];
+
+		  	  $f = $objectsInstances[$account];
+		   
+	 		  echo "setId='$setId';";
+
+			  $photos = $f->photosets_getPhotos($set);
 		 
-		 
-		  // Loop through the photos and output the html
-		  $i=0;
-    	  foreach ($photos['photoset']['photo'] as $photo) {
+			  // Loop through the photos and output the html
+			  $i=0;
+	    	  foreach ($photos['photoset']['photo'] as $photo) {
     	  	
-    	  	$photoInfo = $f->photos_getInfo($photo['id'],NULL);
+	    	  	$photoInfo = $f->photos_getInfo($photo['id'],NULL);
   			
-  			echo "idPhotos[$i]=\"".$photo['id']."\";";
+	  			echo "idPhotos[$i]=\"".$photo['id']."\";";
   			
-  			$i++;
-      	  }
+	  			$i++;
+	      	  }
       	 
- 		  $totalPage = ceil($i/($nColumns*$nRows));
+	 		  $totalPage = ceil($i/($nColumns*$nRows));
  		 
- 		  echo "setSize=$i;";
-      	  echo "totalSetPage=$totalPage;";
- 
+	 		  echo "setSize=$i;";
+	      	  echo "totalSetPage=$totalPage;";
+ 		}
 }
 
 ?>

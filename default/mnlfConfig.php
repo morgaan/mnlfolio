@@ -61,7 +61,7 @@ $strMetaKeywords="mnlfolio,portfolio,book,photobook";
 
 //techParams
 $strCacheDir="cache"; 
-$nCacheTimeToLive=36000; 
+$nCacheTimeToLive=2592000; 
 
 //flickrParams
 $strSelectedSets=""; 
@@ -70,8 +70,8 @@ $urlApiKeyGenerator="http://www.flickr.com/services/apps/create/apply";
 $strApiKey=""; 
 $strApiSecret="";
 $strPerms="read";
-$strAuthToken="";
+$strAuthTokens="";
 
-$strVersion="1.0.0";
+$strVersion="1.1.0";
 
 ?>

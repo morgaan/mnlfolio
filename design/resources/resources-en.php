@@ -7,8 +7,11 @@ $password2="Password again";
 $pwdQuestion="Question in case of password loss";
 $pwdAnswer="Answer";
 $lostPassword="Lost Password?";
+$configFile="Configuration file";
+$appearenceFile="Appearence file";
 
 $messageFolioNotInit="Your mnlfolio admin account is not initialized yet.<br/>You must define a username and a password<br/>in order to be able to manage your mnlfolio. <br/>To do so, please fill the below form :";
+$messageImportConfiguration="Or import valid configuration and appearance files :";
 $messagePasswordsMismatch="Error : 'Password' and 'Password again' do not match";
 $messageWrongPassword="Error : Wrong password, please try again";
 $messagePasswordChanged="Your password has been updated";
@@ -29,7 +32,15 @@ $messageInstallStep1Secret="Secret";
 $messageInstallStep2InstructionsPart1="Now you need to specify a 'Callback URL'. To do so copy the below link (in red) : ";
 $messageInstallStep2InstructionsPart2="On the flickr page you left open, you must find below the 'Secret' a link called 'Edit auth flow for this app'.<br/>If you follow this link you will be able to fill a 'Callback URL' field by pasting the link you have just copied. Once paste made, hit the 'Save changes' button.";
 $messageInstallStep2InstructionsPart3="Click the link below in order to authorize your folio to access your flickr account. Once you hit the 'authorize it' button you'll be brought back to this current page.";
-$messageInstallStep2InstructionsPart4="I have set my Callback URL so I can now Authorize my folio;"
+$messageInstallStep2InstructionsPart4="I have set my Callback URL so I can now Authorize my folio";
+
+$messageAddAccountInstructionsPart1="Please ensure that the Flickr application associated with this folio has the following 'Callback URL' (in red below).<br /> To do so, you need to connect to the Flickr account that had been used to initialise this folio.<br /> Once there, click on the down arrow at the right of the link named 'You', then click on 'Your Apps'.<br />Here choose the App you created for this folio.<br />Once the app page displayed, click on the right sidebar link 'Edit the authentication flow'.<br/> Ensure that the displayed 'Callback URL' is the same than the one in red in this current page.<br /> If not, replace it with this the one below and click 'Save Changes'.";
+$messageAddAccountInstructionsPart2="Once the correct URL set, you need to click the below link, <u><b>but only if you are disconnected from Flickr or connected with the account you wish to add.</b></u>";
+$messageAddAccountInstructionsPart3="Clicking this link will bring you to a page in order to authorize your folio to access this new Flickr account.<br /> Once you hit the 'authorize it' button you'll be brought back to sets administration page.";
+$messageAddAccountInstructionsPart4="I have read the above information so I can now add another existing Flickr account";
+
+$messageAddingExistingFlickrAccount="Adding another existing Flickr account";
+$messageAddingAccount="Account is being added, you'll be redirected shortly to the sets administration page...";
 
 $messageCouldntDelete="Couldn't delete";
 $messageCleanCacheSucceed="Clean cache succeed";
@@ -51,9 +62,12 @@ $tabLogos="Logos";
 $tabLabelMySets="My Sets";
 $tabLabelSeeFolio="See My Folio";
 
+$fromAccount="From account";
+$fromEveryAccount="From every accounts";
 $unselectedSets="Unselected set(s)";
 $selectedSets="Selected set(s)";
 $defaultSet="(by default)";
+$explanationResetCache="If you did any change on Flickr that is not reflected into the folio, press the below button";
 
 $appearenceParams="Parameters";
 $appearenceParamsBody="Body";
@@ -81,15 +95,22 @@ $btnUpload="Upload";
 $btnSave="Save";
 $btnConnect="Connect";
 $btnSaveChanges="Save Changes";
+$btnCancel="Cancel";
 $btnSetAsDefault="Set As Default";
 $btnClearDefault="Clear Default";
 $btnResetCache="Reset Cache";
+$btnAddToSelectSets="Add to selected sets";
+$btnRemoveAccount="(Remove this account)";
+$btnAddAnotherAccount="Add another existing Flickr account";
 $btnSignOut="Sign Out";
 $btnNext="Next";
 $btnRenewPwd="Reset password";
 $btnDelete="Delete";
 $btnResetAll="Reset all";
 $btnResetFlickrLink="Reset flickr link";
+$btnExportConfiguration="Export configuration";
+$btnExportAppearence="Export appearence";
+$btnImport="Import";
 
 $configLanguage="Language";
 $configPageTitle="Page Title";
@@ -134,6 +155,8 @@ $configMetaKeywords="Specifies keywords for this portfolio<br/>(keywords must be
 
 $configResetAll="Reset cache, Flickr link, selection of sets, the apparence, the configuration and the admin account.<br/>Great to restart from scratch";
 $configResetFlickrLink="Reset cache, Flickr link, but preserve the selection of sets, the apparence, the configuration and the admin account.<br/>Great to restart with brand new Flickr App and Token";
+$configExportConfigFile="Click export will build a backup of your configuration settings. This way, in case of mnlfolio update, you can backup your configuration from the older and import it in the updated version";
+$configExportAppearenceFile="Click export will build a backup of your appearence settings. This way, in case of mnlfolio update, you can backup your appearence from the older and import it in the updated version";
 
 $BASICPARAMETERS="<center>----------------------------------&nbsp;#&nbsp;<b>BASIC PARAMETERS</b>&nbsp;#&nbsp;----------------------------------</center>";
 $ADVANCEDPARAMETERS="<center>---------------------------------&nbsp;#&nbsp;<b>ADVANCED PARAMETERS</b>&nbsp;#&nbsp;--------------------------------</center>";

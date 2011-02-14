@@ -8,16 +8,16 @@ ul#admintab {
     font: bold 12px "Trebuchet MS", "Lucida Grande", "Verdana", "sans-serif";
     list-style-type: none;
     padding-bottom: 24px;
-    border-bottom: 1px solid #51555C;
+    border-bottom: 1px solid #bbb;
     margin: 0;
 }
 
 ul#admintab li {
     float: left;
     height: 21px;
-    background-color: #F2EBEC;
+    background-color: #F5F5F5;
     margin: 2px 2px 0 2px;
-    border: 1px solid #51555C;
+    border: 1px solid #bbb;
 }
 
 ul#admintab li.active {
@@ -71,6 +71,16 @@ p.succeed {
 	text-align: center;
 }
 
+p.title {
+	color: #ff0084;
+	font-size: 14px;
+}
+
+p.subtitle, p.account {
+	color: #0063dc;
+	font-size: 12px;
+}
+
 td.comment {
 	color: #0063dc;
 }
@@ -82,4 +92,61 @@ td.header {
 	font-size: 13px;
 	font-weight: bold;
 	text-align: center;
+}
+
+input, select
+{
+	color: #000;
+	background: #fff;
+	border: 1px solid #bbb;
+}
+
+.button input
+{
+	color: #0063dc;
+	font-weight: bold;
+	background: #fff;
+	border: 2px outset #ccc;
+}
+
+.account input
+{
+	color: #888888;
+	background: #fff;
+	border: 1px solid #fff;
+}
+
+.account input:hover
+{
+	border: 1px solid #ccc;
+}
+
+.button input:hover
+{
+	color: #ff0084;
+	border: 2px groove #ccc;
+}
+
+.importantButton input
+{
+	color: #ff0084;
+	font-weight: bold;
+	font-size: 14px;
+	background: #fff;
+	border: 2px outset #ccc;
+}
+
+.importantButton input:hover
+{
+	color: #0063dc;
+	border: 2px groove #ccc;
+}
+
+.signout input
+{
+	color: #ff0084;
+	font-weight: bold;
+	text-decoration: underline;
+	background: #fff;
+	border: 1px solid #fff;
 }

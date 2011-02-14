@@ -13,11 +13,20 @@
 	$layout .="		    	&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="		    </td>";
 	
-	foreach ($photosets['photoset'] as $set) {
-		$setId = $set['id'];
-		if(substr_count(getConf("SelectedSets"),$setId) > 0) {
-		  $photoInfo = $f->photos_getInfo($set['primary'],NULL);
-		  if(isset($setId) && $setid == $set['id']) {
+	$selectedSets = explode(",",getTypedConf("SelectedSets"));
+	$objectsInstances = getFlickrObjectsInstances();
+			
+	for($i = 0; $i < count($selectedSets); $i++) {
+		
+		$accountSet = explode(".",$selectedSets[$i]);
+  		if(count($accountSet) == 2) {
+			$account = $accountSet[0];
+			$set = $accountSet[1];
+			$f = $objectsInstances[$account];
+			$setInfo = $f->photosets_getInfo($set);
+			$photoInfo = $f->photos_getInfo($setInfo['primary'],NULL);
+			if(substr_count(getTypedConf("SelectedSets"),$selectedSets[$i]) > 0) {
+		  		if(isset($selectedSets[$i]) && $setid == $selectedSets[$i]) {
 	
 	$layout .="			<td>";
 	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";
@@ -26,10 +35,10 @@
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;</td>";
 	$layout .="			</td>";
 
-	  		} else {
+	  			} else {
 		
 	$layout .="			<td>";
-	$layout .="				<a href='index.php?setid=".$set['id']."'>";
+	$layout .="				<a href='index.php?setid=".$selectedSets[$i]."'>";
 	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";	
 	$layout .="				</a>";
 	$layout .="			</td>";
@@ -37,7 +46,8 @@
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="			</td>";
 	
-	  		}
+				}
+			}
 		}
 	}	
 

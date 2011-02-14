@@ -11,7 +11,7 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
@@ -132,13 +132,12 @@ function UpdatePreview() {
 
 </script>
 
-<center>
-	<table cellspacing="0" cellpadding="5" border="0">
+<center><br/>
+	<table cellpadding="10" cellspacing="2" border="1" bordercolor="#DDD">
 		<tr>
-			<td><h3><? echo getResource("appearenceParams"); ?> :</h3></td>
-			<td>&nbsp;</td>
-			<td >
-				<h3><? echo getResource("appearencePreview"); ?> :</h3>
+			<td align="center"><p class="title"><? echo getResource("appearenceParams"); ?> :</p></td>
+			<td  align="center">
+				<p class="title"><? echo getResource("appearencePreview"); ?> :</p>
 			</td>
 		</tr>
 		<tr>
@@ -842,10 +841,6 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 </div>
 </td>
 
-<td width="100">
-	&nbsp;
-</td>
-
 <td valign="top">
 
 	<div id="previewbody">
@@ -903,8 +898,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 		</table> 
 		<p id="previewcopyright"><? echo getResource("appearenceCopyright"); ?></p>
 	</div>
-	<br />
-	<div align="center"><input type="submit" <? echo "value=\"".getResource("btnSaveChanges")."\""; ?> ></div>
+	<div align="center"><p class="importantButton"><input type="submit" <? echo "value=\">>>> ".getResource("btnSaveChanges")." <<<<\""; ?> ></p></div>
 </td>
 </tr>
 </table>

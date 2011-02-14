@@ -11,7 +11,7 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
@@ -93,9 +93,7 @@ if(!isset($setid) && isset($strDefaultSet) && $strDefaultSet != NULL) {
 	<?
 }
 
-$f = getFlickrObjectInstance(true);
-//$f->setToken($strAuthToken);
-//$f->enableCache("fs", $strCacheDir, $nCacheTimeToLive);
+$objectsInstances = getFlickrObjectsInstances(true);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -109,14 +107,13 @@ $f = getFlickrObjectInstance(true);
 <style type="text/css">
 <? include("design/css/mnlfstyles.php"); ?>
 </style>
-
 <?
 //#######################//
 // JAVASCRIPT FUNCTIONS
 //#######################//
+
 include("js.php");
 ?>
-
 </head> 
 
 <?
@@ -196,7 +193,7 @@ include("js.php");
 			if($boolShowCopyright)
 				echo "<p class=\"copyright\">&nbsp;".$strCopyright."<p/>";
 			if($boolShowMnlfolioPromo)
-				echo "<a href=\"http://ipositives.net/mnlfolio\" target=\"blank\"><img src=\"design/images/logo-mnlfolio-tiny.gif\" border=\"1\" /></a>";
+				echo "<a href=\"http://morgan.cugerone.com/mnlfolio\" target=\"blank\"><img src=\"design/images/logo-mnlfolio-tiny.gif\" border=\"1\" /></a>";
 			if($boolShowAdminLink)
 				echo "<p><a class=\"copyright\" href=\"mnlfAdmin.php\">admin</a></p>";
 		?>

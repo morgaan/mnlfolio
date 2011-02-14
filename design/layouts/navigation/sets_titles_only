@@ -12,31 +12,41 @@
 	$layout .="			<td align=\"center\">";
 	$layout .="		    	&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="		    </td>";
-	
-	foreach ($photosets['photoset'] as $set) {
-		$setId = $set['id'];
-		if(substr_count(getConf("SelectedSets"),$setId) > 0) {
-		  if(isset($setId) && $setid == $set['id']) {
+
+	$selectedSets = explode(",",getTypedConf("SelectedSets"));
+	$objectsInstances = getFlickrObjectsInstances();
+			
+	for($i = 0; $i < count($selectedSets); $i++) {
+		
+		$accountSet = explode(".",$selectedSets[$i]);
+  		if(count($accountSet) == 2) {
+			$account = $accountSet[0];
+			$set = $accountSet[1];
+			$f = $objectsInstances[$account];
+			$setInfo = $f->photosets_getInfo($set);
+			if(substr_count(getTypedConf("SelectedSets"),$selectedSets[$i]) > 0) {
+		  		if(isset($selectedSets[$i]) && $setid == $selectedSets[$i]) {
 	
 	$layout .="			<td>";
-	$layout .="				<p class=\"body\">".$set['title']."</p>";
+	$layout .="				<p class=\"body\">".$setInfo['title']."</p>";
 	$layout .="			</td>";
 	$layout .="			<td valign=\"middle\">";
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;</td>";
 	$layout .="			</td>";
 
-	  		} else {
+	  			} else {
 		
 	$layout .="			<td>";
-	$layout .="				<a href='index.php?setid=".$set['id']."'>";
-	$layout .="					".$set['title'];
+	$layout .="				<a href='index.php?setid=".$selectedSets[$i]."'>";
+	$layout .="					".$setInfo['title'];
 	$layout .="				</a>";
 	$layout .="			</td>";
 	$layout .="			<td valign=\"middle\">";
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="			</td>";
 	
-	  		}
+	  			}
+			}
 		}
 	}	
 

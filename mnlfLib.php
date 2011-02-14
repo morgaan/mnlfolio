@@ -11,7 +11,7 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
@@ -27,25 +27,23 @@ function getNavigationLayout($setid = NULL) {
 
 	$layout = "";
 	
-	if(getConf("AuthToken") != NULL && getConf("ShowNavigationMenu") == "true") {
+	if(getTypedConf("AuthTokens") != NULL && getTypedConf("ShowNavigationMenu") == "true") {
 
-		$f = getFlickrObjectInstance();
-		$photosets = $f->photosets_getList();
-		$delimiter = getConf("DelimiterSetsTitles");		
+		$selectedSets = explode(",",getTypedConf("SelectedSets"));
+		$delimiter = getTypedConf("DelimiterSetsTitles");
 		$activeSet = "";
-
-		foreach ($photosets['photoset'] as $set) {
-			$setId = $set['id'];
-			if(isset($setId) && $setid == $set['id']) {
-				$activeSet = $set;
+				
+		for($i = 0; $i < count($selectedSets); $i++) {			
+			if($setid == $selectedSets[$i]) {
+				$activeSet = $selectedSets[$i];
 				break;
 			}
 		}
 
 		include("design/layouts/navigation/".getFileListSelectedValue("NavigationLayout"));
-
+			
 	}
-
+				
 	return $layout;
 
 }
@@ -57,45 +55,55 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 
 	$layout = "";
 
-	if(strpos(getConf("SelectedSets"), $setId) !== false) {
-	  	$f = getFlickrObjectInstance(true);
- 
-	  	$photoInfo = $f->photos_getInfo($photoid,NULL);
-		$photosize = $f->photos_getSizes($photoid, $secret = NULL);
-		$photoFormat = getListSelectedValue("PhotoSize");
-		$zoomedPhotoFormat = getListSelectedValue("ZoomedPhotoSize");
+	if(strpos(getTypedConf("SelectedSets"), $setId) !== false) {
+		
+	  	$objectsInstances = getFlickrObjectsInstances(true);
+ 		$accountSet = explode(".",$setId);
+		
+		if(count($accountSet) == 2) {
+		
+		  $account = $accountSet[0];
+		  $set = $accountSet[1];
+		  $f = $objectsInstances[$account];
+
+	  	  $photoInfo = $f->photos_getInfo($photoid,NULL);
+		  $photosize = $f->photos_getSizes($photoid, $secret = NULL);
+		  $photoFormat = getListSelectedValue("PhotoSize");
+		  $zoomedPhotoFormat = getListSelectedValue("ZoomedPhotoSize");
 	
-		$size = $photosize[3];
+		  $size = $photosize[3];
 	
-		$photoDescription = "";
-		$photoTitle = "";
-		if(getConf("ShowPhotoDescription") == "true")
+		  $photoDescription = "";
+		  $photoTitle = "";
+		  if(getTypedConf("ShowPhotoDescription") == "true")
 			$photoDescription = $photoInfo['description'];
-		if(getConf("ShowPhotoTitle") == "true")
+		  if(getTypedConf("ShowPhotoTitle") == "true")
 			$photoTitle = $photoInfo['title'];
 
-		require("config/css.php");
-		$borderDiv = str_replace("px","",$mnlfdivphotoborderwidth);
-		$borderImg = str_replace("px","",$mnlfimgphotoborderwidth);
-	    $tweakSaveImageAs = getConf("TweakSaveImageAs");
-		$widthImg = $size[width]-($borderImg+$borderDiv);
-		$heightImg = $size[height]-($borderImg+$borderDiv);
+			require("config/css.php");
+			$borderDiv = str_replace("px","",$mnlfdivphotoborderwidth);
+			$borderImg = str_replace("px","",$mnlfimgphotoborderwidth);
+		    $tweakSaveImageAs = getTypedConf("TweakSaveImageAs");
+			$widthImg = $size[width]-($borderImg+$borderDiv);
+			$heightImg = $size[height]-($borderImg+$borderDiv);
 
-		$nColumns = getConf("Columns");
-		$nRows = getConf("Rows");
+			$nColumns = getTypedConf("Columns");
+			$nRows = getTypedConf("Rows");
 	
-		$previousPhotoControlLabel = getConf("PreviousPhotoControlLabel");
-		$nextPhotoControlLabel = getConf("NextPhotoControlLabel");
-		$previousThumbnailsPageControlLabel = getConf("PreviousThumbnailsPageControlLabel");
-		$nextThumbnailsPageControlLabel = getConf("NextThumbnailsPageControlLabel");
+			$previousPhotoControlLabel = getTypedConf("PreviousPhotoControlLabel");
+			$nextPhotoControlLabel = getTypedConf("NextPhotoControlLabel");
+			$previousThumbnailsPageControlLabel = getTypedConf("PreviousThumbnailsPageControlLabel");
+			$nextThumbnailsPageControlLabel = getTypedConf("NextThumbnailsPageControlLabel");
 
-		 $photosThumbs = $f->photosets_getPhotos($setId,NULL, "public", ($nColumns*$nRows), $setPage, NULL);
-		 $i = 0;
+			 $photosThumbs = $f->photosets_getPhotos($set,NULL, "public", ($nColumns*$nRows), $setPage, NULL);
+			 $i = 0;
 
-		$nGUIWidth = getConf("GUIWidth");
-		$nGUIHeight = getConf("GUIHeight");
+			$nGUIWidth = getTypedConf("GUIWidth");
+			$nGUIHeight = getTypedConf("GUIHeight");
 
-		include("design/layouts/viewer/".getFileListSelectedValue("ViewerLayout"));
+			include("design/layouts/viewer/".getFileListSelectedValue("ViewerLayout"));
+		
+		}
 	
 	}
 	
@@ -109,33 +117,77 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 // ===============================================================
 function setFrob($frob) {
 	
-	$f = getFlickrObjectInstance();
+	$objectsInstances = getFlickrObjectsInstances();
+	$f = $objectsInstances[0];
 	$token = $f->auth_getToken ($frob);
-	setConf("AuthToken",$token["token"]);
-	
+	$newTokens = getTypedConf("AuthTokens");
+	if(substr_count($newTokens,$token["token"]) <= 0) {
+		if(strlen($newTokens) != 0)
+			$newTokens .= "|".$token["token"];
+		else
+			$newTokens .= $token["token"];		
+		setTypedConf("AuthTokens",$newTokens);
+	}
+
 }
 
 
-function getFlickrObjectInstance($enableCache = false) {
+function getFlickrObjectsInstances($enableCache = false) {
 
-	$apiKey = getConf("ApiKey");
-	$apiSecret = getConf("ApiSecret");
-	$authToken = getConf("AuthToken");
-	$cacheDir = getConf("CacheDir");
-	$cacheTimeToLive = getConf("CacheTimeToLive");
+	$apiKey = getTypedConf("ApiKey");
+	$apiSecret = getTypedConf("ApiSecret");
+	$authTokens = getTypedConf("AuthTokens");
+	$cacheDir = getTypedConf("CacheDir");
+	$cacheTimeToLive = getTypedConf("CacheTimeToLive");
+	
+	$objectsInstances = null;
 	
 	if($apiKey != NULL && $apiSecret != NULL) {
-		$f = new phpFlickr($apiKey,$apiSecret);
-		if($authToken != NULL)
-			$f->setToken($authToken);
-		if($enableCache == true && $cacheDir != NULL && $cacheTimeToLive != NULL)
-			$f->enableCache("fs", $cacheDir, $cacheTimeToLive);
 		
-		return $f;
+		$authToken = explode("|",$authTokens);
+
+		if(count($authToken) == 0) {
+
+			$f = new phpFlickr($apiKey,$apiSecret);
+			if($enableCache == true && $cacheDir != NULL && $cacheTimeToLive != NULL)
+				$f->enableCache("fs", $cacheDir, $cacheTimeToLive);
+			$objectsInstances[] = $f;		
+			
+		} else {
+
+			for($i = 0; $i < count($authToken); $i++) {
+	
+				$f = new phpFlickr($apiKey,$apiSecret);
+				if($authToken[$i] != NULL)
+					$f->setToken($authToken[$i]);
+				if($enableCache == true && $cacheDir != NULL && $cacheTimeToLive != NULL)
+					$f->enableCache("fs", $cacheDir, $cacheTimeToLive);
+				
+				$objectsInstances[] = $f;
+			}
+			
+		}
+		return $objectsInstances;
+
 	}		
 	else
 		return NULL;
 	
+}
+
+// =============================
+// = Gets Flickr account Owner =
+// =============================
+function getOwner($f) {
+	$photosets = $f->photosets_getList();
+	$owner = "";
+	foreach ($photosets['photoset'] as $set) {
+		$setInfo = $f->photosets_getInfo($set['id']);
+		$owner = $f->people_getInfo($setInfo['owner']);
+		$owner = $owner['realname'];
+		break;
+	}
+	return $owner;
 }
 
 // ==================
@@ -149,9 +201,10 @@ function cleanSession() {
 // ======================================================
 // = Gets a configuration list attribute selected value =
 // ======================================================
-function getListSelectedValue($attribute){
+function getListSelectedValue($attribute,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";	
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
 		if(eregi("^\\$",trim($line))) {
@@ -174,9 +227,10 @@ function getListSelectedValue($attribute){
 // ==============================================
 // = Gets a configuration list attribute values =
 // ==============================================
-function getListValues($attribute){
+function getListValues($attribute,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";	
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
 		if(eregi("^\\$",trim($line))) {
@@ -198,9 +252,10 @@ function getListValues($attribute){
 // =============================================================
 // = Gets a configuration "file list" attribute selected value =
 // =============================================================
-function getFileListSelectedValue($attribute){
+function getFileListSelectedValue($attribute,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";	
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
 		if(eregi("^\\$",trim($line))) {
@@ -222,9 +277,10 @@ function getFileListSelectedValue($attribute){
 // =====================================================
 // = Gets a configuration "file list" attribute values =
 // =====================================================
-function getFileListValues($attribute){
+function getFileListValues($attribute,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";	
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
 		if(eregi("^\\$",trim($line))) {
@@ -258,7 +314,7 @@ function getFileListValues($attribute){
 // ===========================================
 function getResources(){
 	
-	if(!isset($_SESSION["lang"]) && getConf("lang") == NULL)
+	if(!isset($_SESSION["lang"]) && getTypedConf("lang") == NULL)
 		$_SESSION["lang"] = getListSelectedValue("Language");
 
 	$configFile = "design/resources/resources-".$_SESSION["lang"].".php";
@@ -289,13 +345,37 @@ function getResource($name){
 		
 }
 
-
-// ==================================
+// ========================================
 // = Gets a configuration attribute =
-// ==================================
-function getConf($attribute){
+// ========================================
+function getConf($attribute,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";	
+	if($configFile == NULL)
+		$configFile = "config/css.php";
+	$confFile = file ($configFile);
+	while (list ($lineNb, $line) = each ($confFile)) {
+		if(eregi("^\\$",trim($line))) {
+			$varVal = explode("=",trim($line));
+			$var = trim($varVal[0]);
+			$val = trim($varVal[1]);
+			if($var == "\$".$attribute)
+				return substr($val,1,-2);
+		}
+	}
+	
+	return NULL;
+		
+}
+
+
+
+// ========================================
+// = Gets a configuration typed attribute =
+// ========================================
+function getTypedConf($attribute,$configFile = NULL){
+
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
 		if(eregi("^\\$",trim($line))) {
@@ -313,12 +393,13 @@ function getConf($attribute){
 		
 }
 
-// ==================================
-// = Sets a configuration attribute =
-// ==================================
-function setConf($attribute,$value,$encrypt=false){
+// ========================================
+// = Sets a configuration typed attribute =
+// ========================================
+function setTypedConf($attribute,$value,$encrypt=false,$configFile = NULL){
 
-	$configFile = "config/mnlfConfig.php";
+	if($configFile == NULL)
+		$configFile = "config/mnlfConfig.php";
 	
 	$previousConfFile = file ($configFile);
 	$confFileBak = fopen($configFile.".bak", "w");
@@ -346,8 +427,9 @@ function setConf($attribute,$value,$encrypt=false){
 				$line = $var." = ".$value."; \n";
 
 			elseif($var == "\$list".$attribute) {
+				
 				$val = substr($val, 1, -1);
-				$listElements = explode("|",trim($val));			
+				$listElements = explode("|",trim($val));		
 				$line = $var." = \"".$value."|".$listElements[1]."; \n";	
 			}
 
@@ -367,20 +449,81 @@ function setConf($attribute,$value,$encrypt=false){
 	fwrite($newConfFile, $newContent);
 	fclose($newConfFile);
 
-	if(getConf($attribute) == $value)
+	if(getTypedConf($attribute) == $value)
 		return true;
 	else
 		return false;
 
 }
 
+// ============================================
+// = Adds a temporary configuration attribute =
+// ============================================
+function addTempConf($attribute,$value,$type,$encrypt=false){
+
+	$configFile = "config/mnlfConfig.php";
+	
+	$previousConfFile = file ($configFile);
+	$confFileBak = fopen($configFile.".bak", "w");
+	fwrite($confFileBak, file_get_contents($configFile));
+	fclose($confFileBak);
+	
+	$newContent = "";
+	while (list ($lineNb, $line) = each ($previousConfFile))
+		if(substr_count($line,"?>") <= 0)
+			$newContent .= $line;
+		
+	if($encrypt == true)
+		$value = md5($value);
+	
+	if($type == "str")	
+		$newContent .= "\$str_Temporary$attribute= \"$value\";\n?>";
+	elseif($type == "n")
+		$newContent .= "\$n_Temporary$attribute= $value;\n?>";	
+	elseif($type == "bool")
+		$newContent .= "\$bool_Temporary$attribute= $value;\n?>";
+	elseif($type == "list")
+		$newContent .= "\$list_Temporary$attribute= \"$value\";\n?>";
+	elseif($type == "filelist")
+		$newContent .= "\$list_Temporary$attribute= \"$value\";\n?>";
+
+	$newConfFile = fopen($configFile, "w");
+	fwrite($newConfFile, $newContent);
+	fclose($newConfFile);
+
+}
+
+// ============================================
+// = Clean a temporary configuration attribute =
+// ============================================
+function deleteTempConf($attribute){
+
+	$configFile = "config/mnlfConfig.php";
+	
+	$previousConfFile = file ($configFile);
+	$confFileBak = fopen($configFile.".bak", "w");
+	fwrite($confFileBak, file_get_contents($configFile));
+	fclose($confFileBak);
+	
+	$newContent = "";
+	while (list ($lineNb, $line) = each ($previousConfFile))
+		if(substr_count($line,"_Temporary$attribute") <= 0)
+			$newContent .= $line;
+
+	$newConfFile = fopen($configFile, "w");
+	fwrite($newConfFile, $newContent);
+	fclose($newConfFile);
+
+}
+
 
 // ======================================
-// = Sets a css configuration attribute =
+// = Sets a configuration attribute =
 // ======================================
-function setCSSConf($attribute,$value){
+function setConf($attribute,$value, $configFile = NULL){
 
-	$configFile = "config/css.php";
+	if($configFile == NULL)
+		$configFile = "config/css.php";
 	
 	$previousConfFile = file ($configFile);
 	$confFileBak = fopen($configFile.".bak", "w");
@@ -407,7 +550,7 @@ function setCSSConf($attribute,$value){
 	fwrite($newConfFile, $newContent);
 	fclose($newConfFile);
 
-	if(getConf($attribute) == $value)
+	if(getTypedConf($attribute) == $value)
 		return true;
 	else
 		return false;
@@ -453,10 +596,10 @@ function getFormConf(){
 
 			if($var != "" && $var != "\$strUsername"
 					&& $var != "\$strPassword"  && $var != "\$strPwdQuestion" && $var != "\$strPwdAnswer" && $var != "\$strApi_sig"
-						&& $var != "\$strAuthUrl" && $var != "\$strAuthToken"
+						&& $var != "\$strAuthUrl" && $var != "\$strAuthTokens"
 							&& $var != "\$strPerms" && $var != "\$strFrob"
 								&& $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir"
-								 	&& $var != "\$strApiKey" && $var != "\$strApiSecret" && $var != "\$strVersion") {
+								 	&& $var != "\$strApiKey" && $var != "\$strApiSecret" && $var != "\$strVersion" && substr_count($var,"_Temporary") <= 0) {
 
 ?>
 				<tr>
@@ -532,7 +675,7 @@ function getFormConf(){
 
 ?>			
 			<tr>
-				<td colspan="3" align="right"><br /><input type="submit" <? echo "value=\"".getResource("btnSave")."\""; ?>></td>
+				<td colspan="3" align="right"><p class="importantButton"><input type="submit" <? echo "value=\">>>> ".getResource("btnSave")." <<<<\""; ?>></p></td>
 			</tr>			
 <?	
 }
@@ -548,9 +691,9 @@ function saveConf(){
 		if(eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
-			if($var != "" && $var != "\$strUsername" && $var != "\$strPassword" && $var != "\$strPwdQuestion" && $var != "\$strPwdAnswer" && $var != "\$strApi_sig" && $var != "\$strAuthUrl" && $var != "\$strAuthToken" && $var != "\$strPerms" && $var != "\$strFrob" && $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir") {
+			if($var != "" && $var != "\$strUsername" && $var != "\$strPassword" && $var != "\$strPwdQuestion" && $var != "\$strPwdAnswer" && $var != "\$strApi_sig" && $var != "\$strAuthUrl" && $var != "\$strAuthTokens" && $var != "\$strPerms" && $var != "\$strFrob" && $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir" && substr_count($var,"_Temporary") <= 0) {
 				if(isset($_POST[getDispVar($var)]))
-					setConf(getDispVar($var),trim($_POST[getDispVar($var)]));
+					setTypedConf(getDispVar($var),trim($_POST[getDispVar($var)]));
 			}
 		}
 	}
@@ -598,14 +741,13 @@ function curPageURL() {
 // ========================
 function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $uploadButtonLabel, $deleteLabel, $extensionFilter = NULL) {
 	
-	echo "<br/><br/><table bgcolor=\"EEEEEE\"><tr><td align=\"center\">";
 	echo "<input type=\"hidden\" name=\"uploadFile\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"removeFile\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"targetDirectory\" value=\"$targetDirectory\" />";
-	echo "<h3>$uploadFieldLabel :</h3><input name=\"uploadedFile\" type=\"file\" /><br/>";
-	echo "<input type=\"button\" value=\"$uploadButtonLabel\" onClick=\"javascript:this.form.uploadFile.value=true;this.form.submit();\" />";
+	echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile\" type=\"file\" /><br/>";
+	echo "<p class=\"button\"><input type=\"button\" value=\"$uploadButtonLabel\" onClick=\"javascript:this.form.uploadFile.value=true;this.form.submit();\" /></p>";
 
-	echo "<br/><h3>$deleteLabel :</h3>";
+	echo "<p class=\"title\">$deleteLabel :</p>";
 	echo "<select name=\"selectedFiles[]\" multiple >";
 
 	if (file_exists($targetDirectory)) {
@@ -617,8 +759,8 @@ function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $upl
 	    }
 		closedir($mydir);
 	}
-	echo "</select><br/>";
-	echo "<input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile.value=true;this.form.submit();\" /></td></tr></table>";
+	echo "</select>";
+	echo "<p class=\"button\"><input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile.value=true;this.form.submit();\" /></p>";
 	
 }
 
@@ -629,17 +771,35 @@ function getMoreForm() {
 
 	echo "<input type=\"hidden\" name=\"resetAll\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"resetFlickr\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"exportConfig\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"exportAppearence\" value=\"false\" />";
 
 	echo "<br/><br>";
-	echo "<table class=\"normal\" width=\"600\" cellspacing=\"0\" cellpadding=\"4\" border=\"1\" bordercolor=\"#51555C\"><tr><td>";
-	echo getResource("configResetAll");
-	echo "</td><td align=\"center\" valign=\"middle\"><input type=\"button\" value=\"".getResource("btnResetAll")."\" onClick=\"javascript:this.form.resetAll.value=true;this.form.submit();\" /></td></tr><td>";
+	echo "<table class=\"normal\" width=\"600\" cellpadding=\"5\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\">";
+	echo "<tr><td>";
+		echo getResource("configResetAll");
+	echo "</td>";
+	echo "<td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnResetAll")."\" onClick=\"javascript:this.form.resetAll.value=true;this.form.submit();\" /></p></td></tr>";
+	echo "<tr><td>";
 	echo getResource("configResetFlickrLink");
-	echo "</td><td align=\"center\" valign=\"middle\"><input type=\"button\" value=\"".getResource("btnResetFlickrLink")."\" onClick=\"javascript:this.form.resetFlickr.value=true;this.form.submit();\" /></td></tr></td><td>";
-	echo getResource("configApiKey");
-	echo "</td><td align=\"center\" valign=\"middle\">".getConf("ApiKey")."</td></tr><td>";
-	echo getResource("configApiSecret");
-	echo "</td><td align=\"center\" valign=\"middle\">".getConf("ApiSecret")."</td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnResetFlickrLink")."\" onClick=\"javascript:this.form.resetFlickr.value=true;this.form.submit();\" /></p></td></tr>";
+	echo "<tr><td>";
+	echo getResource("configExportConfigFile");
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportConfiguration")."\" onClick=\"javascript:this.form.exportConfig.value=true;this.form.exportAppearence.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "<tr><td>";
+	echo getResource("configExportAppearenceFile");
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportAppearence")."\" onClick=\"javascript:this.form.exportAppearence.value=true;this.form.exportConfig.value=false;this.form.submit();\" /></p></td></tr>";
+
+
+	$objectsInstances = getFlickrObjectsInstances();
+
+	echo "<tr><td>".getResource("configApiKey")."</td>";
+	echo "<td align=\"center\" valign=\"middle\">".getTypedConf("ApiKey")."</td></tr>";
+	
+	echo "<tr><td>".getResource("configApiSecret")."</td>";
+	echo "<td align=\"center\" valign=\"middle\">".getTypedConf("ApiSecret")."</td></tr>";
+
+	
 	echo "</table>";
 	
 }
@@ -649,40 +809,79 @@ function getMoreForm() {
 // =======================================
 function getSetsSelector() {
 	
-	if(getConf("AuthToken") != NULL) {
+	if(getTypedConf("AuthTokens") != NULL) {
 
-		$f = getFlickrObjectInstance();
-
-		$photosets = $f->photosets_getList();
+		$objectsInstances = getFlickrObjectsInstances();
 
 		echo "<input type=\"hidden\" name=\"addSets\" value=\"false\" />";
 		echo "<input type=\"hidden\" name=\"removeSets\" value=\"false\" />";
 		echo "<input type=\"hidden\" name=\"setDefault\" value=\"false\" />";
 		echo "<input type=\"hidden\" name=\"clearDefault\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"moveUp\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"moveDown\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"accountIndex\" value=\"-1\" />";
+		echo "<input type=\"hidden\" name=\"addAnotherAccount\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"removeAccount\" value=\"false\" />";
+	
+		echo "<table cellpadding=\"15\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\"><tr><td align=\"center\"><p class=\"title\">".getResource("unselectedSets")." :</p></td><td align=\"center\"><p class=\"title\">".getResource("selectedSets")." :</p></td></tr><tr><td align=\"center\">";
+	
+		for($i = 0; $i < count($objectsInstances); $i++) {
 
-		echo "<br/><br/><table><tr><td align=\"center\">".getResource("unselectedSets")."</td><td></td><td align=\"center\">".getResource("selectedSets")."</td></tr><tr>";
-		
-		echo "<td><select name=\"unSelectedSets[]\" multiple width=\"100%\" style=\"width: 100%\" size=\"10\" >";
-		foreach ($photosets['photoset'] as $set) {
-  		$setId = $set['id'];
-			if(substr_count(getConf("SelectedSets"),$setId) == 0)
-				echo "<option value=\"$setId\">".$set['title']."</option>";
+			$f = $objectsInstances[$i];
+
+			$owner = getOwner($f);
+			
+			$photosets = $f->photosets_getList();
+			
+			if(count($objectsInstances) > 1)
+				echo "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;<input type=\"button\" value=\"".getResource("btnRemoveAccount")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.removeAccount.value=true;this.form.submit();\" /></p>";
+			else
+				echo "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;</p>";
+			
+
+			echo "<select name=\"unSelectedSets".$i."[]\" multiple width=\"100%\" style=\"width: 100%\" size=\"10\" >";
+			foreach ($photosets['photoset'] as $set) {
+	  		$setId = $set['id'];
+				if(substr_count(getTypedConf("SelectedSets"),$setId) == 0)
+					echo "<option value=\"$setId\">".$set['title']."</option>";
+			}
+			echo "</select><p class=\"button\"><input type=\"button\" value=\"".getResource("btnAddToSelectSets")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.addSets.value=true;this.form.submit();\" /></p><hr />";
+
 		}
-		echo "</select><br/><br/></td><td>";
 		
-		echo "<input type=\"button\" value=\">>\" onClick=\"javascript:this.form.addSets.value=true;this.form.submit();\" /><br/><br/>";		
-		echo "<input type=\"button\" value=\"<<\" onClick=\"javascript:this.form.removeSets.value=true;this.form.submit();\" /></td>";
+		echo "<p class=\"importantButton\"><input type=\"button\" value=\"".getResource("btnAddAnotherAccount")."\" onClick=\"javascript:this.form.addAnotherAccount.value=true;this.form.submit();\" /></td><td align=\"center\" valign=\"top\">";
+		
+		echo "<p class=\"subtitle\">".getResource("fromEveryAccount")." : </p>";
+		echo "<select name=\"selectedSets[]\" width=\"100%\" style=\"width: 100%\" multiple size=\"10\" >";
 
-		echo "<td align=\"center\"><select name=\"selectedSets[]\" width=\"100%\" style=\"width: 100%\" multiple size=\"10\" >";
-		foreach ($photosets['photoset'] as $set) {
-  		$setId = $set['id'];
-			if(substr_count(getConf("SelectedSets"),$setId) > 0 && substr_count(getConf("DefaultSet"),$setId) > 0)
-			 echo "<option value=\"$setId\">".$set['title']." (default)</option>";
-			elseif(substr_count(getConf("SelectedSets"),$setId) > 0)
-				echo "<option value=\"$setId\">".$set['title']."</option>";
+		$selectedSets = explode(",",getTypedConf("SelectedSets"));
+
+		for($i = 0; $i < count($selectedSets); $i++) {
+			
+			$accountSet = explode(".",$selectedSets[$i]);
+			if(count($accountSet) == 2) {
+				
+				$account = $accountSet[0];
+				$set = $accountSet[1];
+				$f = $objectsInstances[$account];
+				$setInfo = $f->photosets_getInfo($set);
+				if(substr_count(getTypedConf("DefaultSet"),$selectedSets[$i]) > 0)
+			 		echo "<option value=\"$selectedSets[$i]\">".$setInfo['title']." ".getResource("defaultSet")."</option>";
+				else
+					echo "<option value=\"$selectedSets[$i]\">".$setInfo['title']."</option>";
+			}	
+			
 		}
-		echo "</select><br/><input type=\"button\" value=\"".getResource("btnSetAsDefault")."\" onClick=\"javascript:this.form.setDefault.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnClearDefault")."\" onClick=\"javascript:this.form.clearDefault.value=true;this.form.submit();\" /></td></tr></table>";
 
+		echo "</select>";
+		echo "<p class=\"button\"><input type=\"button\" value=\"X\" onClick=\"javascript:this.form.removeSets.value=true;this.form.submit();\" /><input type=\"button\" value=\"&uarr;\" onClick=\"javascript:this.form.moveUp.value=true;this.form.submit();\" /><input type=\"button\" value=\"&darr;\" onClick=\"javascript:this.form.moveDown.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnSetAsDefault")."\" onClick=\"javascript:this.form.setDefault.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnClearDefault")."\" onClick=\"javascript:this.form.clearDefault.value=true;this.form.submit();\" /></p>";
+
+		echo "<p class=\"subtitle\">".getResource("explanationResetCache")." : </p>";
+
+		?>
+				<input type="hidden" name="resetCache" value="false" />
+				<p class="importantButton"><input type="button" onClick="javascript:this.form.resetCache.value=true;this.form.submit();" <? echo "value=\">>>> ".getResource("btnResetCache")." <<<<\""; ?> /></p></td></tr></table>
+		<?
 
 	}
 	
@@ -693,7 +892,7 @@ function getSetsSelector() {
 // ===============
 function resetCache() {
 	
-	$cacheDir = getConf("CacheDir");
+	$cacheDir = getTypedConf("CacheDir");
 	
 	if (file_exists($cacheDir)) {
 	   $mydir = opendir($cacheDir);
@@ -844,5 +1043,132 @@ function getBorderStyleForm($var,$name,$id,$onChangeFunction) {
 	echo "</select>";
 	
 }
+
+// =============================
+// = Export the specified file =
+// =============================
+function exportFile($path) {
+
+	if ($fd = fopen ($path, "r")) {
+	    $fsize = filesize($path);
+	    $path_parts = pathinfo($path);
+	    $ext = strtolower($path_parts["extension"]);
+	    header("Content-type: text/plain");
+	    header("Content-Disposition: attachment; filename=\"".$path_parts["basename"]."\"");
+	    header("Content-length: $fsize");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-control: private");
+		header('Pragma: private');
+		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	    while(!feof($fd)) {
+	        $buffer = fread($fd, 2048);
+	        echo $buffer;
+	    }
+	}
+	fclose ($fd);
+	exit;	
+	
+}
+
+// ==================================
+// = Import old configuration =
+// ==================================
+function importConf($oldConfFilePath,$newConfFilePath) {
+
+	$currentVersion = getTypedConf("Version");
+	$oldVersion = getTypedConf("Version",$oldConfFilePath);
+	
+	if($oldVersion == "1.0.0") {
+		$selectedSets = getTypedConf("SelectedSets",$oldConfFilePath);
+		if($selectedSets != NULL) {
+			$sets=explode(",",$selectedSets);
+			$setTabs = NULL;
+			foreach($sets as $set) {
+				if(substr_count($set,".") <= 0)
+					$setTabs[] = "0.".$set;
+				else
+					$setTabs[] = $set;
+			}
+			
+			$newSets = "";		
+			for($i = 0; $i < count($setTabs); $i++) {
+				if($i == 0)
+					$newSets .= $setTabs[$i];
+				else
+					$newSets .= ",".$setTabs[$i];
+			}
+			
+			setTypedConf("SelectedSets",$newSets,false,$oldConfFilePath);
+		}
+	}
+	
+	// retrieve changeLog matrix
+	$matrix = NULL;
+	if($currentVersion != $oldVersion) {
+		$confChangeLog = "config/confChangeLog.txt";
+		$confChangeLog = file ($confChangeLog);
+		while (list ($lineNb, $line) = each ($confChangeLog)) {
+			$line=trim($line);
+			$config = explode(";",$line);
+			if($config[1] == $oldVersion)
+				$matrix[$config[0]] = $config[2];
+		}
+	}
+	
+	// backup file before modifying it
+	$confFileBak = fopen($newConfFilePath.".bak", "w");
+	fwrite($confFileBak, file_get_contents($newConfFilePath));
+	fclose($confFileBak);
+
+	// import configuration
+	$newConfFilePath = file ($newConfFilePath);	
+	while (list ($lineNb, $line) = each ($newConfFilePath)) {
+		if(eregi("^\\$",trim($line))) {
+			
+			$varVal = explode("=",trim($line));
+			$var = trim($varVal[0]);
+			
+			if($var != "\$strVersion") {
+
+				$isList = false;
+				$isFileList = false;
+				$isNonTyped = false;
+
+				if(substr_count($var,"\$str") > 0)
+					$var = substr($var,4);
+				else if(substr_count($var,"\$list") > 0) {
+					$var = substr($var,5);
+					$isList = true;	
+				} else if(substr_count($var,"\$bool") > 0)
+					$var = substr($var,5);
+				else if(substr_count($var,"\$n") > 0)
+					$var = substr($var,2);
+				else if(substr_count($var,"\$filelist") > 0) {
+					$var = substr($var,9);
+					$isFileList = true;	
+				} else {
+					// such as CSS
+					$isNonTyped = true;
+					$var = substr($var,1);
+				}
+			
+				$oldVar = $var;
+				if($matrix != NULL && $matrix[$var] != NULL)
+					$oldVar = $matrix[$var];
+				
+				if($isList)
+					setTypedConf($var,getListSelectedValue($oldVar,$oldConfFilePath));
+				elseif($isFileList)
+					setTypedConf($var,getFileListSelectedValue($oldVar,$oldConfFilePath));				
+				elseif($isNonTyped)
+					setConf($var,getConf($oldVar,$oldConfFilePath));				
+				else
+					setTypedConf($var,getTypedConf($oldVar,$oldConfFilePath));
+			}
+		}
+	}
+		
+}
+
 
 ?>

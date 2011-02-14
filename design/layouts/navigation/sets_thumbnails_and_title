@@ -13,30 +13,44 @@
 	$layout .="		    	&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="		    </td>";
 	
-	foreach ($photosets['photoset'] as $set) {
-		$setId = $set['id'];
-		if(substr_count(getConf("SelectedSets"),$setId) > 0) {
-		  $photoInfo = $f->photos_getInfo($set['primary'],NULL);
-		  if(isset($setId) && $setid == $set['id']) {
+	$selectedSets = explode(",",getTypedConf("SelectedSets"));
+	$objectsInstances = getFlickrObjectsInstances();
+
+	$activeSet = explode(".",$activeSet);
+	$f = $objectsInstances[$activeSet[0]];
+	$activeSetInfo = $f->photosets_getInfo($activeSet[1]);
+			
+	for($i = 0; $i < count($selectedSets); $i++) {
+		
+		$accountSet = explode(".",$selectedSets[$i]);
+  		if(count($accountSet) == 2) {
+			$account = $accountSet[0];
+			$set = $accountSet[1];
+			$f = $objectsInstances[$account];
+			$setInfo = $f->photosets_getInfo($set);
+			$photoInfo = $f->photos_getInfo($setInfo['primary'],NULL);
+			if(substr_count(getTypedConf("SelectedSets"),$selectedSets[$i]) > 0) {
+		  		if(isset($selectedSets[$i]) && $setid == $selectedSets[$i]) {
 	
 	$layout .="			<td>";
-	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" onmouseover='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$set['title']."</b>\";' onmouseout='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$activeSet['title']."</b>\";' />";
+	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" onmouseover='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$setInfo['title']."</b>\";' onmouseout='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$activeSetInfo['title']."</b>\";' />";
 	$layout .="			</td>";
 	$layout .="			<td valign=\"middle\">";
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;</td>";
 	$layout .="			</td>";
 
-	  		} else {
+	  			} else {
 		
 	$layout .="			<td>";
-	$layout .="				<a href='index.php?setid=".$set['id']."'>";
-	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" onmouseover='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$set['title']."</b>\";' onmouseout='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$activeSet['title']."</b>\";' />";	
+	$layout .="				<a href='index.php?setid=".$selectedSets[$i]."'>";
+	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" onmouseover='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$setInfo['title']."</b>\";' onmouseout='javascript:document.getElementById(\"activeSet\").innerHTML=\"<b>".$activeSetInfo['title']."</b>\";' />";	
 	$layout .="				</a>";
 	$layout .="			</td>";
 	$layout .="			<td valign=\"middle\">";
 	$layout .="				&nbsp;<b>$delimiter</b>&nbsp;";
 	$layout .="			</td>";
-	
+
+				}
 	  		}
 		}
 	}	
@@ -44,7 +58,7 @@
 	$layout .="		</tr>";
 	$layout .="	</table>";
 	$layout .="	<div class=\"body\" align=\"center\" id=\"activeSet\">";
-	$layout .="		<b>".$activeSet['title']."</b>";
+	$layout .="		<b>".$activeSetInfo['title']."</b>";
 	$layout .="	</div>";
 	
 ?>

@@ -7,8 +7,11 @@ $password2="Mot de passe &agrave; nouveau";
 $pwdQuestion="Question en cas de perte du mot de passe";
 $pwdAnswer="R&eacute;ponse";
 $lostPassword="Mot de passe oubli&eacute;?";
+$configFile="Fichier de configuration";
+$appearenceFile="Fichier d'apparence";
 
 $messageFolioNotInit="Votre compte d'administration mnlfolio n'est pas encore initialis&eacute;.<br/>Vous devez d&eacute;finir un nom d'utilisateur et un mot de passe<br/>pour pouvoir administrer de votre mnlfolio. <br/>Pour cela, merci de remplir le formulaire ci-dessous :";
+$messageImportConfiguration="Ou importez des fichiers de configuration et d'apparence valides :";
 $messagePasswordsMismatch="Erreur: 'Mot de passe' et 'Mot de passe &agrave; nouveau' diff&egrave;rent";
 $messageWrongPassword="Erreur : Mauvais mot de passe, essayez &agrave; nouveau";
 $messagePasswordChanged="Votre mot de passe a &eacute;t&eacute; mis à jour";
@@ -31,6 +34,14 @@ $messageInstallStep2InstructionsPart2="Sur la page Flickr que vous avez laiss&ea
 $messageInstallStep2InstructionsPart3="Cliquez sur le lien ci-dessous afin d'autoriser votre folio &agrave; acc&eacute;der &agrave; votre compte Flickr. Une fois que vous avez cliqu&eacute; sur 'OK, je l'autorise' vous serez reconduit sur cette page courante.";
 $messageInstallStep2InstructionsPart4="J'ai bien attribu&eacute; un URL de rappel, donc je peux d&eacute;sormais autoriser mon folio;"
 
+$messageAddAccountInstructionsPart1="Veuillez vous assurer que l'application Flickr associ&eacute;e avec ce folio a bien l''URL de rappel' suivant (en rouge ci-dessous).<br /> Pour cela, vous avez besoin de vous connecter au compte Flickr utilis&eacute; pour initialiser ce folio.<br /> Une fois sur Flickr, cliquez sur la fl&egrave;che &agrave; droite du lien 'Vous', puis cliquez sur 'Vos applications'.<br />Choissisez alors l'application que vous avez cr&eacute;&eacute; pour ce folio.<br />Une fois la page de l'application affich&eacute;e, cliquez sur le lien 'Modifier le flux d'authentification' situ&eacute; sur le volet droit de la page .<br/> Assurez-vous que l''URL de rappel' affich&eacute; correspond &agrave; celui ci-dessous sur la présente page.<br /> Si ce n'est pas le cas, remplacer avec l'URL ci-dessous et cliquez sur le bouton 'Save Changes'.";
+$messageAddAccountInstructionsPart2="Une fois le bon 'URL de rappel' configur&eacute;, vous avez besoin de cliquez sur le lien ci-dessous, <u><b>mais seulement &agrave; condition que vous soyez soit d&eacute;connect&eacute; de Flickr, ou alors connect&eacute; avec le compte que vous souhaitez ajouter.</b></u>";
+$messageAddAccountInstructionsPart3="En cliquant sur ce lien vous serez redirig&eacute; vers une page afin d'autoriser votre folio &eacute; acc&egrave;der &agrave; ce nouveau compte Flickr.<br /> Une fois que vous avez cliqu&eacute; sur 'OK, je l'autorise' vous serez reconduit sur la page de gestion de vos albums.";
+$messageAddAccountInstructionsPart4="J'ai bien lu les informations ci-dessus, donc je peux d&eacute;sormais ajouter un autre compte Flickr existant";
+
+$messageAddingExistingFlickrAccount="Ajout d'un autre compte Flickr existant";
+$messageAddingAccount="Le compte est en cours d'ajout, vous allez &ecirc;tre redirig&eacute; vers la page de gestion de vos albums...";
+
 $messageCouldntDelete="Ne peut supprimer";
 $messageCleanCacheSucceed="Cache r&eacute;initialis&eacute; avec succ&egrave;s";
 
@@ -51,9 +62,12 @@ $tabLabelAppearance="Apparence";
 $tabLabelMySets="Mes Albums";
 $tabLabelSeeFolio="Voir Mon Folio";
 
+$fromAccount="Du compte";
+$fromEveryAccount="De tous les comptes";
 $unselectedSets="Albums non s&eacute;lectionn&eacute;(s)";
 $selectedSets="Albums s&eacute;lectionn&eacute;(s)";
 $defaultSet="(par d&eacute;faut)";
+$explanationResetCache="Si vous avez effectuez des modifications sur Flickr qui ne sont pas refl&eacute;t&eacute;es dans le folio, appuyer sur le bouton ci-dessous";
 
 $appearenceParams="Param&egrave;tres";
 $appearenceParamsBody="Corps";
@@ -81,15 +95,22 @@ $btnUpload="Charger";
 $btnSave="Enregistrer";
 $btnConnect="Se connecter";
 $btnSaveChanges="Enregistrer les modifications";
+$btnCancel="Annuler";
 $btnSetAsDefault="Définir comme album par d&eacute;faut";
 $btnClearDefault="Aucun album par d&eacute;faut";
 $btnResetCache="R&eacute;initialiser le cache";
+$btnAddToSelectSets="Ajouter &agrave; la s&eacute;lection";
+$btnRemoveAccount="(Retirer ce compte)";
+$btnAddAnotherAccount="Ajouter un autre compte Flickr existant";
 $btnSignOut="Se D&eacute;connecter";
 $btnNext="Suivant";
 $btnRenewPwd="R&eacute;initialiser le mot de passe";
 $btnDelete="Supprimer";
 $btnResetAll="R&eacute;initialiser tout";
 $btnResetFlickrLink="R&eacute;initialiser le lien avec Flickr";
+$btnExportConfiguration="Exporter la configuration";
+$btnExportAppearence="Exporter l'apparence";
+$btnImport="Importer";
 
 $configLanguage="Langue";
 $configPageTitle="Titre de la page";
@@ -134,6 +155,8 @@ $configMetaKeywords="Sp&eacute;cifie des mots cl&eacute;s pour ce portfolio<br/>
 
 $configResetAll="R&eacute;initialise le cache, la connectivit&eacute; Flickr, la s&eacute;lection d'albums, l'apparence, la configuration, le compte administrateur account.<br/>Tr&egrave;s bien pour recommencer de z&eacute;ro.";
 $configResetFlickrLink="R&eacute;initialise le cache, la connectivit&eacute; Flickr, mais pr&eacute;serve la s&eacute;lection d'albums, l'apparence, la configuration, le compte administrateur account.<br/>Tr&egrave;s bien pour recommencer avec une nouvelle application Flickr et un nouveau jeton Flickr.";
+$configExportConfigFile="En cliquant sur export vous pourrez sauvegarder vos param&egrave;tres de configuration. Ainsi, dans le cas d'une mise &agrave; jour de mnlfolio, vous pouvez sauvegarder votre configuration depuis l'ancienne version et l'importer dans la version mise &agrave; jour";
+$configExportAppearenceFile="En cliquant sur export vous pourrez sauvegarder vos param&egrave;tres d'apparence. Ainsi, dans le cas d'une mise &agrave; jour de mnlfolio, vous pouvez sauvegarder votre apparence depuis l'ancienne version et l'importer dans la version mise &agrave; jour";
 
 $BASICPARAMETERS="<center>----------------------------------&nbsp;#&nbsp;<b>PARAMETRES BASIQUES</b>&nbsp;#&nbsp;----------------------------------</center>";
 $ADVANCEDPARAMETERS="<center>-----------------------------------&nbsp;#&nbsp;<b>PARAMETRES AVANCES</b>&nbsp;#&nbsp;----------------------------------</center>";

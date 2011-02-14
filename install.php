@@ -11,26 +11,50 @@
  *  	- Free for use in both personal and commercial projects
  *		- Attribution requires leaving author name, author link, and the license info intact.
  *	
- *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful peace of jscolor code
+ *  Thanks: Jan Odvarko (http://odvarko.cz) for developing this wonderful piece of jscolor code
  *  		Dan Coulter (dan@dancoulter.com / http://phpflickr.com) for bringing this great phpflickr interface
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
 
 if(isset($_REQUEST["frob"]))  {
-?>
+	
+	// If it is the install
+	if(!getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+	
+		?>
 
-<p><b><u><? echo getResource("messageInstallComplete"); ?></u> :</b></p>
-<p>
-<? echo getResource("messageInstallCompleteDescription"); ?>
-</p>
+		<p><b><u><? echo getResource("messageInstallComplete"); ?></u> :</b></p>
+		<p>
+		<? echo getResource("messageInstallCompleteDescription"); ?>
+		</p>
 
-<?
+		<?
+	
+	// If it is the account add	
+	} else {
+
+		echo "<p class=\"subtitle\" />".getResource("messageAddingAccount")."</p>";
+
+		deleteTempConf("IsAddingExistingFlickrAccount");	
+		
+		?>
+
+			<SCRIPT language="JavaScript">
+			window.location="mnlfAdmin.php?view=sets";
+			</SCRIPT>
+
+		<?		
+		
+	}
 }
 
 else {
 $currentUrl = "http".((!empty($_SERVER['HTTPS'])) ? "s" : "")."://".$_SERVER['SERVER_NAME'].((!empty($_SERVER["SERVER_PORT"])) ? ":".$_SERVER["SERVER_PORT"] : "").$_SERVER['REQUEST_URI'];
 $callbackUrl = explode(".php",trim($currentUrl));
 $callbackUrl = $callbackUrl[0].".php";
+
+	if(getTypedConf("AuthTokens") == NULL) {
+
 ?>
 
 <br />
@@ -40,11 +64,21 @@ $callbackUrl = $callbackUrl[0].".php";
 
 <b><? echo getResource("messageInstallStep1NeedCompletion"); ?></b><br/>
 
+<?
+
+	} elseif(getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+		
+		echo "<p class=\"title\">".getResource("messageAddingExistingFlickrAccount")." : </p>";
+
+	}
+
+?>
+
 <hr/>
 
 <?
 
-if(getConf("ApiKey") == NULL && getConf("ApiSecret") == NULL) {
+if(getTypedConf("ApiKey") == NULL && getTypedConf("ApiSecret") == NULL) {
 
 ?>
 
@@ -63,14 +97,16 @@ if(getConf("ApiKey") == NULL && getConf("ApiSecret") == NULL) {
 
 </p>
 
-<input type="submit" <? echo "value=\"".getResource("btnNext")."\""; ?>></td>
+<p class="button"><input type="submit" <? echo "value=\"".getResource("btnNext")."\""; ?>></p>
+
+</td>
 
 <?
 
-} elseif(getConf("AuthToken") == NULL) {
+} elseif(getTypedConf("AuthTokens") == NULL) {
 
-	$Api_sig = md5(getConf("ApiSecret")."api_key".getConf("ApiKey")."perms".getConf("Perms"));
-	$AuthUrl = "http://flickr.com/services/auth/?api_key=".getConf("ApiKey")."&perms=".getConf("Perms")."&api_sig=".$Api_sig;
+	$Api_sig = md5(getTypedConf("ApiSecret")."api_key".getTypedConf("ApiKey")."perms".getTypedConf("Perms"));
+	$AuthUrl = "http://flickr.com/services/auth/?api_key=".getTypedConf("ApiKey")."&perms=".getTypedConf("Perms")."&api_sig=".$Api_sig;
 
 ?>
 
@@ -90,6 +126,29 @@ if(getConf("ApiKey") == NULL && getConf("ApiSecret") == NULL) {
 </p>
 
 <?
+} elseif(getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+	
+	$Api_sig = md5(getTypedConf("ApiSecret")."api_key".getTypedConf("ApiKey")."perms".getTypedConf("Perms"));
+	$AuthUrl = "http://flickr.com/services/auth/?api_key=".getTypedConf("ApiKey")."&perms=".getTypedConf("Perms")."&api_sig=".$Api_sig;
+	
+?>
+	<p>
+	<? echo getResource("messageAddAccountInstructionsPart1"); ?>
+	<? echo "<p class=\"warning-left\">&nbsp;&nbsp;&nbsp;$callbackUrl</p>"; ?>
+	</p>
+
+	<p>
+	<? echo getResource("messageAddAccountInstructionsPart2"); ?>
+	</p>
+
+	<p>
+	<? echo getResource("messageAddAccountInstructionsPart3"); ?>
+	<? echo "<br /><br /><a href=\"".$AuthUrl."\">--> <u>".getResource("messageAddAccountInstructionsPart4")."</u> <--</a>"; ?>
+	</p>		
+
+	<input type="hidden" name="addAnotherAccountCancel" value="false" />
+	<p class="button"><input type="button" <? echo "value=\"".getResource("btnCancel")."\""; ?> onClick="javascript:this.form.addAnotherAccountCancel.value=true;this.form.submit();">		
+<?		
 }
 }
 ?>

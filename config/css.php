@@ -7,7 +7,7 @@ $mnlfbodyfontweight = "normal";
 $mnlfbodyfontstyle = "normal"; 
 $mnlfbodytextdecoration = "none"; 
 $mnlflinkstextalign = "center"; 
-$mnlfbodyfontcolor = "969E9E"; 
+$mnlfbodyfontcolor = "888888"; 
 
 $mnlflinksfontfamily = "Trebuchet MS"; 
 $mnlflinksfontsize = "12px"; 
@@ -15,7 +15,7 @@ $mnlflinksfontweight = "bold";
 $mnlflinksfontstyle = "normal"; 
 $mnlflinkstextdecoration = "none"; 
 $mnlflinkstextalign = "center"; 
-$mnlflinksfontcolor = "CC240A"; 
+$mnlflinksfontcolor = "51555C"; 
 
 $mnlfcontactfontfamily = "Trebuchet MS"; 
 $mnlfcontactfontsize = "12px"; 
@@ -31,7 +31,7 @@ $mnlfcopyrightfontweight = "normal";
 $mnlfcopyrightfontstyle = "normal"; 
 $mnlfcopyrighttextdecoration = "none"; 
 $mnlfcopyrighttextalign = "center"; 
-$mnlfcopyrightfontcolor = "000000"; 
+$mnlfcopyrightfontcolor = "888888";
 
 $mnlfphototitlefontfamily = "Trebuchet MS"; 
 $mnlfphototitlefontsize = "14px"; 
@@ -49,38 +49,38 @@ $mnlfphotodescriptiontextdecoration = "none";
 $mnlfphotodescriptiontextalign = "justify"; 
 $mnlfphotodescriptionfontcolor = "969E9E"; 
 
-$mnlftdthumbborderwidth = "1px"; 
+$mnlftdthumbborderwidth = "2px"; 
 $mnlftdthumbborderstyle = "solid"; 
-$mnlftdthumbbordercolor = "FFFFFF"; 
+$mnlftdthumbbordercolor = "DBDBDB"; 
 
-$mnlftdthumbselectedborderwidth = "1px"; 
+$mnlftdthumbselectedborderwidth = "2px"; 
 $mnlftdthumbselectedborderstyle = "solid"; 
-$mnlftdthumbselectedbordercolor = "CC240A"; 
+$mnlftdthumbselectedbordercolor = "DBDBDB"; 
 
 $mnlfimgthumbborderwidth = "2px"; 
 $mnlfimgthumbborderstyle = "solid"; 
-$mnlfimgthumbbordercolor = "FFFFFF"; 
+$mnlfimgthumbbordercolor = "F1FFFF"; 
 $mnlfimgthumbopacity = "0.8"; 
 
 $mnlfimgthumbselectedborderwidth = "2px"; 
 $mnlfimgthumbselectedborderstyle = "solid"; 
-$mnlfimgthumbselectedbordercolor = "FFFFFF"; 
+$mnlfimgthumbselectedbordercolor = "F00840"; 
 $mnlfimgthumbselectedopacity = "1"; 
 
 $mnlfimgthumbhoverborderwidth = "2px"; 
 $mnlfimgthumbhoverborderstyle = "solid"; 
-$mnlfimgthumbhoverbordercolor = "DBDBDB"; 
+$mnlfimgthumbhoverbordercolor = "0063DC"; 
 $mnlfimgthumbhoveropacity = "1"; 
 
-$mnlfimgphotoborderwidth = "4px"; 
+$mnlfimgphotoborderwidth = "2px"; 
 $mnlfimgphotoborderstyle = "solid"; 
 $mnlfimgphotobordercolor = "FFFFFF"; 
 
-$mnlfdivphotoborderwidth = "1px"; 
+$mnlfdivphotoborderwidth = "2px"; 
 $mnlfdivphotoborderstyle = "solid"; 
 $mnlfdivphotobordercolor = "DBDBDB"; 
 
-$color = "color {pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerPosition:'right'}"; 
+$color="color {pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerPosition:'right'}";
 
 $strVersion="1.1.0";
 ?>

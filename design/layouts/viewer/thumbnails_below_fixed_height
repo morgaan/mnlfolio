@@ -1,6 +1,6 @@
 <?
 	/* 
-		DESCRIPTION: A very simple layout with the photo on middle and no thumbnails panel
+		DESCRIPTION: A very simple layout with the photo on the top and the thumbnails panel below
 		AUTHOR: morgan cugerone
 		VERSION: 1.0 
 	*/
@@ -9,9 +9,9 @@
 
 	$layout .="<center>";
 	$layout .="	<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">";
+	
 	$layout .="		<!-- START: FIRST LINE = PHOTO PANEL -->";
 	$layout .="		<tr>";
-
 	$layout .="			<!-- START: FIRST COLUMN = PHOTO PANEL -->";
 	$layout .="			<td align=\"center\" valign=\"top\" width=\"$nGUIWidth\" height=\"$nGUIHeight\">";
 	$layout .="				<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" align=\"center\" width=\"$size[width]\">";
@@ -64,10 +64,71 @@
 	$layout .="					<!-- END: PHOTO INFOS -->";
 	$layout .="				</table>";
 	$layout .="			</td>";
-	$layout .="			<!-- END: FIRST COLUMN = PHOTO PANEL -->";
-
+	$layout .="			<!-- END: FIRST COLUMN = PHOTO PANEL -->";	
 	$layout .="		</tr>";
 	$layout .="		<!-- END: FIRST LINE = PHOTO PANEL -->";
+
+	$layout .="		<!-- START: SECOND LINE = THUMBNAILS PANEL -->";
+	$layout .="		<tr>";
+
+	$layout .="			<!-- START: FIRST COLUMN = THUMBNAILS PANEL -->";
+	$layout .="			<td align=\"center\" valign=\"top\">";
+	$layout .="				<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\"align=\"center\">";
+	$layout .="					<tr>";
+	$layout .="						<!-- START: THUMBNAILS NAVIGATION PREVIOUS COMMAND -->";
+	$layout .="						<td valign=\"middle\" align=\"right\">&nbsp;";
+	if($showPreviousThumbnailsPage == "true") {	
+		$layout .="							<a href=\"javascript:previousSetPage();\">";
+		$layout .="								<b>$previousThumbnailsPageControlLabel &nbsp;&nbsp;</b>";
+		$layout .="							</a>";
+	}
+	$layout .="						</td>";
+	$layout .="						<!-- END: THUMBNAILS NAVIGATION PREVIOUS COMMAND -->";
+	$layout .="						<td align=\"center\" valign=\"top\">";
+	$layout .="							<table cellspacing=\"4\" cellpadding=\"0\">";
+	$layout .="								<tr>";
+	
+	foreach ($photosThumbs['photoset']['photo'] as $photo) {
+
+		$thumbPhotoInfo = $f->photos_getInfo($photo['id'],NULL);
+
+		$style="thumb";
+		if($photoid == $photo['id'])
+		$style="thumbselected";
+	
+	$layout .="									<td class='$style'>";
+	$layout .="										<a class='$style' href=\"javascript:show($photo[id],$setPage);\">";
+	$layout .="											<img class='$style' "."src=" . $f->buildPhotoURL($thumbPhotoInfo, "Square").">";
+	$layout .="										</a>";
+	$layout .="									</td>";
+
+		$i++;
+
+		// If it reaches $columns, insert a line break
+		if ($i % $nColumns == 0) {
+	$layout .="								</tr>";
+		}
+
+	}
+
+	$layout .="							</table>";
+	$layout .="						</td>";
+	$layout .="						<!-- START: THUMBNAILS NAVIGATION NEXT COMMAND -->";
+	$layout .="						<td valign=\"middle\" align=\"right\">";
+	if($showNextThumbnailsPage == "true") {
+		$layout .="							<a href=\"javascript:nextSetPage();\">";
+		$layout .="								<b>$nextThumbnailsPageControlLabel</b>";
+		$layout .="							</a>";
+	}	
+	$layout .="						</td>";
+	$layout .="						<!-- END: THUMBNAILS NAVIGATION NEXT COMMAND -->";	
+	$layout .="					</tr>";
+	$layout .="				</table>";
+	$layout .="			</td>";
+	$layout .="			<!-- END: FIRST COLUMN = THUMBNAILS PANEL -->";
+	$layout .="		</tr>";
+	$layout .="		<!-- END: SECOND LINE = THUMBNAILS PANEL -->";
+	
 	$layout .="	</table>";
 	$layout .="</center>";
 	

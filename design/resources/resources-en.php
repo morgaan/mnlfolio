@@ -8,7 +8,8 @@ $pwdQuestion="Question in case of password loss";
 $pwdAnswer="Answer";
 $lostPassword="Lost Password?";
 $configFile="Configuration file";
-$appearenceFile="Appearence file";
+$appearenceFile="Appearence file (optional)";
+$headFile="&#60;head&#62; code file (optional)";
 
 $messageFolioNotInit="Your mnlfolio admin account is not initialized yet.<br/>You must define a username and a password<br/>in order to be able to manage your mnlfolio. <br/>To do so, please fill the below form :";
 $messageImportConfiguration="Or import valid configuration and appearance files :";
@@ -108,6 +109,8 @@ $btnRenewPwd="Reset password";
 $btnDelete="Delete";
 $btnResetAll="Reset all";
 $btnResetFlickrLink="Reset flickr link";
+$btnEditHead="Add some code to html tag &#60;head&#62;";
+$btnExportHead="Export code added to html tag &#60;head&#62;";
 $btnExportConfiguration="Export configuration";
 $btnExportAppearence="Export appearence";
 $btnImport="Import";
@@ -155,6 +158,8 @@ $configMetaKeywords="Specifies keywords for this portfolio<br/>(keywords must be
 
 $configResetAll="Reset cache, Flickr link, selection of sets, the apparence, the configuration and the admin account.<br/>Great to restart from scratch";
 $configResetFlickrLink="Reset cache, Flickr link, but preserve the selection of sets, the apparence, the configuration and the admin account.<br/>Great to restart with brand new Flickr App and Token";
+$configEditHead="Add some code to HEAD html tag (&#60;head>&#60;/head&#62;). Useful to had some code for metering visits (for example Google Analytics...) or any other code piece you would need to place in the area.";
+$configExportHead="Click export will build a backup of the code you added to the html HEAD tag (&#60;head>&#60;/head&#62;). This way, in case of mnlfolio update, you can backup this code and import it in the updated version";
 $configExportConfigFile="Click export will build a backup of your configuration settings. This way, in case of mnlfolio update, you can backup your configuration from the older and import it in the updated version";
 $configExportAppearenceFile="Click export will build a backup of your appearence settings. This way, in case of mnlfolio update, you can backup your appearence from the older and import it in the updated version";
 

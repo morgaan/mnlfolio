@@ -2,7 +2,7 @@
 /*
  *	mnlfolio v1.1.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110214
+ *	Last Modification: 20110216
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -489,3 +489,5 @@ function changeBackgroundColor(color) {
 ?>
 
 </script>
+
+

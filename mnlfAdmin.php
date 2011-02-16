@@ -2,7 +2,7 @@
 /*
  *	mnlfolio v1.1.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110214
+ *	Last Modification: 20110216
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -62,8 +62,10 @@ if(isset($_POST["importConfigFiles"]) && $_POST["importConfigFiles"] == "true") 
 		move_uploaded_file($_FILES['configFile']['tmp_name'], $target_path);
 		
 		importConf($target_path,"config/mnlfConfig.php");		
-		unlink($target_path);
-		unlink($target_path.".bak");
+		if(file_exists($target_path))
+			unlink($target_path);
+		if(file_exists($target_path.".bak"))
+			unlink($target_path.".bak");
 
 	}
 	if(isset($_FILES["appearenceFile"])) {
@@ -71,8 +73,16 @@ if(isset($_POST["importConfigFiles"]) && $_POST["importConfigFiles"] == "true") 
 		move_uploaded_file($_FILES['appearenceFile']['tmp_name'], $target_path);
 		
 		importConf($target_path,"config/css.php");
-		unlink($target_path);
-		unlink($target_path.".bak");
+		if(file_exists($target_path))
+			unlink($target_path);
+		if(file_exists($target_path.".bak"))
+			unlink($target_path.".bak");
+	}
+	if(isset($_FILES["headFile"])) {
+
+		if(file_exists("config/head.html"))
+			unlink("config/head.html");
+		move_uploaded_file($_FILES['headFile']['tmp_name'], "config/head.html");
 	}
 
 }
@@ -190,6 +200,11 @@ if(isUserAuthenticated()) {
 		setTypedConf("DefaultSet", "");
 		copy ("default/css.php", "config/css.php");
 		copy ("default/mnlfConfig.php", "config/mnlfConfig.php");
+		copy ("default/head.html", "config/head.html");
+		if(file_exists("config/mnlfConfig.php.bak"))
+			unlink("config/mnlfConfig.php.bak");
+		if(file_exists("config/css.php.bak"))
+			unlink("config/css.php.bak");
 		cleanSession();
 		header("Location: index.php");
 		ob_flush();
@@ -228,6 +243,11 @@ if(isUserAuthenticated()) {
 	// Export appearence file if explicitly asked
 	if(isset($_POST["exportAppearence"]) && $_POST["exportAppearence"] == "true") {
 		exportFile("config/css.php");
+	}
+
+	// Export header file if explicitly asked
+	if(isset($_POST["exportHead"]) && $_POST["exportHead"] == "true") {
+		exportFile("config/head.html");
 	}
 
 	// If asked, remove an account
@@ -395,7 +415,8 @@ if(isUserAuthenticated()) {
 	if(isset($_POST["removeFile"]) && $_POST["removeFile"] == "true" && isset($_POST["selectedFiles"]) && isset($_POST["targetDirectory"])) {
 
 		foreach ($_POST["selectedFiles"] as $selected) {
-			unlink($_POST["targetDirectory"]."/".$selected) or DIE("couldn't delete ".$_POST["targetDirectory"]."/".$selected."<br />");
+			if(file_exists($_POST["targetDirectory"]."/".$selected))
+				unlink($_POST["targetDirectory"]."/".$selected) or DIE("couldn't delete ".$_POST["targetDirectory"]."/".$selected."<br />");
 		}
 
 	}
@@ -837,6 +858,10 @@ if(getTypedConf("Username") == NULL) {
 		<tr>
 			<td><? echo getResource("appearenceFile"); ?> :</td>
 			<td><input name="appearenceFile" type="file" /></td>
+		</tr>
+		<tr>
+			<td><? echo getResource("headFile"); ?> :</td>
+			<td><input name="headFile" type="file" /></td>
 		</tr>
 	</table>
 	<center>

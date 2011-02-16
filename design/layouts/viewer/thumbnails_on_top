@@ -39,7 +39,7 @@
 	
 	$layout .="									<td class='$style'>";
 	$layout .="										<a class='$style' href=\"javascript:show($photo[id],$setPage);\">";
-	$layout .="											<img class='$style' alt='".$photo['title']."' "."src=" . $f->buildPhotoURL($thumbPhotoInfo, "Square").">";
+	$layout .="											<img class='$style' "."src=" . $f->buildPhotoURL($thumbPhotoInfo, "Square").">";
 	$layout .="										</a>";
 	$layout .="									</td>";
 
@@ -80,7 +80,7 @@
 	$layout .="						<td align=\"center\" valign=\"top\">";
 	$layout .="							<a href=\"javascript:nextPhoto();\">";
 	$layout .="								<div class=\"photo\">";
-	$layout .="									<img class=\"photo\" border=\"0\" alt=\"$photoInfo[title]\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";
+	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";
 	$layout .="								</div>";
 	$layout .="							</a>";
 	$layout .="						</td>";

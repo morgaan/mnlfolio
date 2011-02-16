@@ -1,1 +1,2 @@
 AuthTokens;1.0.0;AuthToken
+ViewerLayout;1.0.0;Layout

@@ -2,7 +2,7 @@
 /*
  *	mnlfolio v1.1.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110214
+ *	Last Modification: 20110216
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -294,7 +294,7 @@ function getFileListValues($attribute,$configFile = NULL){
 				if (file_exists($val[1])) {
 				    $mydir = opendir($val[1]);
 				    while(false !== ($file = readdir($mydir))) {
-				        if($file != "." && $file != "..") {
+				        if($file != "." && $file != ".." && !is_dir($file)) {
 				            $results[] = $file;
 				        }
 				    }
@@ -769,8 +769,14 @@ function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $upl
 // ==========================
 function getMoreForm() {
 
+	if(isset($_POST["saveHead"]) && $_POST["saveHead"] == "true" && isset($_POST["content"]))
+		savefile("config/head.html",$_POST["content"]);
+
 	echo "<input type=\"hidden\" name=\"resetAll\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"resetFlickr\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"editHead\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"saveHead\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"exportHead\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"exportConfig\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"exportAppearence\" value=\"false\" />";
 
@@ -784,11 +790,23 @@ function getMoreForm() {
 	echo getResource("configResetFlickrLink");
 	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnResetFlickrLink")."\" onClick=\"javascript:this.form.resetFlickr.value=true;this.form.submit();\" /></p></td></tr>";
 	echo "<tr><td>";
+	echo getResource("configEditHead");
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnEditHead")."\" onClick=\"javascript:this.form.editHead.value=true;this.form.exportAppearence.value=false;this.form.exportConfig.value=false;this.form.submit();\" /></p></td></tr>";
+	if(isset($_POST["editHead"]) && $_POST["editHead"] == "true") {
+	echo "<tr><td colspan=\"2\" align=\"center\">";
+	echo "<textarea rows=\"25\" cols=\"80\" name=\"content\">";
+	echo file_get_contents("config/head.html", true);
+	echo "</textarea><p class=\"button\"><input type=\"button\" value=\"".getResource("btnSave")."\" onClick=\"javascript:this.form.saveHead.value=true;this.form.editHead.value=false;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnCancel")."\" onClick=\"javascript:this.form.editHead.value=false;this.form.submit();\" /></p></td></tr>";
+	}
+	echo "<tr><td>";
+	echo getResource("configExportHead");
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportHead")."\" onClick=\"javascript:this.form.exportHead.value=true;this.form.exportConfig.value=false;this.form.exportAppearence.value=false;this.form.editHead.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "<tr><td>";
 	echo getResource("configExportConfigFile");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportConfiguration")."\" onClick=\"javascript:this.form.exportConfig.value=true;this.form.exportAppearence.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportConfiguration")."\" onClick=\"javascript:this.form.exportConfig.value=true;this.form.exportAppearence.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
 	echo "<tr><td>";
 	echo getResource("configExportAppearenceFile");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportAppearence")."\" onClick=\"javascript:this.form.exportAppearence.value=true;this.form.exportConfig.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportAppearence")."\" onClick=\"javascript:this.form.exportAppearence.value=true;this.form.exportConfig.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
 
 
 	$objectsInstances = getFlickrObjectsInstances();
@@ -899,7 +917,8 @@ function resetCache() {
 	   while(false !== ($file = readdir($mydir))) {
 	       if($file != "." && $file != "..") {
 	           if(substr($file, -6) == ".cache") {
-	            unlink($cacheDir."/".$file) or DIE(getResource("messageCouldntDelete")." $cacheDir/$file<br />");
+	            if(file_exists($cacheDir."/".$file))
+					unlink($cacheDir."/".$file) or DIE(getResource("messageCouldntDelete")." $cacheDir/$file<br />");
 	           }
 	       }
 	   }
@@ -1077,8 +1096,13 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 
 	$currentVersion = getTypedConf("Version");
 	$oldVersion = getTypedConf("Version",$oldConfFilePath);
+	if($oldVersion == NULL)
+		$oldVersion = "1.0.0";
 	
 	if($oldVersion == "1.0.0") {
+		
+		$navigationLayout = 
+				
 		$selectedSets = getTypedConf("SelectedSets",$oldConfFilePath);
 		if($selectedSets != NULL) {
 			$sets=explode(",",$selectedSets);
@@ -1159,13 +1183,13 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 				if($matrix != NULL && $matrix[$var] != NULL)
 					$oldVar = $matrix[$var];
 				
-				if($isList)
+				if($isList && getListSelectedValue($oldVar,$oldConfFilePath) != NULL)
 					setTypedConf($var,getListSelectedValue($oldVar,$oldConfFilePath));
-				elseif($isFileList)
+				elseif($isFileList && getFileListSelectedValue($oldVar,$oldConfFilePath) != NULL)
 					setTypedConf($var,getFileListSelectedValue($oldVar,$oldConfFilePath));				
-				elseif($isNonTyped)
+				elseif($isNonTyped && getConf($oldVar,$oldConfFilePath) != NULL)
 					setConf($var,getConf($oldVar,$oldConfFilePath));				
-				else
+				elseif(getTypedConf($oldVar,$oldConfFilePath) != NULL)
 					setTypedConf($var,getTypedConf($oldVar,$oldConfFilePath));
 			}
 		}
@@ -1173,5 +1197,13 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 		
 }
 
+// ==================================
+// = Update file content
+// ==================================
+function savefile($filepath,$filecontent) {	
+	$file = fopen($filepath, "w");
+	fwrite($file, $filecontent);
+	fclose($file);
+}
 
 ?>

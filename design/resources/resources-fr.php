@@ -8,7 +8,8 @@ $pwdQuestion="Question en cas de perte du mot de passe";
 $pwdAnswer="R&eacute;ponse";
 $lostPassword="Mot de passe oubli&eacute;?";
 $configFile="Fichier de configuration";
-$appearenceFile="Fichier d'apparence";
+$appearenceFile="Fichier d'apparence (facultatif)";
+$headFile="Fichier du code de la balise &#60;head&#62; (facultatif)";
 
 $messageFolioNotInit="Votre compte d'administration mnlfolio n'est pas encore initialis&eacute;.<br/>Vous devez d&eacute;finir un nom d'utilisateur et un mot de passe<br/>pour pouvoir administrer de votre mnlfolio. <br/>Pour cela, merci de remplir le formulaire ci-dessous :";
 $messageImportConfiguration="Ou importez des fichiers de configuration et d'apparence valides :";
@@ -108,6 +109,8 @@ $btnRenewPwd="R&eacute;initialiser le mot de passe";
 $btnDelete="Supprimer";
 $btnResetAll="R&eacute;initialiser tout";
 $btnResetFlickrLink="R&eacute;initialiser le lien avec Flickr";
+$btnEditHead="Ajouter du code &agrave la balise html &#60;head&#62;";
+$btnExportHead="Exporter le code ajout&eacute; &agrave; la balise &#60;head&#62;";
 $btnExportConfiguration="Exporter la configuration";
 $btnExportAppearence="Exporter l'apparence";
 $btnImport="Importer";
@@ -155,6 +158,8 @@ $configMetaKeywords="Sp&eacute;cifie des mots cl&eacute;s pour ce portfolio<br/>
 
 $configResetAll="R&eacute;initialise le cache, la connectivit&eacute; Flickr, la s&eacute;lection d'albums, l'apparence, la configuration, le compte administrateur account.<br/>Tr&egrave;s bien pour recommencer de z&eacute;ro.";
 $configResetFlickrLink="R&eacute;initialise le cache, la connectivit&eacute; Flickr, mais pr&eacute;serve la s&eacute;lection d'albums, l'apparence, la configuration, le compte administrateur account.<br/>Tr&egrave;s bien pour recommencer avec une nouvelle application Flickr et un nouveau jeton Flickr.";
+$configEditHead="Ajouter du code &agrave; la balise html HEAD (&#60;head&#62;&#60;/head&#62;). Utile pour ajouter du code permettant d'analyser le traffic(par exemple Google Analytics...) ou tout autre bout de code que vous auriez besoin de placer dans cette zone.";
+$configExportHead="En cliquant sur export vous pourrez sauvegarder le code que vous avez ajout&eacute; &agrave; la balise html HEAD (&#60;head>&#60;/head&#62;). Ainsi, dans le cas d'une mise &agrave; jour de mnlfolio, vous pouvez sauvegarder ce code et l'importer dans la version mise &agrave; jour";
 $configExportConfigFile="En cliquant sur export vous pourrez sauvegarder vos param&egrave;tres de configuration. Ainsi, dans le cas d'une mise &agrave; jour de mnlfolio, vous pouvez sauvegarder votre configuration depuis l'ancienne version et l'importer dans la version mise &agrave; jour";
 $configExportAppearenceFile="En cliquant sur export vous pourrez sauvegarder vos param&egrave;tres d'apparence. Ainsi, dans le cas d'une mise &agrave; jour de mnlfolio, vous pouvez sauvegarder votre apparence depuis l'ancienne version et l'importer dans la version mise &agrave; jour";
 

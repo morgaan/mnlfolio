@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.1.0
+ *	mnlfolio v1.5.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110216
+ *	Last Modification: 20110830
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -66,6 +66,7 @@ if (!file_exists($userCSSFile)) {
 foreach($_REQUEST as $key => $value) $$key=$value;
 require_once("mnlfLib.php");
 
+
 // =============================================================================
 // = If none username has been define, stop here and go straight to Admin page =
 // =============================================================================
@@ -79,6 +80,7 @@ if($strUsername == NULL) {
 	
 	<?
 }
+
 
 // =================================================
 // = If a default set is set load the page with it =
@@ -106,6 +108,26 @@ $objectsInstances = getFlickrObjectsInstances(true);
 <title><? echo $strPageTitle; ?></title>
 <style type="text/css">
 <? include("design/css/mnlfstyles.php"); ?>
+
+table.normal {
+	font-size: 13px;	
+}
+
+input, select
+{
+	color: #000;
+	background: #fff;
+	border: 1px solid #bbb;
+}
+
+.button input
+{
+	color: #0063dc;
+	font-weight: bold;
+	background: #fff;
+	border: 2px outset #ccc;
+}
+
 </style>
 <?
 //#######################//
@@ -118,6 +140,8 @@ include("js.php");
 <!-- //####################### USER HEADER #######################// -->
 
 <?
+if(!file_exists("config/head.html"))
+	copy ("default/head.html", "config/head.html");
 include("config/head.html");
 ?>
 
@@ -133,6 +157,46 @@ include("config/head.html");
 
 <body onkeydown="getArrows(event)" onload="init()" id="body" >
 
+<?
+// =============================================
+// = Folio privacy control step, if necessary  =
+// =============================================
+if($boolProtectFolio)
+{
+	
+	if(isset($_POST["guestpass"]) && $_POST["guestpass"] == $strGuestPass)
+	{
+		$_SESSION["guestpass"] = $_POST["guestpass"];
+	}
+	
+	if((!isset($_SESSION["guestpass"]) || (isset($_SESSION["guestpass"]) && $_SESSION["guestpass"] != $strGuestPass)))
+	{
+	
+?>	
+	<form action="index.php"  method="post">
+	<table border="0" class="body" align="center">
+		<tr>
+			<td><? echo $strGuestPassLabel; ?> :</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="password" name="guestpass" size="60" />
+				<center>
+					<p class="button"><input type="button" <? echo "value=\"".$strGuestPassButtonLabel."\""; ?> onclick="this.form.submit();" /></p>
+				</center>
+			</td>
+		</tr>
+	</table>
+	</form>
+<?
+	}
+}
+
+if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && $_SESSION["guestpass"] == $strGuestPass))
+{
+?>
+
+
 
 <?
 //#######################//
@@ -145,9 +209,12 @@ include("config/head.html");
    <td align="left" valign="top">
 <?
 	if($boolShowLogo)
-		echo "<a href=\"$strLogoLink\"><img src=\"design/images/logos/".getFileListSelectedValue("Logo")."\" border=\"0\" /></a>"; 
+		echo "<a href=\"$strLogoLink\"><img src=\"design/images/logos/".getFileListSelectedValue("Logo")."\" border=\"0\" /></a>";
+	elseif($boolShowTextLogo)
+		echo "<a href=\"$strLogoLink\" class=\"logo\">$strTextLogo</a>";
 ?>
    </td>
+
    <td align="right">
 <?
 	if($boolShowBackgroundColorPicker) {
@@ -174,6 +241,18 @@ include("config/head.html");
 ?>
    </td>
   </tr>
+<?
+//	if($boolShowTitle)
+//	{
+?>
+	  <tr>
+	   <td class="title" colspan="2">
+		<? echo $strPageTitle; ?>
+	   </td>
+	  </tr>
+<?
+//	}
+?>
 </table>
    <br/>
    <center>
@@ -209,7 +288,8 @@ include("config/head.html");
 		</td>
 	</tr>
 </table>
-
-
+<?
+}
+?>
 </body> 
 </html>

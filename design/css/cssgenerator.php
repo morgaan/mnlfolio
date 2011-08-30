@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.1.0
+ *	mnlfolio v1.5.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110216
+ *	Last Modification: 20110830
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -26,11 +26,15 @@ function UpdatePreview() {
 
 	var previewbody = document.getElementById("previewbody");
 	var previewtext = document.getElementById("previewtext");
+	var previewlogo = document.getElementById("previewlogo");
+	var previewtitle = document.getElementById("previewtitle");
 	var previewlinks = document.getElementById("previewlinks");
 	var previewcontact = document.getElementById("previewcontact");
 	var previewcopyright = document.getElementById("previewcopyright");	
 	var previewphototitle = document.getElementById("previewphototitle");
 	var previewphotodescription = document.getElementById("previewphotodescription");
+	var previewphotonavigationcontrols = document.getElementById("previewphotonavigationcontrols");
+	var previewthumbnailsnavigationcontrols = document.getElementById("previewthumbnailsnavigationcontrols");
 	var previewtdthumb = document.getElementById("previewtdthumb");
 	var previewtdthumbselected = document.getElementById("previewtdthumbselected");
 	var previewimgthumb = document.getElementById("previewimgthumb");
@@ -48,6 +52,22 @@ function UpdatePreview() {
 	previewlinks.style.textAlign = mnlflinkstextalign.value;
 	previewlinks.style.color = mnlflinksfontcolor.value;
 
+	previewlogo.style.fontFamily = mnlflogofontfamily.options[mnlflogofontfamily.selectedIndex].text;
+	previewlogo.style.fontSize = mnlflogofontsize.options[mnlflogofontsize.selectedIndex].text; 
+	previewlogo.style.fontWeight = mnlflogofontweight.options[mnlflogofontweight.selectedIndex].text;
+	previewlogo.style.fontStyle = mnlflogofontstyle.options[mnlflogofontstyle.selectedIndex].text;
+	previewlogo.style.textDecoration = mnlflogotextdecoration.options[mnlflogotextdecoration.selectedIndex].text;
+	previewlogo.style.textAlign = mnlflogotextalign.value;
+	previewlogo.style.color = mnlflogofontcolor.value;
+
+	previewtitle.style.fontFamily = mnlftitlefontfamily.options[mnlftitlefontfamily.selectedIndex].text;
+	previewtitle.style.fontSize = mnlftitlefontsize.options[mnlftitlefontsize.selectedIndex].text; 
+	previewtitle.style.fontWeight = mnlftitlefontweight.options[mnlftitlefontweight.selectedIndex].text;
+	previewtitle.style.fontStyle = mnlftitlefontstyle.options[mnlftitlefontstyle.selectedIndex].text;
+	previewtitle.style.textDecoration = mnlftitletextdecoration.options[mnlftitletextdecoration.selectedIndex].text;
+	previewtitle.style.textAlign = mnlftitletextalign.value;
+	previewtitle.style.color = mnlftitlefontcolor.value;
+	
 	previewcontact.style.fontFamily = mnlfcontactfontfamily.options[mnlfcontactfontfamily.selectedIndex].text;
 	previewcontact.style.fontSize = mnlfcontactfontsize.options[mnlfcontactfontsize.selectedIndex].text; 
 	previewcontact.style.fontWeight = mnlfcontactfontweight.options[mnlfcontactfontweight.selectedIndex].text;
@@ -80,6 +100,20 @@ function UpdatePreview() {
 	previewphotodescription.style.textAlign = mnlfphotodescriptiontextalign.value;
 	previewphotodescription.style.color = mnlfphotodescriptionfontcolor.value;
 
+	previewphotonavigationcontrols.style.fontFamily = mnlfphotonavigationcontrolsfontfamily.options[mnlfphotonavigationcontrolsfontfamily.selectedIndex].text;
+	previewphotonavigationcontrols.style.fontSize = mnlfphotonavigationcontrolsfontsize.options[mnlfphotonavigationcontrolsfontsize.selectedIndex].text; 
+	previewphotonavigationcontrols.style.fontWeight = mnlfphotonavigationcontrolsfontweight.options[mnlfphotonavigationcontrolsfontweight.selectedIndex].text;
+	previewphotonavigationcontrols.style.fontStyle = mnlfphotonavigationcontrolsfontstyle.options[mnlfphotonavigationcontrolsfontstyle.selectedIndex].text;
+	previewphotonavigationcontrols.style.textDecoration = mnlfphotonavigationcontrolstextdecoration.options[mnlfphotonavigationcontrolstextdecoration.selectedIndex].text;
+	previewphotonavigationcontrols.style.color = mnlfphotonavigationcontrolsfontcolor.value;
+
+	previewthumbnailsnavigationcontrols.style.fontFamily = mnlfthumbnailsnavigationcontrolsfontfamily.options[mnlfthumbnailsnavigationcontrolsfontfamily.selectedIndex].text;
+	previewthumbnailsnavigationcontrols.style.fontSize = mnlfthumbnailsnavigationcontrolsfontsize.options[mnlfthumbnailsnavigationcontrolsfontsize.selectedIndex].text; 
+	previewthumbnailsnavigationcontrols.style.fontWeight = mnlfthumbnailsnavigationcontrolsfontweight.options[mnlfthumbnailsnavigationcontrolsfontweight.selectedIndex].text;
+	previewthumbnailsnavigationcontrols.style.fontStyle = mnlfthumbnailsnavigationcontrolsfontstyle.options[mnlfthumbnailsnavigationcontrolsfontstyle.selectedIndex].text;
+	previewthumbnailsnavigationcontrols.style.textDecoration = mnlfthumbnailsnavigationcontrolstextdecoration.options[mnlfthumbnailsnavigationcontrolstextdecoration.selectedIndex].text;
+	previewthumbnailsnavigationcontrols.style.color = mnlfthumbnailsnavigationcontrolsfontcolor.value;
+	
 	previewbody.style.backgroundColor = mnlfbodybgcolor.value;
 	previewbody.style.fontFamily = mnlfbodyfontfamily.options[mnlfbodyfontfamily.selectedIndex].text;
 	previewbody.style.fontSize = mnlfbodyfontsize.options[mnlfbodyfontsize.selectedIndex].text; 
@@ -133,7 +167,7 @@ function UpdatePreview() {
 </script>
 
 <center><br/>
-	<table cellpadding="10" cellspacing="2" border="1" bordercolor="#DDD">
+	<table cellpadding="10" cellspacing="2" width="400">
 		<tr>
 			<td align="center"><p class="title"><? echo getResource("appearenceParams"); ?> :</p></td>
 			<td  align="center">
@@ -281,6 +315,156 @@ getTextAlignForm($mnlflinkstextalign,"mnlflinkstextalign","mnlflinkstextalign","
 <tr>
 	<td>Font color : </td>
 	<td><input <? echo "class=\"$color\""; ?> <? echo "value=\"$mnlflinksfontcolor\""; ?> name="mnlflinksfontcolor" id="mnlflinksfontcolor" onChange="javascript:UpdatePreview();"></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+	<td>
+		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
+			<tr>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsLogo"); ?></td>
+			</tr>
+			<tr>
+				<td>Font family : </td>
+				<td>
+
+				<?
+			getFontFamilyForm($mnlflogofontfamily,"mnlflogofontfamily","mnlflogofontfamily","UpdatePreview()");
+			?>
+
+		</td>
+	</tr>
+	<tr>
+		<td>Font size : </td>
+		<td>
+
+		<?
+	getFontSizeForm($mnlflogofontsize,"mnlflogofontsize","mnlflogofontsize","UpdatePreview()");
+	?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font weight : </td>
+	<td>
+	<?
+getFontWeightForm($mnlflogofontweight,"mnlflogofontweight","mnlflogofontweight","UpdatePreview()");
+?>
+</td>
+</tr>
+
+<tr>
+	<td>Font style : </td>
+	<td>
+	<?
+getFontStyleForm($mnlflogofontstyle,"mnlflogofontstyle","mnlflogofontstyle","UpdatePreview()");
+?>
+</td>
+</tr>
+
+
+<tr>
+	<td>Text decoration : </td>
+	<td>
+	<?
+getTextDecorationForm($mnlflogotextdecoration,"mnlflogotextdecoration","mnlflogotextdecoration","UpdatePreview()");
+?>
+</td>
+</tr>
+
+<tr>
+	<td>Text align : </td>
+	<td>
+	<?
+getTextAlignForm($mnlflogotextalign,"mnlflogotextalign","mnlflogotextalign","UpdatePreview()");
+?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font color : </td>
+	<td><input <? echo "class=\"$color\""; ?> <? echo "value=\"$mnlflogofontcolor\""; ?> name="mnlflogofontcolor" id="mnlflogofontcolor" onChange="javascript:UpdatePreview();"></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+	<td>
+		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
+			<tr>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsTitle"); ?></td>
+			</tr>
+			<tr>
+				<td>Font family : </td>
+				<td>
+
+				<?
+			getFontFamilyForm($mnlftitlefontfamily,"mnlftitlefontfamily","mnlftitlefontfamily","UpdatePreview()");
+			?>
+
+		</td>
+	</tr>
+	<tr>
+		<td>Font size : </td>
+		<td>
+
+		<?
+	getFontSizeForm($mnlftitlefontsize,"mnlftitlefontsize","mnlftitlefontsize","UpdatePreview()");
+	?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font weight : </td>
+	<td>
+	<?
+getFontWeightForm($mnlftitlefontweight,"mnlftitlefontweight","mnlftitlefontweight","UpdatePreview()");
+?>
+</td>
+</tr>
+
+<tr>
+	<td>Font style : </td>
+	<td>
+	<?
+getFontStyleForm($mnlftitlefontstyle,"mnlftitlefontstyle","mnlftitlefontstyle","UpdatePreview()");
+?>
+</td>
+</tr>
+
+
+<tr>
+	<td>Text decoration : </td>
+	<td>
+	<?
+getTextDecorationForm($mnlftitletextdecoration,"mnlftitletextdecoration","mnlftitletextdecoration","UpdatePreview()");
+?>
+</td>
+</tr>
+
+<tr>
+	<td>Text align : </td>
+	<td>
+	<?
+getTextAlignForm($mnlftitletextalign,"mnlftitletextalign","mnlftitletextalign","UpdatePreview()");
+?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font color : </td>
+	<td><input <? echo "class=\"$color\""; ?> <? echo "value=\"$mnlftitlefontcolor\""; ?> name="mnlftitlefontcolor" id="mnlftitlefontcolor" onChange="javascript:UpdatePreview();"></td>
 </tr>
 
 </table>
@@ -592,6 +776,137 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoNavigationControls"); ?></td>
+			</tr>
+			<tr>
+				<td>Font family : </td>
+				<td>
+
+
+				<?
+			getFontFamilyForm($mnlfphotonavigationcontrolsfontfamily,"mnlfphotonavigationcontrolsfontfamily","mnlfphotonavigationcontrolsfontfamily","UpdatePreview()");
+			?>
+
+		</td>
+	</tr>
+	<tr>
+		<td>Font size : </td>
+		<td>
+
+		<?
+	getFontSizeForm($mnlfphotonavigationcontrolsfontsize,"mnlfphotonavigationcontrolsfontsize","mnlfphotonavigationcontrolsfontsize","UpdatePreview()");
+	?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font weight : </td>
+	<td>
+		<?
+	getFontWeightForm($mnlfphotonavigationcontrolsfontweight,"mnlfphotonavigationcontrolsfontweight","mnlfphotonavigationcontrolsfontweight","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>									
+	<td>Font style : </td>
+	<td>
+		<?
+	getFontStyleForm($mnlfphotonavigationcontrolsfontstyle,"mnlfphotonavigationcontrolsfontstyle","mnlfphotonavigationcontrolsfontstyle","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>
+	<td>Text decoration : </td>
+	<td>
+		<?
+	getTextDecorationForm($mnlfphotonavigationcontrolstextdecoration,"mnlfphotonavigationcontrolstextdecoration","mnlfphotonavigationcontrolstextdecoration","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>
+	<td>Font color : </td>
+	<td><input <? echo "class=\"$color\""; ?> <? echo "value=\"$mnlfphotonavigationcontrolsfontcolor\""; ?> name="mnlfphotonavigationcontrolsfontcolor" id="mnlfphotonavigationcontrolsfontcolor" onChange="javascript:UpdatePreview();"></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<tr>
+	<td>
+		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
+			<tr>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsThumbnailsNavigationControls"); ?></td>
+			</tr>
+			<tr>
+				<td>Font family : </td>
+				<td>
+
+
+				<?
+			getFontFamilyForm($mnlfthumbnailsnavigationcontrolsfontfamily,"mnlfthumbnailsnavigationcontrolsfontfamily","mnlfthumbnailsnavigationcontrolsfontfamily","UpdatePreview()");
+			?>
+
+		</td>
+	</tr>
+	<tr>
+		<td>Font size : </td>
+		<td>
+
+		<?
+	getFontSizeForm($mnlfthumbnailsnavigationcontrolsfontsize,"mnlfthumbnailsnavigationcontrolsfontsize","mnlfthumbnailsnavigationcontrolsfontsize","UpdatePreview()");
+	?>
+
+</td>
+</tr>
+
+<tr>
+	<td>Font weight : </td>
+	<td>
+		<?
+	getFontWeightForm($mnlfthumbnailsnavigationcontrolsfontweight,"mnlfthumbnailsnavigationcontrolsfontweight","mnlfthumbnailsnavigationcontrolsfontweight","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>									
+	<td>Font style : </td>
+	<td>
+		<?
+	getFontStyleForm($mnlfthumbnailsnavigationcontrolsfontstyle,"mnlfthumbnailsnavigationcontrolsfontstyle","mnlfthumbnailsnavigationcontrolsfontstyle","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>
+	<td>Text decoration : </td>
+	<td>
+		<?
+	getTextDecorationForm($mnlfthumbnailsnavigationcontrolstextdecoration,"mnlfthumbnailsnavigationcontrolstextdecoration","mnlfthumbnailsnavigationcontrolstextdecoration","UpdatePreview()");
+	?>
+</td>
+</tr>
+
+<tr>
+	<td>Font color : </td>
+	<td><input <? echo "class=\"$color\""; ?> <? echo "value=\"$mnlfthumbnailsnavigationcontrolsfontcolor\""; ?> name="mnlfthumbnailsnavigationcontrolsfontcolor" id="mnlfthumbnailsnavigationcontrolsfontcolor" onChange="javascript:UpdatePreview();"></td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+
+<tr>
+	<td>
+		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
+			<tr>
 				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoThumbFrame"); ?></td>
 			</tr>
 			<tr>
@@ -838,13 +1153,15 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 
 </table>
 
-</div>
+
 </td>
 
 <td valign="top">
 
-	<div id="previewbody">
+	<div id="previewbody" style="position:fixed;">
 		<div class="body" id="previewtext"><? echo getResource("appearenceBodyText"); ?></div><br />
+		<div class="logo" id="previewlogo"><? echo getResource("appearenceLogo"); ?></div><br />
+		<div class="title" id="previewtitle"><? echo getResource("appearenceTitle"); ?></div><br />
 		<a id="previewlinks" href="#"><? echo getResource("appearenceLinks"); ?></a><br/><br/>
 		<a id="previewcontact" href="#"><? echo getResource("appearenceContact"); ?></a>
 		<table width="200" height="220" border="0" cellpadding="5" cellspacing="4" >
@@ -879,16 +1196,38 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 						</tr>
 					</table>
 					<table cellspacing="0" cellpadding="0">
+					 <tr>
+					   <td class="thumbnailsNavigationControls" id="previewthumbnailsnavigationcontrols">
+					   	<? echo getTypedConf("NextThumbnailsPageControlLabel"); ?>
+					   </td>
+					 </tr>					
+					</table>
+					<table cellspacing="0" cellpadding="0">
 						<tr>
-							<td class="photoTitle" id="previewphototitle" colspan="2"><br />
+							<td><br />
 								<div class="photo" id="previewdivphoto">
 									<img class="photo" id="previewimgphoto" src="design/images/photo.jpg" />
 								</div>
-								<? echo getResource("appearencePhotoTitle"); ?>
 							</td>
 						</tr>
 						<tr>
-							<td class="photoDescription" id="previewphotodescription" colspan="2">
+						   <td>
+								<table cellspacing="0" cellpadding="1" style="width:100%">
+									<tr>
+										<td width="15%">
+										</td>						
+										<td class="photoTitle" id="previewphototitle" width="70%">
+											<center><? echo getResource("appearencePhotoTitle"); ?></center>
+										</td>
+										<td class="photoNavigationControls" id="previewphotonavigationcontrols" width="15%">
+											<? echo getTypedConf("NextPhotoControlLabel"); ?>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="photoDescription" id="previewphotodescription" >
 								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
 							</td>
 						</tr>
@@ -897,8 +1236,8 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 			</tr>
 		</table> 
 		<p id="previewcopyright"><? echo getResource("appearenceCopyright"); ?></p>
-	</div>
 	<div align="center"><p class="importantButton"><input type="submit" <? echo "value=\">>>> ".getResource("btnSaveChanges")." <<<<\""; ?> ></p></div>
+	</div>
 </td>
 </tr>
 </table>

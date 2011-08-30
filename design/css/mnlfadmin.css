@@ -31,10 +31,20 @@ ul#admintab li.signout {
     background-color: #ffffff;
 }
 
-ul#admintab li.more {
+ul#admintab li.seefolio {
 	float: right;
-    margin: 2px 20px 0 10px;
-	background-color: #fff;
+    margin: 2px 2px 0 10px;
+	background-color: #0063dc;
+}
+
+ul#admintab li.seefolio {
+	float: right;
+    margin: 2px 2px 0 10px;
+	background-color: #ffffff;
+}
+
+ul#admintab li.seefolio a {
+	color: #0063dc;
 }
 
 ul#admintab li.active a {

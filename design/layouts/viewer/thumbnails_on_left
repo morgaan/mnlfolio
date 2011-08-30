@@ -2,7 +2,7 @@
 	/* 
 		DESCRIPTION: A very simple layout with the photo on right side and thumbnails on left side
 		AUTHOR: morgan cugerone
-		VERSION: 1.0 
+		VERSION: 1.5 
 	*/
 
 	$layout = "";
@@ -48,15 +48,15 @@
 	$layout .="					</tr>";
 	$layout .="					<!-- START: THUMBNAILS NAVIGATION COMMANDS -->";
 	$layout .="					<tr>";
-	$layout .="						<td align=\"left\" valign=\"top\">&nbsp;";
+	$layout .="						<td class=\"thumbnailsNavigationControls\" align=\"left\" valign=\"top\">&nbsp;";
 	if($showPreviousThumbnailsPage == "true") {	
 		$layout .="							<a href=\"javascript:previousSetPage();\">";
-		$layout .="								<b>$previousThumbnailsPageControlLabel &nbsp;&nbsp;</b>";
+		$layout .="								$previousThumbnailsPageControlLabel &nbsp;&nbsp;";
 		$layout .="							</a>";
 	}	
 	if($showNextThumbnailsPage == "true") {
 		$layout .="							<a href=\"javascript:nextSetPage();\">";
-		$layout .="								<b>$nextThumbnailsPageControlLabel</b>";
+		$layout .="								$nextThumbnailsPageControlLabel";
 		$layout .="							</a>";
 	}	
 	$layout .="						</td>";
@@ -86,20 +86,20 @@
 	$layout .="							<!-- START: PREVIOUS COMMAND + PHOTO TITLE + NEXT COMMAND -->";
 	$layout .="							<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\" width=\"100%\">";
 	$layout .="								<tr>";
-	$layout .="									<td align=\"left\" valign=\"top\">";
+	$layout .="									<td class=\"photoNavigationControls\" align=\"left\" valign=\"top\" width=\"15%\">";
 	if($showPreviousPhoto == "true") {
 	$layout .="										<a href=\"javascript:previousPhoto();\">";
-	$layout .="											<b>$previousPhotoControlLabel</b>";
+	$layout .="											$previousPhotoControlLabel";
 	$layout .="										</a>";
 	}
 	$layout .="									</td>";
-	$layout .="									<td align=\"center\" valign=\"top\" class=\"photoTitle\">";
+	$layout .="									<td align=\"center\" valign=\"top\" class=\"photoTitle\" width=\"70%\">";
 	$layout .="										$photoTitle";
 	$layout .="									</td>";
-	$layout .="									<td align=\"right\" valign=\"top\">";
+	$layout .="									<td class=\"photoNavigationControls\" align=\"right\" valign=\"top\" width=\"15%\">";
 	if($showNextPhoto == "true") {
 	$layout .="										<a href=\"javascript:nextPhoto();\">";
-	$layout .="											<b>$nextPhotoControlLabel</b>";
+	$layout .="											$nextPhotoControlLabel";
 	$layout .="										</a>";
 	}	
 	$layout .="									</td>";
@@ -111,11 +111,24 @@
 	$layout .="					<tr>";
 	$layout .="						<!-- START: PHOTO DESCRIPTION -->";
 	$layout .="						<td align=\"left\" valign=\"top\" class=\"photoDescription\">";
+	if($displayDownloadLink == "true")
+	{
+	$layout .="						<!-- START: DOWNLOAD LINK -->";
+	$layout .="							<center><a href=\"dl.php?p=".$photoStaticUrlForDownload."\">$downloadLinkLabel</a></center><br/>";
+	$layout .="						<!-- END: DOWNLOAD LINK -->";
+	}
 	$layout .="							$photoDescription";
 	$layout .="						</td>";
 	$layout .="						<!-- END: PHOTO DESCRIPTION -->";
 	$layout .="					</tr>";
 	$layout .="					<!-- END: PHOTO INFOS -->";
+	$layout .="					<tr>";
+	$layout .="					 <td align=\"".$photoLinkToFlickrAlignment."\" valign=\"top\">";
+	$layout .="					  <a href=\"".$photoPage."\" target=\"_blank\">";
+	$layout .="					   <img title=\"".$photoLinkToFlickrLabel."\" src=\"design/images/fgrey.png\" onmouseover=\"this.src='design/images/fcolor.png'\" onmouseout=\"this.src='design/images/fgrey.png'\" border=\"0\" />";
+	$layout .="					  </a>";
+	$layout .="					 </td>";
+	$layout .="					</tr>";
 	$layout .="				</table>";
 	$layout .="			</td>";
 	$layout .="			<!-- END: SECOND COLUMN = PHOTO PANEL -->";

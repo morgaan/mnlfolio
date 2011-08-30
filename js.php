@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.1.0
+ *	mnlfolio v1.5.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110216
+ *	Last Modification: 20110830
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio

@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.1.0
+ *	mnlfolio v1.5.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110216
+ *	Last Modification: 20110830
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -32,6 +32,7 @@ function getNavigationLayout($setid = NULL) {
 		$selectedSets = explode(",",getTypedConf("SelectedSets"));
 		$delimiter = getTypedConf("DelimiterSetsTitles");
 		$activeSet = "";
+		$setsLinksAlignment = getListSelectedValue("SetsLinksAlignment");
 				
 		for($i = 0; $i < count($selectedSets); $i++) {			
 			if($setid == $selectedSets[$i]) {
@@ -39,6 +40,8 @@ function getNavigationLayout($setid = NULL) {
 				break;
 			}
 		}
+		
+		$nSetByLine = getTypedConf("SetByLine");
 
 		include("design/layouts/navigation/".getFileListSelectedValue("NavigationLayout"));
 			
@@ -70,6 +73,9 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 		  $photosize = $f->photos_getSizes($photoid, $secret = NULL);
 		  $photoFormat = getListSelectedValue("PhotoSize");
 		  $zoomedPhotoFormat = getListSelectedValue("ZoomedPhotoSize");
+		  $photos_url = $f->urls_getUserPhotos(getOwnerId($f,$set));
+		  $photoPage = $photos_url.$photoid;
+		  $photoStaticUrlForDownload = $f->buildPhotoURL($photoInfo, $downloadPhotoSize);
 	
 		  $size = $photosize[3];
 	
@@ -100,6 +106,12 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 
 			$nGUIWidth = getTypedConf("GUIWidth");
 			$nGUIHeight = getTypedConf("GUIHeight");
+			
+			$displayDownloadLink = getTypedConf("DisplayDownloadLink");
+			$downloadLinkLabel = getTypedConf("DownloadLinkLabel");
+			$downloadPhotoSize = getListSelectedValue("DownloadPhotoSize");
+			$photoLinkToFlickrLabel = getTypedConf("PhotoLinkToFlickrLabel");
+			$photoLinkToFlickrAlignment = getListSelectedValue("PhotoLinkToFlickrAlignment");
 
 			include("design/layouts/viewer/".getFileListSelectedValue("ViewerLayout"));
 		
@@ -188,6 +200,17 @@ function getOwner($f) {
 		break;
 	}
 	return $owner;
+}
+
+// =============================
+// = Gets Flickr account Owner =
+// =============================
+function getOwnerId($f,$set) {
+	$setInfo = $f->photosets_getInfo($set['id']);
+	$owner = $f->people_getInfo($setInfo['owner']);
+	$owner = $owner['photosurl'];
+	
+	return $owner['photosurl'].$photoId;
 }
 
 // ==================
@@ -740,15 +763,14 @@ function curPageURL() {
 // = Displays an uploader =
 // ========================
 function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $uploadButtonLabel, $deleteLabel, $extensionFilter = NULL) {
-	
-	echo "<input type=\"hidden\" name=\"uploadFile\" value=\"false\" />";
-	echo "<input type=\"hidden\" name=\"removeFile\" value=\"false\" />";
-	echo "<input type=\"hidden\" name=\"targetDirectory\" value=\"$targetDirectory\" />";
-	echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile\" type=\"file\" /><br/>";
-	echo "<p class=\"button\"><input type=\"button\" value=\"$uploadButtonLabel\" onClick=\"javascript:this.form.uploadFile.value=true;this.form.submit();\" /></p>";
+	echo "<input type=\"hidden\" name=\"uploadFile$object\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"removeFile$object\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"targetDirectory$object\" value=\"$targetDirectory\" />";
+	echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile$object\" type=\"file\" /><br/>";
+	echo "<p class=\"button\"><input type=\"button\" value=\"$uploadButtonLabel\" onClick=\"javascript:this.form.uploadFile$object.value=true;this.form.submit();\" /></p>";
 
 	echo "<p class=\"title\">$deleteLabel :</p>";
-	echo "<select name=\"selectedFiles[]\" multiple >";
+	echo "<select name=\"selectedFiles".$object."[]\" multiple >";
 
 	if (file_exists($targetDirectory)) {
 	    $mydir = opendir($targetDirectory);
@@ -760,7 +782,7 @@ function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $upl
 		closedir($mydir);
 	}
 	echo "</select>";
-	echo "<p class=\"button\"><input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile.value=true;this.form.submit();\" /></p>";
+	echo "<p class=\"button\"><input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile$object.value=true;this.form.submit();\" /></p>";
 	
 }
 
@@ -795,7 +817,11 @@ function getMoreForm() {
 	if(isset($_POST["editHead"]) && $_POST["editHead"] == "true") {
 	echo "<tr><td colspan=\"2\" align=\"center\">";
 	echo "<textarea rows=\"25\" cols=\"80\" name=\"content\">";
+
+	if(!file_exists("config/head.html"))
+		copy ("default/head.html", "config/head.html");
 	echo file_get_contents("config/head.html", true);
+
 	echo "</textarea><p class=\"button\"><input type=\"button\" value=\"".getResource("btnSave")."\" onClick=\"javascript:this.form.saveHead.value=true;this.form.editHead.value=false;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnCancel")."\" onClick=\"javascript:this.form.editHead.value=false;this.form.submit();\" /></p></td></tr>";
 	}
 	echo "<tr><td>";
@@ -827,22 +853,14 @@ function getMoreForm() {
 // =======================================
 function getSetsSelector() {
 	
-	if(getTypedConf("AuthTokens") != NULL) {
-
+	if(getTypedConf("AuthTokens") != NULL) {		
+		
 		$objectsInstances = getFlickrObjectsInstances();
-
-		echo "<input type=\"hidden\" name=\"addSets\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"removeSets\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"setDefault\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"clearDefault\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"moveUp\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"moveDown\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"accountIndex\" value=\"-1\" />";
-		echo "<input type=\"hidden\" name=\"addAnotherAccount\" value=\"false\" />";
-		echo "<input type=\"hidden\" name=\"removeAccount\" value=\"false\" />";
-	
-		echo "<table cellpadding=\"15\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\"><tr><td align=\"center\"><p class=\"title\">".getResource("unselectedSets")." :</p></td><td align=\"center\"><p class=\"title\">".getResource("selectedSets")." :</p></td></tr><tr><td align=\"center\">";
-	
+		
+		$unSelectedSetsSide = "";
+		$selectedSetsSide = "";
+		$divSetsSelector = "";
+		
 		for($i = 0; $i < count($objectsInstances); $i++) {
 
 			$f = $objectsInstances[$i];
@@ -852,25 +870,26 @@ function getSetsSelector() {
 			$photosets = $f->photosets_getList();
 			
 			if(count($objectsInstances) > 1)
-				echo "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;<input type=\"button\" value=\"".getResource("btnRemoveAccount")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.removeAccount.value=true;this.form.submit();\" /></p>";
+				$unSelectedSetsSide .= "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;<input type=\"button\" value=\"".getResource("btnRemoveAccount")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.removeAccount.value=true;this.form.submit();\" /></p>";
 			else
-				echo "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;</p>";
+				$unSelectedSetsSide .= "<p class=\"account\">".getResource("fromAccount")." : <b><u>".$owner."</u></b>&nbsp;</p>";
 			
 
-			echo "<select name=\"unSelectedSets".$i."[]\" multiple width=\"100%\" style=\"width: 100%\" size=\"10\" >";
+			$unSelectedSetsSide .= "<select name=\"unSelectedSets".$i."[]\" multiple style=\"width: 300px\" size=\"10\" >";
 			foreach ($photosets['photoset'] as $set) {
 	  		$setId = $set['id'];
 				if(substr_count(getTypedConf("SelectedSets"),$setId) == 0)
-					echo "<option value=\"$setId\">".$set['title']."</option>";
+					$unSelectedSetsSide .= "<option value=\"$setId\">".$set['title']."</option>";
 			}
-			echo "</select><p class=\"button\"><input type=\"button\" value=\"".getResource("btnAddToSelectSets")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.addSets.value=true;this.form.submit();\" /></p><hr />";
+			$unSelectedSetsSide .= "</select><p class=\"button\"><input type=\"button\" value=\"".getResource("btnAddToSelectSets")."\" onClick=\"javascript:this.form.accountIndex.value='$i';this.form.addSets.value=true;this.form.submit();\" /></p><hr />";
 
 		}
 		
-		echo "<p class=\"importantButton\"><input type=\"button\" value=\"".getResource("btnAddAnotherAccount")."\" onClick=\"javascript:this.form.addAnotherAccount.value=true;this.form.submit();\" /></td><td align=\"center\" valign=\"top\">";
+		$unSelectedSetsSide .= "<p class=\"importantButton\"><input type=\"button\" value=\"".getResource("btnAddAnotherAccount")."\" onClick=\"javascript:this.form.addAnotherAccount.value=true;this.form.submit();\" />";
+
 		
-		echo "<p class=\"subtitle\">".getResource("fromEveryAccount")." : </p>";
-		echo "<select name=\"selectedSets[]\" width=\"100%\" style=\"width: 100%\" multiple size=\"10\" >";
+		$selectedSetsSide .= "<p class=\"subtitle\">".getResource("fromEveryAccount")." : </p>";
+		$selectedSetsSide .= "<select name=\"selectedSets[]\" style=\"width: 300px\" multiple size=\"10\" >";
 
 		$selectedSets = explode(",",getTypedConf("SelectedSets"));
 
@@ -884,22 +903,40 @@ function getSetsSelector() {
 				$f = $objectsInstances[$account];
 				$setInfo = $f->photosets_getInfo($set);
 				if(substr_count(getTypedConf("DefaultSet"),$selectedSets[$i]) > 0)
-			 		echo "<option value=\"$selectedSets[$i]\">".$setInfo['title']." ".getResource("defaultSet")."</option>";
+			 		$selectedSetsSide .= "<option value=\"$selectedSets[$i]\">".$setInfo['title']." ".getResource("defaultSet")."</option>";
 				else
-					echo "<option value=\"$selectedSets[$i]\">".$setInfo['title']."</option>";
+					$selectedSetsSide .= "<option value=\"$selectedSets[$i]\">".$setInfo['title']."</option>";
 			}	
 			
 		}
 
-		echo "</select>";
-		echo "<p class=\"button\"><input type=\"button\" value=\"X\" onClick=\"javascript:this.form.removeSets.value=true;this.form.submit();\" /><input type=\"button\" value=\"&uarr;\" onClick=\"javascript:this.form.moveUp.value=true;this.form.submit();\" /><input type=\"button\" value=\"&darr;\" onClick=\"javascript:this.form.moveDown.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnSetAsDefault")."\" onClick=\"javascript:this.form.setDefault.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnClearDefault")."\" onClick=\"javascript:this.form.clearDefault.value=true;this.form.submit();\" /></p>";
+		$selectedSetsSide .= "</select>";
+		$selectedSetsSide .= "<p class=\"button\"><input type=\"button\" value=\"X\" onClick=\"javascript:this.form.removeSets.value=true;this.form.submit();\" /><input type=\"button\" value=\"&uarr;\" onClick=\"javascript:this.form.moveUp.value=true;this.form.submit();\" /><input type=\"button\" value=\"&darr;\" onClick=\"javascript:this.form.moveDown.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnSetAsDefault")."\" onClick=\"javascript:this.form.setDefault.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnClearDefault")."\" onClick=\"javascript:this.form.clearDefault.value=true;this.form.submit();\" /></p>";
 
-		echo "<p class=\"subtitle\">".getResource("explanationResetCache")." : </p>";
+		$selectedSetsSide .= "<p class=\"subtitle\">".getResource("explanationResetCache")." : </p>";
+		
+		$selectedSetsSide .= "<input type=\"hidden\" name=\"resetCache\" value=\"false\" />";
+		$selectedSetsSide .= "<p class=\"importantButton\"><input type=\"button\" onClick=\"javascript:this.form.resetCache.value=true;this.form.submit();\" value=\">>>> ".getResource("btnResetCache")." <<<<\" /></p>";
+		
+		
+		echo "<input type=\"hidden\" name=\"addSets\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"removeSets\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"setDefault\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"clearDefault\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"moveUp\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"moveDown\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"accountIndex\" value=\"-1\" />";
+		echo "<input type=\"hidden\" name=\"addAnotherAccount\" value=\"false\" />";
+		echo "<input type=\"hidden\" name=\"removeAccount\" value=\"false\" />";
 
-		?>
-				<input type="hidden" name="resetCache" value="false" />
-				<p class="importantButton"><input type="button" onClick="javascript:this.form.resetCache.value=true;this.form.submit();" <? echo "value=\">>>> ".getResource("btnResetCache")." <<<<\""; ?> /></p></td></tr></table>
-		<?
+
+		$divSetsSelector .= "<table width=\"800\" height=\"500\" cellpadding=\"15\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\"><tr height=\"8%\"><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("unselectedSets")." :</p></td><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("selectedSets")." :</p></td></tr><tr><td width=\"50%\" align=\"center\" valign=\"top\">";	
+		$divSetsSelector .= $unSelectedSetsSide;
+		$divSetsSelector .= "</td><td width=\"50%\" align=\"center\" valign=\"top\">";
+		$divSetsSelector .= $selectedSetsSide."</td></tr></table>";
+		
+		echo $divSetsSelector;
+		
 
 	}
 	
@@ -1100,8 +1137,6 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 		$oldVersion = "1.0.0";
 	
 	if($oldVersion == "1.0.0") {
-		
-		$navigationLayout = 
 				
 		$selectedSets = getTypedConf("SelectedSets",$oldConfFilePath);
 		if($selectedSets != NULL) {

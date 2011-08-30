@@ -1,8 +1,8 @@
-<?
+<?php
 /*
- *	mnlfolio v1.1.0
+ *	mnlfolio v1.5.0
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110216
+ *	Last Modification: 20110830
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -45,7 +45,17 @@ a {
 	text-align : <? echo $mnlflinkstextalign; ?>;
 }
 
-.contact {
+.title {
+	color: #<? echo $mnlftitlefontcolor; ?>;
+	font-size: <? echo $mnlftitlefontsize; ?>;
+	font-family: <? echo $mnlftitlefontfamily; ?>;
+	font-weight: <? echo $mnlftitlefontweight; ?>;
+	font-style: <? echo $mnlftitlefontstyle; ?>;
+	text-decoration : <? echo $mnlftitletextdecoration; ?>;	
+	text-align : <? echo $mnlftitletextalign; ?>;
+}
+
+a.contact {
 	color: #<? echo $mnlfcontactfontcolor; ?>;
 	font-size: <? echo $mnlfcontactfontsize; ?>;
 	font-family: <? echo $mnlfcontactfontfamily; ?>;
@@ -130,8 +140,42 @@ td.photoDescription {
 	text-align : <? echo $mnlfphotodescriptiontextalign; ?>;	
 }
 
+.photoNavigationControls a {
+	color: #<? echo $mnlfphotonavigationcontrolsfontcolor; ?>;
+	font-size: <? echo $mnlfphotonavigationcontrolsfontsize; ?>;
+	font-family: <? echo $mnlfphotonavigationcontrolsfontfamily; ?>;
+	font-weight: <? echo $mnlfphotonavigationcontrolsfontweight; ?>;
+	font-style: <? echo $mnlfphotonavigationcontrolsfontstyle; ?>;
+	text-decoration : <? echo $mnlfphotonavigationcontrolstextdecoration; ?>;
+}
+
+.thumbnailsNavigationControls a {
+	color: #<? echo $mnlfthumbnailsnavigationcontrolsfontcolor; ?>;
+	font-size: <? echo $mnlfthumbnailsnavigationcontrolsfontsize; ?>;
+	font-family: <? echo $mnlfthumbnailsnavigationcontrolsfontfamily; ?>;
+	font-weight: <? echo $mnlfthumbnailsnavigationcontrolsfontweight; ?>;
+	font-style: <? echo $mnlfthumbnailsnavigationcontrolsfontstyle; ?>;
+	text-decoration : <? echo $mnlfthumbnailsnavigationcontrolstextdecoration; ?>;
+}
+
 div.logo {
-	font: 18px Trebuchet MS, arial, sans-serif;
+	color: #<? echo $mnlflogofontcolor; ?>;
+	font-size: <? echo $mnlflogofontsize; ?>;
+	font-family: <? echo $mnlflogofontfamily; ?>;
+	font-weight: <? echo $mnlflogofontweight; ?>;
+	font-style: <? echo $mnlflogofontstyle; ?>;
+	text-decoration : <? echo $mnlflogotextdecoration; ?>;	
+	text-align : <? echo $mnlflogotextalign; ?>;
+}
+
+a.logo {
+	color: #<? echo $mnlflogofontcolor; ?>;
+	font-size: <? echo $mnlflogofontsize; ?>;
+	font-family: <? echo $mnlflogofontfamily; ?>;
+	font-weight: <? echo $mnlflogofontweight; ?>;
+	font-style: <? echo $mnlflogofontstyle; ?>;
+	text-decoration : <? echo $mnlflogotextdecoration; ?>;	
+	text-align : <? echo $mnlflogotextalign; ?>;
 }
 
 div.white {

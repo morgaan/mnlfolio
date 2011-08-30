@@ -6,8 +6,24 @@ $mnlfbodyfontsize = "12px";
 $mnlfbodyfontweight = "normal"; 
 $mnlfbodyfontstyle = "normal"; 
 $mnlfbodytextdecoration = "none"; 
-$mnlflinkstextalign = "center"; 
+$mnlfbodytextalign = "left"; 
 $mnlfbodyfontcolor = "888888"; 
+
+$mnlflogofontfamily = "Trebuchet MS"; 
+$mnlflogofontsize = "20px"; 
+$mnlflogofontweight = "bold"; 
+$mnlflogofontstyle = "normal"; 
+$mnlflogotextdecoration = "none"; 
+$mnlflogotextalign = "left"; 
+$mnlflogofontcolor = "CC240A"; 
+
+$mnlftitlefontfamily = "Trebuchet MS"; 
+$mnlftitlefontsize = "14px"; 
+$mnlftitlefontweight = "bold"; 
+$mnlftitlefontstyle = "normal"; 
+$mnlftitletextdecoration = "none"; 
+$mnlftitletextalign = "center"; 
+$mnlftitlefontcolor = "51555C"; 
 
 $mnlflinksfontfamily = "Trebuchet MS"; 
 $mnlflinksfontsize = "12px"; 
@@ -49,6 +65,20 @@ $mnlfphotodescriptiontextdecoration = "none";
 $mnlfphotodescriptiontextalign = "justify"; 
 $mnlfphotodescriptionfontcolor = "969E9E"; 
 
+$mnlfphotonavigationcontrolsfontfamily = "Trebuchet MS"; 
+$mnlfphotonavigationcontrolsfontsize = "12px"; 
+$mnlfphotonavigationcontrolsfontweight = "bold"; 
+$mnlfphotonavigationcontrolsfontstyle = "normal"; 
+$mnlfphotonavigationcontrolstextdecoration = "none";
+$mnlfphotonavigationcontrolsfontcolor = "000000"; 
+
+$mnlfthumbnailsnavigationcontrolsfontfamily = "Trebuchet MS"; 
+$mnlfthumbnailsnavigationcontrolsfontsize = "12px"; 
+$mnlfthumbnailsnavigationcontrolsfontweight = "bold"; 
+$mnlfthumbnailsnavigationcontrolsfontstyle = "normal"; 
+$mnlfthumbnailsnavigationcontrolstextdecoration = "none";
+$mnlfthumbnailsnavigationcontrolsfontcolor = "000000"; 
+
 $mnlftdthumbborderwidth = "2px"; 
 $mnlftdthumbborderstyle = "solid"; 
 $mnlftdthumbbordercolor = "DBDBDB"; 
@@ -82,5 +112,5 @@ $mnlfdivphotobordercolor = "DBDBDB";
 
 $color="color {pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerPosition:'right'}";
 
-$strVersion="1.1.0";
+$strVersion="1.5.0";
 ?>

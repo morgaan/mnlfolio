@@ -16,28 +16,17 @@
  *			To every friends and relatives who supported and helped me in the achievement of this project.
  */
 
-require_once("phpFlickr.php");
+if ($_REQUEST ['p'])
+	$photo = $_REQUEST ['p'];
 
-foreach($_REQUEST as $key => $value) $$key=$value;
+$filename = basename($photo);   
+ini_set('session.cache_limiter', '');
+header('Expires: Thu, 14 Apr 1981 03:28:00 GMT');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+header('Pragma: no-cache');
+header("Content-Type: application/octet-stream");
+header("Content-Disposition: disposition-type=attachment; filename=\"$filename\"");
 
-require_once("mnlfLib.php");
-
-
-if(isset($photoid)) {
-
-?>
-
-	<center><br /><br />
-<? 		
-		if(isset($setPage))
-		 echo getViewerLayout($setId,$setPage,$photoid,$p,$n,$u,$d);
-?>
-
-	</center>
-
-
-<?
-
-}
+readfile($photo);
 
 ?>

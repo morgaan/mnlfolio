@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.0
+ *	mnlfolio v1.5.1
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110830
+ *	Last Modification: 20110906
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -68,9 +68,9 @@ if(isset($_POST["importConfigFiles"]) && $_POST["importConfigFiles"] == "true") 
 			unlink($target_path.".bak");
 
 	}
-	if(isset($_FILES["appearenceFile"]) && $_FILES["appearenceFile"] != "") {
-		$target_path = "config/".basename($_FILES['appearenceFile']['name']).".old";
-		move_uploaded_file($_FILES['appearenceFile']['tmp_name'], $target_path);
+	if(isset($_FILES["appearanceFile"]) && $_FILES["appearanceFile"] != "") {
+		$target_path = "config/".basename($_FILES['appearanceFile']['name']).".old";
+		move_uploaded_file($_FILES['appearanceFile']['tmp_name'], $target_path);
 		
 		importConf($target_path,"config/css.php");
 		if(file_exists($target_path))
@@ -240,8 +240,8 @@ if(isUserAuthenticated()) {
 		exportFile("config/mnlfConfig.php");
 	}
 
-	// Export appearence file if explicitly asked
-	if(isset($_POST["exportAppearence"]) && $_POST["exportAppearence"] == "true") {
+	// Export appearance file if explicitly asked
+	if(isset($_POST["exportAppearance"]) && $_POST["exportAppearance"] == "true") {
 		exportFile("config/css.php");
 	}
 
@@ -934,8 +934,8 @@ if(getTypedConf("Username") == NULL) {
 			<td><input name="configFile" type="file" /></td>
 		</tr>
 		<tr>
-			<td><? echo getResource("appearenceFile"); ?> :</td>
-			<td><input name="appearenceFile" type="file" /></td>
+			<td><? echo getResource("appearanceFile"); ?> :</td>
+			<td><input name="appearanceFile" type="file" /></td>
 		</tr>
 		<tr>
 			<td><? echo getResource("headFile"); ?> :</td>

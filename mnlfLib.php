@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.0
+ *	mnlfolio v1.5.1
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110830
+ *	Last Modification: 20110906
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -800,7 +800,7 @@ function getMoreForm() {
 	echo "<input type=\"hidden\" name=\"saveHead\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"exportHead\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"exportConfig\" value=\"false\" />";
-	echo "<input type=\"hidden\" name=\"exportAppearence\" value=\"false\" />";
+	echo "<input type=\"hidden\" name=\"exportAppearance\" value=\"false\" />";
 
 	echo "<br/><br>";
 	echo "<table class=\"normal\" width=\"600\" cellpadding=\"5\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\">";
@@ -813,7 +813,7 @@ function getMoreForm() {
 	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnResetFlickrLink")."\" onClick=\"javascript:this.form.resetFlickr.value=true;this.form.submit();\" /></p></td></tr>";
 	echo "<tr><td>";
 	echo getResource("configEditHead");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnEditHead")."\" onClick=\"javascript:this.form.editHead.value=true;this.form.exportAppearence.value=false;this.form.exportConfig.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnEditHead")."\" onClick=\"javascript:this.form.editHead.value=true;this.form.exportAppearance.value=false;this.form.exportConfig.value=false;this.form.submit();\" /></p></td></tr>";
 	if(isset($_POST["editHead"]) && $_POST["editHead"] == "true") {
 	echo "<tr><td colspan=\"2\" align=\"center\">";
 	echo "<textarea rows=\"25\" cols=\"80\" name=\"content\">";
@@ -826,13 +826,13 @@ function getMoreForm() {
 	}
 	echo "<tr><td>";
 	echo getResource("configExportHead");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportHead")."\" onClick=\"javascript:this.form.exportHead.value=true;this.form.exportConfig.value=false;this.form.exportAppearence.value=false;this.form.editHead.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportHead")."\" onClick=\"javascript:this.form.exportHead.value=true;this.form.exportConfig.value=false;this.form.exportAppearance.value=false;this.form.editHead.value=false;this.form.submit();\" /></p></td></tr>";
 	echo "<tr><td>";
 	echo getResource("configExportConfigFile");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportConfiguration")."\" onClick=\"javascript:this.form.exportConfig.value=true;this.form.exportAppearence.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportConfiguration")."\" onClick=\"javascript:this.form.exportConfig.value=true;this.form.exportAppearance.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
 	echo "<tr><td>";
-	echo getResource("configExportAppearenceFile");
-	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportAppearence")."\" onClick=\"javascript:this.form.exportAppearence.value=true;this.form.exportConfig.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
+	echo getResource("configExportAppearanceFile");
+	echo "</td><td align=\"center\" valign=\"middle\"><p class=\"button\"><input type=\"button\" value=\"".getResource("btnExportAppearance")."\" onClick=\"javascript:this.form.exportAppearance.value=true;this.form.exportConfig.value=false;this.form.editHead.value=false;this.form.exportHead.value=false;this.form.submit();\" /></p></td></tr>";
 
 
 	$objectsInstances = getFlickrObjectsInstances();

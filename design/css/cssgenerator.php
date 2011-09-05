@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.0
+ *	mnlfolio v1.5.1
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110830
+ *	Last Modification: 20110906
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -169,9 +169,9 @@ function UpdatePreview() {
 <center><br/>
 	<table cellpadding="10" cellspacing="2" width="400">
 		<tr>
-			<td align="center"><p class="title"><? echo getResource("appearenceParams"); ?> :</p></td>
+			<td align="center"><p class="title"><? echo getResource("appearanceParams"); ?> :</p></td>
 			<td  align="center">
-				<p class="title"><? echo getResource("appearencePreview"); ?> :</p>
+				<p class="title"><? echo getResource("appearancePreview"); ?> :</p>
 			</td>
 		</tr>
 		<tr>
@@ -181,7 +181,7 @@ function UpdatePreview() {
 							<td>
 								<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 									<tr>
-										<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsBody"); ?></td>
+										<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsBody"); ?></td>
 									</tr>
 									<tr>
 										<td>Background color : </td>
@@ -251,7 +251,7 @@ getTextAlignForm($mnlfbodytextalign,"mnlfbodytextalign","mnlfbodytextalign","Upd
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsLinks"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsLinks"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -326,7 +326,7 @@ getTextAlignForm($mnlflinkstextalign,"mnlflinkstextalign","mnlflinkstextalign","
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsLogo"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsLogo"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -401,7 +401,7 @@ getTextAlignForm($mnlflogotextalign,"mnlflogotextalign","mnlflogotextalign","Upd
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsTitle"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsTitle"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -476,7 +476,7 @@ getTextAlignForm($mnlftitletextalign,"mnlftitletextalign","mnlftitletextalign","
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsContact"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsContact"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -551,7 +551,7 @@ getTextAlignForm($mnlfcontacttextalign,"mnlfcontacttextalign","mnlfcontacttextal
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsCopyright"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsCopyright"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -627,7 +627,7 @@ getTextAlignForm($mnlfcopyrighttextalign,"mnlfcopyrighttextalign","mnlfcopyright
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoTitle"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoTitle"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -702,7 +702,7 @@ getTextAlignForm($mnlfphototitletextalign,"mnlfphototitletextalign","mnlfphototi
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoDescription"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoDescription"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -776,7 +776,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoNavigationControls"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoNavigationControls"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -841,7 +841,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsThumbnailsNavigationControls"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsThumbnailsNavigationControls"); ?></td>
 			</tr>
 			<tr>
 				<td>Font family : </td>
@@ -907,7 +907,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoThumbFrame"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoThumbFrame"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -941,7 +941,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="1" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsSelectedPhotoThumbFrame"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsSelectedPhotoThumbFrame"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -974,7 +974,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoThumb"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoThumb"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -1012,7 +1012,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsSelectedPhotoThumb"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsSelectedPhotoThumb"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -1050,7 +1050,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsPhotoThumbMouseOver"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsPhotoThumbMouseOver"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -1089,7 +1089,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsSelectedPhoto"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsSelectedPhoto"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -1122,7 +1122,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 	<td>
 		<table class="normal" cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
-				<td colspan="2" align="center" class="header"><? echo getResource("appearenceParamsSelectedPhotoFrame"); ?></td>
+				<td colspan="2" align="center" class="header"><? echo getResource("appearanceParamsSelectedPhotoFrame"); ?></td>
 			</tr>
 			<tr>
 				<td>Border width : </td>
@@ -1159,39 +1159,32 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 <td valign="top">
 
 	<div id="previewbody" style="position:fixed;">
-		<div class="body" id="previewtext"><? echo getResource("appearenceBodyText"); ?></div><br />
-		<div class="logo" id="previewlogo"><? echo getResource("appearenceLogo"); ?></div><br />
-		<div class="title" id="previewtitle"><? echo getResource("appearenceTitle"); ?></div><br />
-		<a id="previewlinks" href="#"><? echo getResource("appearenceLinks"); ?></a><br/><br/>
-		<a id="previewcontact" href="#"><? echo getResource("appearenceContact"); ?></a>
+		<div class="body" id="previewtext"><? echo getResource("appearanceBodyText"); ?></div><br />
+		<div class="logo" id="previewlogo"><? echo getResource("appearanceLogo"); ?></div><br />
+		<div class="title" id="previewtitle"><? echo getResource("appearanceTitle"); ?></div><br />
+		<a id="previewlinks" href="#"><? echo getResource("appearanceLinks"); ?></a><br/><br/>
+		<a id="previewcontact" href="#"><? echo getResource("appearanceContact"); ?></a>
 		<table width="200" height="220" border="0" cellpadding="5" cellspacing="4" >
 			<tr>
 				<td valign="top">
+					<table cellspacing="4" cellpadding="0" width="100%">
+						<tr style="font-family:'Trebuchet MS';font-size:10px;">
+							<td align="left">
+								<? echo getResource("appearanceParamsPhotoThumb"); ?> |
+								<? echo getResource("appearanceParamsSelectedPhotoThumb"); ?> |
+								<? echo getResource("appearanceParamsPhotoThumbMouseOver"); ?> :
+						</tr>
+					</table>
 					<table cellspacing="4" cellpadding="0">
-
 						<tr>
 							<td class="thumb" id="previewtdthumb">
 								<img class="thumb" id="previewimgthumb" src="design/images/thumb.jpg" />
 							</td>
-							<td>
-								<? echo getResource("appearenceParamsPhotoThumb"); ?>
-							</td>
-						</tr>
-
-						<tr>
 							<td class="thumbselected" id="previewtdthumbselected">
 								<img class="thumbselected" id="previewimgthumbselected" src="design/images/thumb.jpg" />
 							</td>
-							<td>
-								<? echo getResource("appearenceParamsSelectedPhotoThumb"); ?>
-							</td>
-						</tr>
-						<tr>
 							<td id="previewtdthumbhover">
 								<img id="previewimgthumbhover" src="design/images/thumb.jpg" />
-							</td>
-							<td>
-								<? echo getResource("appearenceParamsPhotoThumbMouseOver"); ?>
 							</td>
 						</tr>
 					</table>
@@ -1217,7 +1210,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 										<td width="15%">
 										</td>						
 										<td class="photoTitle" id="previewphototitle" width="70%">
-											<center><? echo getResource("appearencePhotoTitle"); ?></center>
+											<center><? echo getResource("appearancePhotoTitle"); ?></center>
 										</td>
 										<td class="photoNavigationControls" id="previewphotonavigationcontrols" width="15%">
 											<? echo getTypedConf("NextPhotoControlLabel"); ?>
@@ -1228,14 +1221,14 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 						</tr>
 						<tr>
 							<td class="photoDescription" id="previewphotodescription" >
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+								Lorem ipsum dolor sit amet, consectetur...
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table> 
-		<p id="previewcopyright"><? echo getResource("appearenceCopyright"); ?></p>
+		<p id="previewcopyright"><? echo getResource("appearanceCopyright"); ?></p>
 	<div align="center"><p class="importantButton"><input type="submit" <? echo "value=\">>>> ".getResource("btnSaveChanges")." <<<<\""; ?> ></p></div>
 	</div>
 </td>

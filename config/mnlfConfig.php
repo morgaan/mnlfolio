@@ -8,6 +8,7 @@ $listLanguage = "en|en,fr";
 //pageParameters
 //headerParams
 $strPageTitle = "My mnlfolio"; 
+$boolShowTitle=true;
 $boolShowLogo=true;
 $filelistLogo = "logo-mnlfolio-medium.gif|design/images/logos";
 $boolShowTextLogo=false;
@@ -87,6 +88,6 @@ $strApiSecret="";
 $strPerms="read";
 $strAuthTokens="";
 
-$strVersion="1.5.1";
+$strVersion="1.5.2";
 
 ?>

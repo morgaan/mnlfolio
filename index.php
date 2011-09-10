@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.1
+ *	mnlfolio v1.5.2
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110906
+ *	Last Modification: 20110911
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -247,7 +247,8 @@ if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && 
 ?>
 	  <tr>
 	   <td class="title" colspan="2">
-		<? echo $strPageTitle; ?>
+	    <? if($boolShowTitle) { echo $strPageTitle; } else { echo "&nbsp;"; } ?>
+		
 	   </td>
 	  </tr>
 <?

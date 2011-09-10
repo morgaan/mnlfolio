@@ -1,6 +1,6 @@
 <?php
 /*
- *	mnlfolio v1.5.1
+ *	mnlfolio v1.5.2
  *	by Morgan Cugerone - http://ipositives.net
  *	Last Modification: 20110906
  *

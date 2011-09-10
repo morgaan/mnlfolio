@@ -122,7 +122,8 @@ $btnExportAppearance="Export appearance";
 $btnImport="Import";
 
 $configLanguage="Language";
-$configPageTitle="Page Title";
+$configPageTitle="Folio title";
+$configShowTitle="Show folio title";
 $configShowPhotoDescription="Show photo description";
 $configShowPhotoTitle="Show Photo Title";
 $configPhotoSize="Selected photo size";

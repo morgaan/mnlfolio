@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.2
+ *	mnlfolio v1.5.3
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110906
+ *	Last Modification: 20111105
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -75,7 +75,7 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 		  $zoomedPhotoFormat = getListSelectedValue("ZoomedPhotoSize");
 		  $photos_url = $f->urls_getUserPhotos(getOwnerId($f,$set));
 		  $photoPage = $photos_url.$photoid;
-		  $photoStaticUrlForDownload = $f->buildPhotoURL($photoInfo, $downloadPhotoSize);
+		  $photoStaticUrlForDownload = $f->buildPhotoURL($photoInfo, getListSelectedValue("DownloadPhotoSize"));
 	
 		  $size = $photosize[3];
 	

@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.2
+ *	mnlfolio v1.5.3
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20110906
+ *	Last Modification: 20111105
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -36,6 +36,7 @@ function UpdatePreview() {
 	var previewphotonavigationcontrols = document.getElementById("previewphotonavigationcontrols");
 	var previewthumbnailsnavigationcontrols = document.getElementById("previewthumbnailsnavigationcontrols");
 	var previewtdthumb = document.getElementById("previewtdthumb");
+	var previewtdthumbmouseover = document.getElementById("previewtdthumbmouseover");
 	var previewtdthumbselected = document.getElementById("previewtdthumbselected");
 	var previewimgthumb = document.getElementById("previewimgthumb");
 	var previewimgthumbselected = document.getElementById("previewimgthumbselected");	
@@ -135,6 +136,10 @@ function UpdatePreview() {
 	previewtdthumb.style.borderStyle = mnlftdthumbborderstyle.options[mnlftdthumbborderstyle.selectedIndex].text;
 	previewtdthumb.style.borderColor = mnlftdthumbbordercolor.value;
 
+	previewtdthumbmouseover.style.borderWidth = mnlftdthumbborderwidth.options[mnlftdthumbborderwidth.selectedIndex].text;
+	previewtdthumbmouseover.style.borderStyle = mnlftdthumbborderstyle.options[mnlftdthumbborderstyle.selectedIndex].text;
+	previewtdthumbmouseover.style.borderColor = mnlftdthumbbordercolor.value;
+	
 	previewtdthumbselected.style.borderWidth = mnlftdthumbselectedborderwidth.options[mnlftdthumbselectedborderwidth.selectedIndex].text;
 	previewtdthumbselected.style.borderStyle = mnlftdthumbselectedborderstyle.options[mnlftdthumbselectedborderstyle.selectedIndex].text;
 	previewtdthumbselected.style.borderColor = mnlftdthumbselectedbordercolor.value;
@@ -1164,7 +1169,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 		<div class="title" id="previewtitle"><? echo getResource("appearanceTitle"); ?></div><br />
 		<a id="previewlinks" href="#"><? echo getResource("appearanceLinks"); ?></a><br/><br/>
 		<a id="previewcontact" href="#"><? echo getResource("appearanceContact"); ?></a>
-		<table width="200" height="220" border="0" cellpadding="5" cellspacing="4" >
+		<table border="0">
 			<tr>
 				<td valign="top">
 					<table cellspacing="4" cellpadding="0" width="100%">
@@ -1183,7 +1188,7 @@ getTextAlignForm($mnlfphotodescriptiontextalign,"mnlfphotodescriptiontextalign",
 							<td class="thumbselected" id="previewtdthumbselected">
 								<img class="thumbselected" id="previewimgthumbselected" src="design/images/thumb.jpg" />
 							</td>
-							<td id="previewtdthumbhover">
+							<td class="thumb" id="previewtdthumbmouseover">
 								<img id="previewimgthumbhover" src="design/images/thumb.jpg" />
 							</td>
 						</tr>

@@ -4,7 +4,7 @@ mnlfolio
 mnlfolio is a FREE flickr-based portfolio script for all Flickr users wanting to easily create a portfolio. It is set up in the blink of an eye and is very customisable. It works on all modern browsers without any plug-ins.
 
 
-# Here are the main features :
+## Here are the main features :
 
 - Displays public and private sets
 - No database required
@@ -15,7 +15,7 @@ mnlfolio is a FREE flickr-based portfolio script for all Flickr users wanting to
 
 For advanced users, it is easy to create your own viewer and sets navigation layouts. You can then import them with the back office.
 
-# FRONT OFFICE
+## FRONT OFFICE
 
 - Customisable Logo (image/text/none)
 - Customisable Title
@@ -34,7 +34,7 @@ For advanced users, it is easy to create your own viewer and sets navigation lay
   - Copyright
   - Direct access to the Back Office
   
-# BACK OFFICE
+## BACK OFFICE
 
 - Login/Password protected
 - Internationalisation (English|French)

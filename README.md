@@ -18,6 +18,7 @@ For advanced users, it is easy to create your own viewer and sets navigation lay
 ## FRONT OFFICE
 
 - Customisable Logo (image/text/none)
+- Customisable Font
 - Customisable Title
 - Email link
 - Background-color picker (white/gray/black)
@@ -40,8 +41,10 @@ For advanced users, it is easy to create your own viewer and sets navigation lay
 - Internationalisation (English|French)
 - Layouts import-module
 - Logos import-module
+- Fonts import-module
 - Albums(sets) selector :
 	- Button to reinitialise cache in order to sync the albums(sets) with Flickr.
+	- Button to reinitialise sets title and thumbnails cache in order to sync the albums(sets) titles and thumbnails with Flickr.
 	- Ability to assign an album(set) as the default.
 	- Ability to define albums(sets) display order in navigation bar
 - CSS WISIWIG editor
@@ -65,6 +68,8 @@ For advanced users, it is easy to create your own viewer and sets navigation lay
 		- Flickr photo format for the displayed photo (small|medium|large|orgininal)
 		- Flickr photo format for the download (small|medium|large|orgininal)
 		- Viewer height & width
+		- Maximum width of the photo (ratio is preserved)
+		- Text to display while loading the photo
 		- Thumbnails grid column and row numbers
 		- Albums navigation bar column number
 		- Viewer layout

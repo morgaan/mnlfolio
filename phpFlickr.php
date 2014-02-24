@@ -581,10 +581,8 @@ if ( !class_exists('phpFlickr') ) {
 
 			if (empty($_SESSION['phpFlickr_auth_token']) && empty($this->token)) {
 				if ( $remember_uri === true ) {
-					session_register('phpFlickr_auth_redirect');
 					$_SESSION['phpFlickr_auth_redirect'] = $_SERVER['REQUEST_URI'];
 				} elseif ( $remember_uri !== false ) {
-					session_register('phpFlickr_auth_redirect');
 					$_SESSION['phpFlickr_auth_redirect'] = $remember_uri;
 				}
 				$api_sig = md5($this->secret . "api_key" . $this->api_key . "perms" . $perms);
@@ -667,7 +665,6 @@ if ( !class_exists('phpFlickr') ) {
 		function auth_getToken ($frob) {
 			/* http://www.flickr.com/services/api/flickr.auth.getToken.html */
 			$this->request('flickr.auth.getToken', array('frob'=>$frob));
-			session_register('phpFlickr_auth_token');
 			$_SESSION['phpFlickr_auth_token'] = $this->parsed_response['auth']['token'];
 			return $this->parsed_response ? $this->parsed_response['auth'] : false;
 		}

@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.3
+ *	mnlfolio v1.5.4
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20111105
+ *	Last Modification: 20140224
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -111,13 +111,26 @@ img.thumb:hover {
 }
 
 img.photo {
+	position: relative;
 	border-width: <? echo $mnlfimgphotoborderwidth; ?>;
 	border-style: <? echo $mnlfimgphotoborderstyle; ?>;
 	border-color:  #<? echo $mnlfimgphotobordercolor; ?>;
 	display:block;
+	z-index: 2;
+}
+
+div.photo:before {
+	content: '<? echo $strImageLoadingMessage; ?>';
+	display: block;
+	position: absolute;
+	width: inherit;
+	top: 48%;
+	z-index: 1;
 }
 
 div.photo {
+	position: relative;
+	margin: 0 auto;
 	border-width: <? echo $mnlfdivphotoborderwidth; ?>;
 	border-style: <? echo $mnlfdivphotoborderstyle; ?>;
 	border-color:  #<? echo $mnlfdivphotobordercolor; ?>;

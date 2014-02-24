@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.3
+ *	mnlfolio v1.5.4
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20111105
+ *	Last Modification: 20140224
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -24,6 +24,7 @@ $defaultCSSFile = "default/css.php";
 $userConfigFile = "config/mnlfConfig.php";
 $userCSSFile = "config/css.php";
 $cacheDirectory = "cache";
+
 
 if (!file_exists($cacheDirectory)) {	
 	if (is_writable(".")) {
@@ -61,11 +62,8 @@ if (!file_exists($userCSSFile)) {
 	   echo "Can't create CSS file";
 }
 
-
-
 foreach($_REQUEST as $key => $value) $$key=$value;
 require_once("mnlfLib.php");
-
 
 // =============================================================================
 // = If none username has been define, stop here and go straight to Admin page =
@@ -95,6 +93,7 @@ if(!isset($setid) && isset($strDefaultSet) && $strDefaultSet != NULL) {
 	<?
 }
 
+
 $objectsInstances = getFlickrObjectsInstances(true);
 ?>
 
@@ -107,8 +106,29 @@ $objectsInstances = getFlickrObjectsInstances(true);
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 <title><? echo $strPageTitle; ?></title>
 <style type="text/css">
-<? include("design/css/mnlfstyles.php"); ?>
+<?
+include("design/css/mnlfstyles.php");
+$usedFonts = array($mnlfbodyfontfamily,$mnlflogofontfamily,$mnlftitlefontfamily,$mnlflinksfontfamily,$mnlfcontactfontfamily,$mnlfcopyrightfontfamily,$mnlfphototitlefontfamily,$mnlfphotodescriptionfontfamily,$mnlfphotonavigationcontrolsfontfamily,$mnlfthumbnailsnavigationcontrolsfontfamily);
+$fontsFaced = array();
+foreach ($usedFonts as &$usedFont) {
+	if (in_array($usedFont, $fontsFaced) === false && strpos(STANDARD_FONT_FAMILIES, $usedFont) === false) {
+?>
 
+@font-face {
+    font-family: <? echo "'$usedFont'"; ?>;
+    src: url(<? echo "'design/fonts/$usedFont/$usedFont.eot'"; ?>);
+    src: url(<? echo "'design/fonts/$usedFont/$usedFont.woff'"; ?>) format('woff'),
+         url(<? echo "'design/fonts/$usedFont/$usedFont.ttf'"; ?>) format('truetype'),
+         url(<? echo "'design/fonts/$usedFont/$usedFont.svg#$usedFont'"; ?>) format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+<?
+    	array_push($fontsFaced, $usedFont);
+    }
+}
+
+?>
 table.normal {
 	font-size: 13px;	
 }
@@ -129,13 +149,6 @@ input, select
 }
 
 </style>
-<?
-//#######################//
-// JAVASCRIPT FUNCTIONS
-//#######################//
-
-include("js.php");
-?>
 
 <!-- //####################### USER HEADER #######################// -->
 
@@ -209,9 +222,9 @@ if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && 
    <td align="left" valign="top">
 <?
 	if($boolShowLogo)
-		echo "<a href=\"$strLogoLink\"><img src=\"design/images/logos/".getFileListSelectedValue("Logo")."\" border=\"0\" /></a>";
+		echo "<a href=\"$strLogoLink\" target=\"_top\"><img src=\"design/images/logos/".getFileListSelectedValue("Logo")."\" border=\"0\" /></a>";
 	elseif($boolShowTextLogo)
-		echo "<a href=\"$strLogoLink\" class=\"logo\">$strTextLogo</a>";
+		echo "<a href=\"$strLogoLink\" class=\"logo\" target=\"_top\">$strTextLogo</a>";
 ?>
    </td>
 
@@ -247,7 +260,7 @@ if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && 
 ?>
 	  <tr>
 	   <td class="title" colspan="2">
-	    <? if($boolShowTitle) { echo $strPageTitle; } else { echo "&nbsp;"; } ?>
+	    <? if($boolShowTitle) { echo stripslashes ($strPageTitle); } else { echo "&nbsp;"; } ?>
 		
 	   </td>
 	  </tr>
@@ -258,11 +271,11 @@ if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && 
    <br/>
    <center>
 <?
+
 		if(!isset($setid))
 			echo getNavigationLayout();
 		else
 			echo getNavigationLayout($setid);
-		
 ?>
    </center>
 
@@ -291,6 +304,34 @@ if(!$boolProtectFolio || ($boolProtectFolio && isset($_SESSION["guestpass"]) && 
 </table>
 <?
 }
+//#######################//
+// JAVASCRIPT FUNCTIONS
+//#######################//
+//
 ?>
+
+<script>
+
+var Mnlfolio = {
+
+  idPhotos : new Array(),
+  photosThumbsPages : new Array(),
+  descPhotos : new Array(),
+  pos : -1,
+  setSize : -1,
+  currentSetPage : -1,
+  totalSetPage : -1,
+  setId : -1,
+  thumbsBySetPage : 1,
+  currentBackgroundColor :  ''
+
+};
+
+<?
+// INIT DES VARIABLE de Mnlfolio
+echo apply_template("js.php", true);
+?>
+</script>
+<script src="mnlf.js"></script>
 </body> 
 </html>

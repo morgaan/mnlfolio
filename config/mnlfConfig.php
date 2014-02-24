@@ -31,7 +31,9 @@ $nGUIWidth=600;
 $nGUIHeight=600;
 $nColumns=3; 
 $nRows=4; 
-$nSetByLine = 6; 
+$nSetByLine = 6;
+$nImgMaxWidth = -1; 
+$strImageLoadingMessage = "Loading...";
 $listSetsLinksAlignment="center|left,center,right";
 $boolDisplayDownloadLink = false;
 $strDownloadLinkLabel="Download";
@@ -81,6 +83,8 @@ $nCacheTimeToLive=2592000;
 
 //flickrParams
 $strSelectedSets=""; 
+$strSelectedSetsTitles=""; 
+$strSelectedSetsThumbnails=""; 
 $strDefaultSet="";
 $urlApiKeyGenerator="http://www.flickr.com/services/apps/create/apply";
 $strApiKey=""; 
@@ -88,6 +92,6 @@ $strApiSecret="";
 $strPerms="read";
 $strAuthTokens="";
 
-$strVersion="1.5.3";
+$strVersion="1.5.4";
 
 ?>

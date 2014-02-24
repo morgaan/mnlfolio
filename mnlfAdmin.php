@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.3
+ *	mnlfolio v1.5.4
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20111105
+ *	Last Modification: 20140224
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -192,11 +192,12 @@ if(isUserAuthenticated()) {
 	if(isset($_POST["resetAll"]) && $_POST["resetAll"] == "true") {
 	
 		ob_start();
-		resetCache();
+		reinitImagesCache();
 		setTypedConf("ApiKey", "");
 		setTypedConf("ApiSecret", "");
 		setTypedConf("AuthTokens", "");
 		setTypedConf("SelectedSets", "");
+		reinitSetsCache();
 		setTypedConf("DefaultSet", "");
 		copy ("default/css.php", "config/css.php");
 		copy ("default/mnlfConfig.php", "config/mnlfConfig.php");
@@ -215,7 +216,8 @@ if(isUserAuthenticated()) {
 	if(isset($_POST["resetFlickr"]) && $_POST["resetFlickr"] == "true") {
 	
 		ob_start();
-		resetCache();
+		reinitImagesCache();
+		reinitSetsCache();
 		setTypedConf("ApiKey", "");
 		setTypedConf("ApiSecret", "");
 		setTypedConf("AuthTokens", "");
@@ -230,11 +232,16 @@ if(isUserAuthenticated()) {
 	}
 
 
-	// Purge cache if explicitly asked
-	if(isset($_POST["resetCache"]) && $_POST["resetCache"] == "true") {
-		resetCache();
+	// Purge images cache if explicitly asked
+	if(isset($_POST["reinitImagesCache"]) && $_POST["reinitImagesCache"] == "true") {
+		reinitImagesCache();
 	}
 	
+	// Purge sets cache if explicitly asked
+	if(isset($_POST["reinitSetsCache"]) && $_POST["reinitSetsCache"] == "true") {
+		reinitSetsCache();
+	}
+
 	// Export configuration file if explicitly asked
 	if(isset($_POST["exportConfig"]) && $_POST["exportConfig"] == "true") {
 		exportFile("config/mnlfConfig.php");
@@ -275,6 +282,7 @@ if(isUserAuthenticated()) {
 		}
 
 		setTypedConf("SelectedSets", $newSelected);
+		reinitSetsCache();
 		
 		//remove account
 		$newTokens = getTypedConf("AuthTokens");		
@@ -312,6 +320,7 @@ if(isUserAuthenticated()) {
 					$newSelected .=",".$_POST["accountIndex"].".".$unselected;
 			}
 			setTypedConf("SelectedSets", $newSelected);
+			reinitSetsCache();
 		}
 	
 	}
@@ -329,6 +338,7 @@ if(isUserAuthenticated()) {
 				$newSelected = str_replace($selected,"",$newSelected);
 		}
 		setTypedConf("SelectedSets", $newSelected);
+		reinitSetsCache();
 	
 	}
 
@@ -356,6 +366,7 @@ if(isUserAuthenticated()) {
 		}		
 
 		setTypedConf("SelectedSets", $newSelected);
+		reinitSetsCache();
 	
 	}
 
@@ -383,6 +394,7 @@ if(isUserAuthenticated()) {
 		}		
 
 		setTypedConf("SelectedSets", $newSelected);
+		reinitSetsCache();
 	
 	}
 
@@ -409,7 +421,26 @@ if(isUserAuthenticated()) {
 		$target_path = $_POST["targetDirectoryLogo"]."/".basename($_FILES['uploadedFileLogo']['name']);
 		$uploaded =  move_uploaded_file($_FILES['uploadedFileLogo']['tmp_name'], $target_path);
 	}
-	elseif(isset($_POST["uploadFileViewerLayout"]) && $_POST["uploadFileViewerLayout"] == "true" && isset($_FILES["uploadedFileViewerLayout"]) && isset($_POST["targetDirectoryViewerLayout"])) {
+	elseif (isset($_POST["uploadFileFont"]) && $_POST["uploadFileFont"] == "true" && isset($_FILES["uploadedFileFont"]) && isset($_POST["targetDirectoryFont"])) {
+		$font_name = "";
+		foreach ($_FILES['uploadedFileFont']['name'] as $filename) {
+			$ext = pathinfo($filename, PATHINFO_EXTENSION);
+			$font_name = basename($filename, ".".$ext);
+			break;
+		}
+		$target_folder = $_POST["targetDirectoryFont"]."/".$font_name;
+		if (!file_exists($target_folder)) {
+			mkdir($target_folder, 0777);
+		}
+		$count=0;
+        foreach ($_FILES['uploadedFileFont']['name'] as $filename) {
+        	$tmpFilePath = $_FILES['uploadedFileFont']['tmp_name'][$count];
+        	$ext = pathinfo($_FILES['uploadedFileFont']['name'][$count], PATHINFO_EXTENSION);
+			$target_path = $target_folder."/".$font_name.".".$ext;
+			$uploaded =  move_uploaded_file($tmpFilePath, $target_path);
+			$count++;
+        }
+	} elseif(isset($_POST["uploadFileViewerLayout"]) && $_POST["uploadFileViewerLayout"] == "true" && isset($_FILES["uploadedFileViewerLayout"]) && isset($_POST["targetDirectoryViewerLayout"])) {
 		$target_path = $_POST["targetDirectoryViewerLayout"]."/".basename($_FILES['uploadedFileViewerLayout']['name']);
 		$uploaded =  move_uploaded_file($_FILES['uploadedFileViewerLayout']['tmp_name'], $target_path);
 	}
@@ -424,6 +455,13 @@ if(isUserAuthenticated()) {
 			if(file_exists($_POST["targetDirectoryLogo"]."/".$selected))
 				unlink($_POST["targetDirectoryLogo"]."/".$selected) or DIE("couldn't delete ".$_POST["targetDirectoryLogo"]."/".$selected."<br />");
 		}
+	} elseif(isset($_POST["removeFileFont"]) && $_POST["removeFileFont"] == "true" && isset($_POST["selectedFilesFont"]) && isset($_POST["targetDirectoryFont"])) {
+		foreach ($_POST["selectedFilesFont"] as $selected) {
+			$dir = $_POST["targetDirectoryFont"]."/".$selected;
+			if(file_exists($dir) && is_dir($dir)) {
+				rrmdir($dir);
+    		}
+    	}
 	} elseif(isset($_POST["removeFileNavigationLayout"]) && $_POST["removeFileNavigationLayout"] == "true" && isset($_POST["selectedFilesNavigationLayout"]) && isset($_POST["targetDirectoryNavigationLayout"])) {
 		foreach ($_POST["selectedFilesNavigationLayout"] as $selected) {
 			if(file_exists($_POST["targetDirectoryNavigationLayout"]."/".$selected))
@@ -548,7 +586,6 @@ if(isUserAuthenticated()) {
 		&& isset($_POST["mnlfdivphotoborderstyle"])
 		&& isset($_POST["mnlfdivphotobordercolor"])) {
 		
-			setConf("unSelectedSets",$_POST["unSelectedSets"]);
 			setConf("mnlfbodybgcolor",$_POST["mnlfbodybgcolor"]);
 			setConf("mnlfbodyfontfamily",$_POST["mnlfbodyfontfamily"]);
 			setConf("mnlfbodyfontsize",$_POST["mnlfbodyfontsize"]);
@@ -619,7 +656,6 @@ if(isUserAuthenticated()) {
 			setConf("mnlfphotonavigationcontrolsfontweight",$_POST["mnlfphotonavigationcontrolsfontweight"]);
 			setConf("mnlfphotonavigationcontrolsfontstyle",$_POST["mnlfphotonavigationcontrolsfontstyle"]);
 			setConf("mnlfphotonavigationcontrolstextdecoration",$_POST["mnlfphotonavigationcontrolstextdecoration"]);
-			setConf("mnlfphotonavigationcontrolstextalign",$_POST["mnlfphotonavigationcontrolstextalign"]);
 			setConf("mnlfphotonavigationcontrolsfontcolor",$_POST["mnlfphotonavigationcontrolsfontcolor"]);
 
 			setConf("mnlfthumbnailsnavigationcontrolsfontfamily",$_POST["mnlfthumbnailsnavigationcontrolsfontfamily"]);
@@ -627,7 +663,6 @@ if(isUserAuthenticated()) {
 			setConf("mnlfthumbnailsnavigationcontrolsfontweight",$_POST["mnlfthumbnailsnavigationcontrolsfontweight"]);
 			setConf("mnlfthumbnailsnavigationcontrolsfontstyle",$_POST["mnlfthumbnailsnavigationcontrolsfontstyle"]);
 			setConf("mnlfthumbnailsnavigationcontrolstextdecoration",$_POST["mnlfthumbnailsnavigationcontrolstextdecoration"]);
-			setConf("mnlfthumbnailsnavigationcontrolstextalign",$_POST["mnlfthumbnailsnavigationcontrolstextalign"]);
 			setConf("mnlfthumbnailsnavigationcontrolsfontcolor",$_POST["mnlfthumbnailsnavigationcontrolsfontcolor"]);
 			
 			setConf("mnlftdthumbborderwidth",$_POST["mnlftdthumbborderwidth"]);
@@ -676,7 +711,7 @@ if(isUserAuthenticated()) {
 <body <? if(isset($view) && $view == "css") echo "onLoad=\"javascript:UpdatePreview();\""  ?>>	
 	<script type="text/javascript" src="design/jscolor/jscolor.js"></script>
 
-	<form id="mnlform" <? if((isset($view) && ($view == "layouts" || $view == "logos")) || getTypedConf("Username") == NULL) echo "enctype=\"multipart/form-data\""; ?>  <? if(!isset($view)) echo "action=\"mnlfAdmin.php\""; else echo "action=\"mnlfAdmin.php?view=".$view."\""; ?>  method="post">
+	<form id="mnlform" <? if((isset($view) && ($view == "layouts" || $view == "branding")) || getTypedConf("Username") == NULL) echo "enctype=\"multipart/form-data\""; ?>  <? if(!isset($view)) echo "action=\"mnlfAdmin.php\""; else echo "action=\"mnlfAdmin.php?view=".$view."\""; ?>  method="post">
 
 <?
 
@@ -811,7 +846,7 @@ if(isUserAuthenticated()) {
 ?>
 		     <li <? if(isset($view) && $view == "css") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=css"><? echo getResource("tabLabelAppearance"); ?></a></li>
 	     	 <li <? if(isset($view) && $view == "layouts") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=layouts"><? echo getResource("tabLayouts"); ?></a></li>
-	     	 <li <? if(isset($view) && $view == "logos") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=logos"><? echo getResource("tabLogos"); ?></a></li>
+	     	 <li <? if(isset($view) && $view == "branding") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=branding"><? echo getResource("tabBranding"); ?></a></li>
 		     <li <? if(isset($view) && $view == "sets") echo "class=\"active\""; ?>><a href="mnlfAdmin.php?view=sets"><? echo getResource("tabLabelMySets"); ?></a></li>
 			 <li class="signout"><input type="button" onClick="javascript:this.form.signout.value=true;this.form.submit();" <? echo "value=\"".getResource("btnSignOut")."\""; ?> /></li>
 			 <li <? if(isset($view) && $view == "more") echo "class=\"active\"";  ?>><a href="mnlfAdmin.php?view=more"><? echo getResource("tabLabelMore"); ?></a></li>
@@ -851,7 +886,7 @@ if(!((getTypedConf("ApiKey") == NULL || getTypedConf("ApiSecret") == NULL || get
 		elseif(isset($view) && $view == "layouts" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 ?>
 		<br /><br />
-		<table cellpadding="15" cellspacing="2" border="1" bordercolor="#DDD">
+		<table cellpadding="15" class="styled">
 			<tr>
 				<td valign="top" align="center">
 <?
@@ -868,14 +903,24 @@ if(!((getTypedConf("ApiKey") == NULL || getTypedConf("ApiSecret") == NULL || get
 <?
 		}
 
-		elseif(isset($view) && $view == "logos" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
+		elseif(isset($view) && $view == "branding" && (getTypedConf("ApiKey") != NULL && getTypedConf("ApiSecret") != NULL && getTypedConf("AuthTokens") != NULL)  && !getTypedConf("_TemporaryIsAddingExistingFlickrAccount")) {
 ?>
 		<br /><br />
-		<table cellpadding="15" cellspacing="2" border="1" bordercolor="#DDD">
+		<table cellpadding="15" class="styled">
 			<tr>
 				<td valign="top" align="center">
 <?
 			getUploader("design/images/logos", "", "Logo", getResource("messageUploadLogo"), getResource("btnUpload"), getResource("messageDeleteLogo"));
+?>
+				</td>
+			</tr>
+		</table>
+		<br /><br />
+		<table cellpadding="15" class="styled">
+			<tr>
+				<td valign="top" align="center">
+<?
+			getUploader("design/fonts", "", "Font", getResource("messageUploadFont"), getResource("btnUpload"), getResource("messageDeleteFontFolder"), getResource("messageUploadFontInstructions"), true, true);
 ?>
 				</td>
 			</tr>

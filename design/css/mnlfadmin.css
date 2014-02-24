@@ -113,10 +113,20 @@ input, select
 
 .button input
 {
+	border: 1px solid #DADADA;
+	border-radius: 3px;
+	padding: 5px 8px;
 	color: #0063dc;
 	font-weight: bold;
-	background: #fff;
-	border: 2px outset #ccc;
+	text-shadow: 0 -1px 0 #FFF4F4;
+	background: #f8f8f8;
+
+    background-image: -webkit-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -moz-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -o-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -ms-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: linear-gradient(#f8f8f8,#E9E7E7);
+	cursor: pointer;
 }
 
 .account input
@@ -134,22 +144,36 @@ input, select
 .button input:hover
 {
 	color: #ff0084;
-	border: 2px groove #ccc;
+	background: #E9E7E7;
 }
 
 .importantButton input
 {
+	border: 1px solid #DADADA;
+	border-radius: 3px;
+	padding: 8px;
 	color: #ff0084;
 	font-weight: bold;
 	font-size: 14px;
-	background: #fff;
-	border: 2px outset #ccc;
+	text-shadow: 0 -1px 0 #FFF4F4;
+	background: #f8f8f8;
+
+	background-image: -webkit-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -moz-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -o-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: -ms-linear-gradient(#f8f8f8,#E9E7E7);
+	background-image: linear-gradient(#f8f8f8,#E9E7E7);
+	cursor: pointer;
 }
 
 .importantButton input:hover
 {
 	color: #0063dc;
-	border: 2px groove #ccc;
+	background: #F3F3F3;
+}
+
+#mnlform select[name^="selectedFiles"] {
+	width: 100%;
 }
 
 .signout input
@@ -159,4 +183,18 @@ input, select
 	text-decoration: underline;
 	background: #fff;
 	border: 1px solid #fff;
+}
+
+table.styled {
+	border: none;
+	border-spacing: 10px 5px;
+}
+
+table.styled td {
+	border: 1px solid #DADADA;
+	border-radius: 5px;
+}
+
+table.styled td+td {
+	margin-left: 10px;
 }

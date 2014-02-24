@@ -2,7 +2,7 @@
 	/* 
 		DESCRIPTION: A very simple layout with the photo on middle and no thumbnails panel
 		AUTHOR: morgan cugerone
-		VERSION: 1.5 
+		VERSION: 1.5.4
 	*/
 
 	$layout = "";
@@ -13,14 +13,24 @@
 	$layout .="		<tr>";
 
 	$layout .="			<!-- START: FIRST COLUMN = PHOTO PANEL -->";
-	$layout .="			<td align=\"center\" valign=\"top\" width=\"$nGUIWidth\" height=\"$nGUIHeight\">";
-	$layout .="				<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" align=\"center\" width=\"$size[width]\">";
+	if($ratio < 1) {
+		$layout .="			<td align=\"center\" valign=\"top\" width=\"$widthImg\" height=\"$nGUIHeight\">";
+	}
+	else {
+		$layout .="			<td align=\"center\" valign=\"top\" width=\"$nGUIWidth\" height=\"$nGUIHeight\">";
+	}
+	$layout .="				<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" align=\"center\">";
 	$layout .="					<!-- START: PHOTO -->";
 	$layout .="					<tr>";
 	$layout .="						<td align=\"center\" valign=\"top\">";
 	$layout .="							<a href=\"javascript:nextPhoto();\">";
-	$layout .="								<div class=\"photo\">";
-	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";
+	$layout .="								<div class=\"photo\" style=\"width:".$widthImg."px; height:".$heightImg."px;\">";
+	if($ratio < 1) {
+	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	}
+	else {
+	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	}
 	$layout .="								</div>";
 	$layout .="							</a>";
 	$layout .="						</td>";
@@ -47,7 +57,7 @@
 	$layout .="										<a href=\"javascript:nextPhoto();\">";
 	$layout .="											$nextPhotoControlLabel";
 	$layout .="										</a>";
-	}	
+	}
 	$layout .="									</td>";
 	$layout .="								</tr>";
 	$layout .="							</table>";
@@ -63,7 +73,9 @@
 	$layout .="							<center><a href=\"dl.php?p=".$photoStaticUrlForDownload."\">$downloadLinkLabel</a></center><br/>";
 	$layout .="						<!-- END: DOWNLOAD LINK -->";
 	}
-	$layout .="							$photoDescription";
+	$layout .="<pre style=\"white-space: pre-line;font-family: inherit\">";
+	$layout .="$photoDescription";
+	$layout .="</pre>";
 	$layout .="						</td>";
 	$layout .="						<!-- END: PHOTO DESCRIPTION -->";
 	$layout .="					</tr>";

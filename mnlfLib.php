@@ -1,8 +1,8 @@
 <?php
 /*
- *	mnlfolio v1.5.3
+ *	mnlfolio v1.5.4
  *	by Morgan Cugerone - http://ipositives.net
- *	Last Modification: 20111105
+ *	Last Modification: 20140224
  *
  *	For more information, visit:
  *	http://morgan.cugerone.com/mnlfolio
@@ -19,6 +19,20 @@
 require_once("phpFlickr.php");
 require_once("config/mnlfConfig.php");
 
+define("STANDARD_FONT_FAMILIES",  "Arial|Arial Black|Comic Sans MS|Courier New|Georgia|Impact|Symbol|Times New Roman|Trebuchet MS|Verdana");
+$fontFamilies = array_merge(array(), explode("|", STANDARD_FONT_FAMILIES));
+$fontDirectory = "design/fonts";
+if (file_exists($fontDirectory)) {
+    $mydir = opendir($fontDirectory);
+    while(false !== ($file = readdir($mydir))) {
+    	if($file != "." && $file != ".." && is_dir($fontDirectory."/".$file)) {
+    		array_push($fontFamilies, $file);
+    	}
+    }
+	closedir($mydir);
+}
+
+define("FONT_FAMILIES",  implode("|", $fontFamilies));
 
 // =============================================
 // = Designs the appropriate navigation layout =
@@ -72,17 +86,24 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 	  	  $photoInfo = $f->photos_getInfo($photoid,NULL);
 		  $photosize = $f->photos_getSizes($photoid, $secret = NULL);
 		  $photoFormat = getListSelectedValue("PhotoSize");
-		  $zoomedPhotoFormat = getListSelectedValue("ZoomedPhotoSize");
-		  $photos_url = $f->urls_getUserPhotos(getOwnerId($f,$set));
+		  $photos_url = getPhotosUrl($f,$set);
+		  error_log($photos_url);
 		  $photoPage = $photos_url.$photoid;
 		  $photoStaticUrlForDownload = $f->buildPhotoURL($photoInfo, getListSelectedValue("DownloadPhotoSize"));
 	
-		  $size = $photosize[3];
+		  $size = NULL;
+		  for ($i = 0; $i < $photosize; $i++) {
+		    if(strtolower($photosize[$i]['label']) == strtolower($photoFormat)) {
+		    	$size = $photosize[$i];
+		    	break;
+		    }
+		  }
 	
 		  $photoDescription = "";
 		  $photoTitle = "";
-		  if(getTypedConf("ShowPhotoDescription") == "true")
+		  if(getTypedConf("ShowPhotoDescription") == "true") {
 			$photoDescription = $photoInfo['description'];
+		  }
 		  if(getTypedConf("ShowPhotoTitle") == "true")
 			$photoTitle = $photoInfo['title'];
 
@@ -90,8 +111,15 @@ function getViewerLayout($setId, $setPage, $photoid, $showPreviousPhoto, $showNe
 			$borderDiv = str_replace("px","",$mnlfdivphotoborderwidth);
 			$borderImg = str_replace("px","",$mnlfimgphotoborderwidth);
 		    $tweakSaveImageAs = getTypedConf("TweakSaveImageAs");
-			$widthImg = $size[width]-($borderImg+$borderDiv);
-			$heightImg = $size[height]-($borderImg+$borderDiv);
+		    $maxWidthImg = getTypedConf("ImgMaxWidth");
+		    $ratio = 1;
+			if($maxWidthImg > -1) {
+				if($size['width'] > $maxWidthImg) {
+					$ratio = $maxWidthImg/$size['width'];	
+				}
+			}
+			$widthImg = ($size['width']*$ratio)+($borderImg+$borderDiv);
+			$heightImg = ($size['height']*$ratio)+($borderImg+$borderDiv);
 
 			$nColumns = getTypedConf("Columns");
 			$nRows = getTypedConf("Rows");
@@ -202,15 +230,17 @@ function getOwner($f) {
 	return $owner;
 }
 
-// =============================
-// = Gets Flickr account Owner =
-// =============================
-function getOwnerId($f,$set) {
-	$setInfo = $f->photosets_getInfo($set['id']);
+// ==============================
+// = Gets sets owner photos url =
+// ==============================
+function getPhotosUrl($f,$set) {
+	$setInfo = $f->photosets_getInfo($set);
 	$owner = $f->people_getInfo($setInfo['owner']);
-	$owner = $owner['photosurl'];
-	
-	return $owner['photosurl'].$photoId;
+	error_log(print_R($owner, TRUE));
+	if(isset($owner['photosurl']))
+		return $owner['photosurl'];
+	else
+		return "";
 }
 
 // ==================
@@ -230,7 +260,7 @@ function getListSelectedValue($attribute,$configFile = NULL){
 		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -256,7 +286,7 @@ function getListValues($attribute,$configFile = NULL){
 		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -276,12 +306,12 @@ function getListValues($attribute,$configFile = NULL){
 // = Gets a configuration "file list" attribute selected value =
 // =============================================================
 function getFileListSelectedValue($attribute,$configFile = NULL){
-
+	
 	if($configFile == NULL)
 		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -292,7 +322,7 @@ function getFileListSelectedValue($attribute,$configFile = NULL){
 			}
 		}
 	}
-	
+
 	return NULL;
 		
 }
@@ -306,7 +336,7 @@ function getFileListValues($attribute,$configFile = NULL){
 		$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -343,11 +373,15 @@ function getResources(){
 	$configFile = "design/resources/resources-".$_SESSION["lang"].".php";
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
+			//error_log($varVal);
+			unset($varVal[0]);
+			//error_log($varVal);
 			$var = substr($var,1,strlen($var)-1);
-			$val = substr(trim($varVal[1]),0,-1);
+			$val = implode("=",$varVal);
+			$val = substr($val,0,-1);
 			$rsrc[$_SESSION["lang"]."|".$var] = substr($val,1,-1);
 		}
 	}
@@ -377,7 +411,7 @@ function getConf($attribute,$configFile = NULL){
 		$configFile = "config/css.php";
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -401,7 +435,7 @@ function getTypedConf($attribute,$configFile = NULL){
 		$configFile = "config/mnlfConfig.php";
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -432,7 +466,7 @@ function setTypedConf($attribute,$value,$encrypt=false,$configFile = NULL){
 	$newContent = "";
 	while (list ($lineNb, $line) = each ($previousConfFile)) {
 
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -556,7 +590,7 @@ function setConf($attribute,$value, $configFile = NULL){
 	$newContent = "";
 	while (list ($lineNb, $line) = each ($previousConfFile)) {
 
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 				
@@ -589,7 +623,7 @@ function getFormConf(){
 	$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
 			$val = trim($varVal[1]);
@@ -614,7 +648,7 @@ function getFormConf(){
 			
 						
 			$desc = "";
-			if(count($valDesc) > 1)
+			if(isset($valDesc) && count($valDesc) > 1)
 				$desc = $valDesc[1];
 
 			if($var != "" && $var != "\$strUsername"
@@ -622,7 +656,7 @@ function getFormConf(){
 						&& $var != "\$strAuthUrl" && $var != "\$strAuthTokens"
 							&& $var != "\$strPerms" && $var != "\$strFrob"
 								&& $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir"
-								 	&& $var != "\$strApiKey" && $var != "\$strApiSecret" && $var != "\$strVersion" && substr_count($var,"_Temporary") <= 0) {
+								 	&& $var != "\$strApiKey" && $var != "\$strApiSecret" && $var != "\$strVersion" && $var != "\$strSelectedSetsTitles" && $var != "\$strSelectedSetsThumbnails" && substr_count($var,"_Temporary") <= 0) {
 
 ?>
 				<tr>
@@ -675,16 +709,16 @@ function getFormConf(){
 <?						
 					} else {
 ?>
-					<td><input type="text" size="50" <? echo "name=\"".getDispVar($var)."\""; ?> <? echo "value=\"".$val."\""; ?> /></td>
+					<td><input type="text" size="50" <? echo "name=\"".getDispVar($var)."\""; ?> <? echo "value=\"".stripslashes($val)."\""; ?> /></td>
 <?					
 					}
 ?>					
-					<td><? echo $desc; ?></td>
+					<td><? if(isset($valDesc)) echo $desc; ?></td>
 				</tr>
 <?
 			}		
 			
-		} elseif(eregi("^\\//",trim($line))) {
+		} elseif(mb_eregi("^\\//",trim($line))) {
 			if(trim($line) != "//mnlfolio admin account" && trim($line) != "//flickrParams") {
 ?>			
 			<tr>
@@ -711,10 +745,10 @@ function saveConf(){
 	$configFile = "config/mnlfConfig.php";	
 	$confFile = file ($configFile);
 	while (list ($lineNb, $line) = each ($confFile)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
-			if($var != "" && $var != "\$strUsername" && $var != "\$strPassword" && $var != "\$strPwdQuestion" && $var != "\$strPwdAnswer" && $var != "\$strApi_sig" && $var != "\$strAuthUrl" && $var != "\$strAuthTokens" && $var != "\$strPerms" && $var != "\$strFrob" && $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir" && substr_count($var,"_Temporary") <= 0) {
+			if($var != "" && $var != "\$strUsername" && $var != "\$strPassword" && $var != "\$strPwdQuestion" && $var != "\$strPwdAnswer" && $var != "\$strApi_sig" && $var != "\$strAuthUrl" && $var != "\$strAuthTokens" && $var != "\$strPerms" && $var != "\$strFrob" && $var != "\$strSelectedSets" && $var != "\$strDefaultSet" && $var != "\$strCacheDir" && $var != "\$strSelectedSetsTitles" && $var != "\$strSelectedSetsThumbnails"  && substr_count($var,"_Temporary") <= 0) {
 				if(isset($_POST[getDispVar($var)]))
 					setTypedConf(getDispVar($var),trim($_POST[getDispVar($var)]));
 			}
@@ -762,11 +796,16 @@ function curPageURL() {
 // ========================
 // = Displays an uploader =
 // ========================
-function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $uploadButtonLabel, $deleteLabel, $extensionFilter = NULL) {
+function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $uploadButtonLabel, $deleteLabel, $uploadInstructions = "", $isMultiple = false, $showDirectoriesOnly = false) {
 	echo "<input type=\"hidden\" name=\"uploadFile$object\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"removeFile$object\" value=\"false\" />";
 	echo "<input type=\"hidden\" name=\"targetDirectory$object\" value=\"$targetDirectory\" />";
-	echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile$object\" type=\"file\" /><br/>";
+	if($isMultiple) {
+		echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile".$object."[]\" type=\"file\" multiple/><br/>";
+	} else {
+		echo "<p class=\"title\">$uploadFieldLabel :</p><input name=\"uploadedFile$object\" type=\"file\" /><br/>";
+	}
+	echo $uploadInstructions."<br/>";
 	echo "<p class=\"button\"><input type=\"button\" value=\"$uploadButtonLabel\" onClick=\"javascript:this.form.uploadFile$object.value=true;this.form.submit();\" /></p>";
 
 	echo "<p class=\"title\">$deleteLabel :</p>";
@@ -776,14 +815,17 @@ function getUploader($targetDirectory, $action, $object, $uploadFieldLabel, $upl
 	    $mydir = opendir($targetDirectory);
 	    while(false !== ($file = readdir($mydir))) {
 	        if($file != "." && $file != "..") {
-				echo "<option value=\"$file\">$file</option>";
+	        	if($showDirectoriesOnly && is_dir($targetDirectory."/".$file)) {
+					echo "<option value=\"$file\">$file</option>";
+	        	} elseif (!$showDirectoriesOnly) {
+	        		echo "<option value=\"$file\">$file</option>";
+	        	}
 	        }
 	    }
 		closedir($mydir);
 	}
 	echo "</select>";
-	echo "<p class=\"button\"><input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile$object.value=true;this.form.submit();\" /></p>";
-	
+	echo "<p class=\"button\"><input type=\"button\" value=\"".getResource("btnDelete")."\" onClick=\"javascript:this.form.removeFile$object.value=true;this.form.submit();\" /></p>";	
 }
 
 // ==========================
@@ -803,7 +845,7 @@ function getMoreForm() {
 	echo "<input type=\"hidden\" name=\"exportAppearance\" value=\"false\" />";
 
 	echo "<br/><br>";
-	echo "<table class=\"normal\" width=\"600\" cellpadding=\"5\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\">";
+	echo "<table class=\"normal styled\" width=\"600\" cellpadding=\"8\">";
 	echo "<tr><td>";
 		echo getResource("configResetAll");
 	echo "</td>";
@@ -913,12 +955,14 @@ function getSetsSelector() {
 		$selectedSetsSide .= "</select>";
 		$selectedSetsSide .= "<p class=\"button\"><input type=\"button\" value=\"X\" onClick=\"javascript:this.form.removeSets.value=true;this.form.submit();\" /><input type=\"button\" value=\"&uarr;\" onClick=\"javascript:this.form.moveUp.value=true;this.form.submit();\" /><input type=\"button\" value=\"&darr;\" onClick=\"javascript:this.form.moveDown.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnSetAsDefault")."\" onClick=\"javascript:this.form.setDefault.value=true;this.form.submit();\" /><input type=\"button\" value=\"".getResource("btnClearDefault")."\" onClick=\"javascript:this.form.clearDefault.value=true;this.form.submit();\" /></p>";
 
-		$selectedSetsSide .= "<p class=\"subtitle\">".getResource("explanationResetCache")." : </p>";
+		$selectedSetsSide .= "<p class=\"subtitle\">".getResource("explanationReinitCache")." : </p>";
 		
-		$selectedSetsSide .= "<input type=\"hidden\" name=\"resetCache\" value=\"false\" />";
-		$selectedSetsSide .= "<p class=\"importantButton\"><input type=\"button\" onClick=\"javascript:this.form.resetCache.value=true;this.form.submit();\" value=\">>>> ".getResource("btnResetCache")." <<<<\" /></p>";
+		$selectedSetsSide .= "<input type=\"hidden\" name=\"reinitImagesCache\" value=\"false\" />";
+		$selectedSetsSide .= "<p class=\"importantButton\"><input type=\"button\" onClick=\"javascript:this.form.reinitImagesCache.value=true;this.form.submit();\" value=\">>>> ".getResource("btnReinitImagesCache")." <<<<\" /></p>";
 		
-		
+		$selectedSetsSide .= "<input type=\"hidden\" name=\"reinitSetsCache\" value=\"false\" />";
+		$selectedSetsSide .= "<p class=\"importantButton\"><input type=\"button\" onClick=\"javascript:this.form.reinitSetsCache.value=true;this.form.submit();\" value=\">>>> ".getResource("btnReinitSetsCache")." <<<<\" /></p>";
+
 		echo "<input type=\"hidden\" name=\"addSets\" value=\"false\" />";
 		echo "<input type=\"hidden\" name=\"removeSets\" value=\"false\" />";
 		echo "<input type=\"hidden\" name=\"setDefault\" value=\"false\" />";
@@ -930,7 +974,7 @@ function getSetsSelector() {
 		echo "<input type=\"hidden\" name=\"removeAccount\" value=\"false\" />";
 
 
-		$divSetsSelector .= "<table width=\"800\" height=\"500\" cellpadding=\"15\" cellspacing=\"2\" border=\"1\" bordercolor=\"#DDD\"><tr height=\"8%\"><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("unselectedSets")." :</p></td><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("selectedSets")." :</p></td></tr><tr><td width=\"50%\" align=\"center\" valign=\"top\">";	
+		$divSetsSelector .= "<table width=\"800\" height=\"500\" cellpadding=\"15\" class=\"styled\"><tr height=\"8%\"><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("unselectedSets")." :</p></td><td width=\"50%\" align=\"center\"><p class=\"title\">".getResource("selectedSets")." :</p></td></tr><tr><td width=\"50%\" align=\"center\" valign=\"top\">";	
 		$divSetsSelector .= $unSelectedSetsSide;
 		$divSetsSelector .= "</td><td width=\"50%\" align=\"center\" valign=\"top\">";
 		$divSetsSelector .= $selectedSetsSide."</td></tr></table>";
@@ -942,10 +986,10 @@ function getSetsSelector() {
 	
 }
 
-// ===============
-// = Reset cache =
-// ===============
-function resetCache() {
+// =======================
+// = Reinit images cache =
+// =======================
+function reinitImagesCache() {
 	
 	$cacheDir = getTypedConf("CacheDir");
 	
@@ -964,9 +1008,35 @@ function resetCache() {
 	}
 }
 
+// =========================
+// = Reinit the Sets cache =
+// =========================
+function reinitSetsCache()
+{
+	$selectedSetsAsString = getTypedConf("SelectedSets");
+	$selectedSets = explode(",",$selectedSetsAsString);
+	$objectsInstances = getFlickrObjectsInstances();
+	$selectedSetsTitles = array();
+	$selectedSetsThumbnails = array();
+	for($i = 0; $i < count($selectedSets); $i++) {
+		$accountSet = explode(".",$selectedSets[$i]);
+
+		if(count($accountSet) == 2) {
+			$account = $accountSet[0];
+			$set = $accountSet[1];
+			$f = $objectsInstances[$account];
+			$setInfo = $f->photosets_getInfo($set);
+			array_push($selectedSetsTitles, $setInfo['title']);
+			array_push($selectedSetsThumbnails, $f->buildPhotoURL($f->photos_getInfo($setInfo['primary'],NULL), "square"));
+		}
+	}
+	setTypedConf("SelectedSetsTitles", implode("@@", $selectedSetsTitles));
+	setTypedConf("SelectedSetsThumbnails", implode("@@", $selectedSetsThumbnails));
+}
+
 function getFontFamilyForm($var,$name,$id,$onChangeFunction) {
 	
-	$families = array("Arial","Arial Black","Comic Sans MS","Courier New","Georgia","Impact","Symbol","Times New Roman","Trebuchet MS","Verdana");
+	$families =  explode("|", FONT_FAMILIES);
 	
 	echo "
 	<select name=\"$name\" id=\"$id\" onChange=\"javascript:$onChangeFunction;\">";
@@ -1158,6 +1228,7 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 			}
 			
 			setTypedConf("SelectedSets",$newSets,false,$oldConfFilePath);
+			setUpSelectedSetsInfo();
 		}
 		$defautSet = getTypedConf("DefaultSet",$oldConfFilePath);
 		if($defautSet != NULL)
@@ -1185,7 +1256,7 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 	// import configuration
 	$newConfFilePath = file ($newConfFilePath);	
 	while (list ($lineNb, $line) = each ($newConfFilePath)) {
-		if(eregi("^\\$",trim($line))) {
+		if(mb_eregi("^\\$",trim($line))) {
 			
 			$varVal = explode("=",trim($line));
 			$var = trim($varVal[0]);
@@ -1233,12 +1304,43 @@ function importConf($oldConfFilePath,$newConfFilePath) {
 }
 
 // ==================================
+// = Recursively remove a directory
+// ==================================
+function rrmdir($dir) {
+    foreach(glob($dir . '/*') as $file) {
+        if(is_dir($file))
+            rrmdir($file);
+        else
+            unlink($file) or DIE("couldn't delete file $file<br />");
+    }
+    rmdir($dir) or DIE("couldn't delete directory $dir<br />");
+}
+
+// ==================================
 // = Update file content
 // ==================================
 function savefile($filepath,$filecontent) {	
 	$file = fopen($filepath, "w");
 	fwrite($file, $filecontent);
 	fclose($file);
+}
+
+// ==================================================================
+// = Execute a PHP template file and return the result as a string
+// ==================================================================
+function apply_template($templateFile, $includeGlobals = true)
+{
+ 
+  if ($includeGlobals) extract($GLOBALS, EXTR_SKIP);
+ 
+  ob_start();
+ 
+  require($templateFile);
+ 
+  $applied_template = ob_get_contents();
+  ob_end_clean();
+ 
+  return $applied_template;
 }
 
 ?>

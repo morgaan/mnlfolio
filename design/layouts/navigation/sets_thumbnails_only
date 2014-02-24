@@ -14,7 +14,7 @@
 	$layout .="		    </td>";
 
 	$selectedSets = explode(",",getTypedConf("SelectedSets"));
-	$objectsInstances = getFlickrObjectsInstances();
+	$selectedSetsThumbnails = explode("@@",getTypedConf("SelectedSetsThumbnails"));
 			
 	for($i = 0; $i < count($selectedSets); $i++) {
 		
@@ -24,16 +24,12 @@
 		if(($rest == ($nSetByLine-1) && $i != 0 && $i < count($selectedSets)) || ($i == (count($selectedSets)-1)))
 			$actualDelimiter = "&nbsp";
   		if(count($accountSet) == 2) {
-			$account = $accountSet[0];
 			$set = $accountSet[1];
-			$f = $objectsInstances[$account];
-			$setInfo = $f->photosets_getInfo($set);
-			$photoInfo = $f->photos_getInfo($setInfo['primary'],NULL);
 			if(substr_count(getTypedConf("SelectedSets"),$selectedSets[$i]) > 0) {
-		  		if(isset($selectedSets[$i]) && $setid == $selectedSets[$i]) {
+		  		if(isset($selectedSets[$i]) && $setid === $selectedSets[$i]) {
 	
 	$layout .="			<td align=\"center\">";
-	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";
+	$layout .="				<img class=\"thumbselected\" border=\"0\" src=\"".$selectedSetsThumbnails[$i]."\" />";
 	$layout .="			</td>";
 	$layout .="			<td class=\"body\" valign=\"middle\">";
 	$layout .="				&nbsp;<b>$actualDelimiter</b>&nbsp;</td>";
@@ -57,7 +53,7 @@
 		
 	$layout .="			<td align=\"center\">";
 	$layout .="				<a href='index.php?setid=".$selectedSets[$i]."'>";
-	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$f->buildPhotoURL($photoInfo, "square")."\" />";
+	$layout .="					<img class=\"thumb\" border=\"0\" src=\"".$selectedSetsThumbnails[$i]."\" />";
 	$layout .="				</a>";
 	$layout .="			</td>";
 	$layout .="			<td class=\"body\" valign=\"middle\">";

@@ -13,28 +13,25 @@
 	$layout .="		    	&nbsp;<b>&nbsp;</b>&nbsp;";
 	$layout .="		    </td>";
 
-	$selectedSets = explode(",",getTypedConf("SelectedSets"));
-	$objectsInstances = getFlickrObjectsInstances();
-			
-	for($i = 0; $i < count($selectedSets); $i++) {
+	$selectedSetsAsString = getTypedConf("SelectedSets");
+	$selectedSets = explode(",",$selectedSetsAsString);
+	$selectedSetsTitles = explode("@@",getTypedConf("SelectedSetsTitles"));
 		
+	for($i = 0; $i < count($selectedSets); $i++) {
 		$rest = $i%$nSetByLine;
 		$accountSet = explode(".",$selectedSets[$i]);
 		$actualDelimiter = $delimiter;
 		if(($rest == ($nSetByLine-1) && $i != 0 && $i < count($selectedSets)) || ($i == (count($selectedSets)-1)))
 			$actualDelimiter = "&nbsp";
   		if(count($accountSet) == 2) {
-			$account = $accountSet[0];
 			$set = $accountSet[1];
-			$f = $objectsInstances[$account];
-			$setInfo = $f->photosets_getInfo($set);
-			if(substr_count(getTypedConf("SelectedSets"),$selectedSets[$i]) > 0) {
-		  		if(isset($selectedSets[$i]) && $setid == $selectedSets[$i]) {
+			if(substr_count($selectedSetsAsString,$selectedSets[$i]) > 0) {
+		  		if(isset($selectedSets[$i]) && $setid === $selectedSets[$i]) {
 	
 
 	
 	$layout .="			<td class=\"body\" style=\"text-align:".$setsLinksAlignment.";\">";
-	$layout .="				".$setInfo['title'];
+	$layout .="				".$selectedSetsTitles[$i];
 	$layout .="			</td>";
 	$layout .="			<td class=\"body\" valign=\"middle\">";
 	$layout .="				&nbsp;<b>$actualDelimiter</b>&nbsp;";
@@ -58,7 +55,7 @@
 		
 	$layout .="			<td align=\"".$setsLinksAlignment."\">";
 	$layout .="				<a href='index.php?setid=".$selectedSets[$i]."'>";
-	$layout .="					".$setInfo['title'];
+	$layout .="					".$selectedSetsTitles[$i];
 	$layout .="				</a>";
 	$layout .="			</td>";
 	$layout .="			<td class=\"body\" valign=\"middle\">";
@@ -78,7 +75,8 @@
 	  			}
 			}
 		}
-	}	
+	}
+		
  	if($rest != ($nSetByLine-1))
  	{
   		$layout .="  <td colspan=\"".(($nSetByLine-($rest+1))*2)."\"></td></tr>";

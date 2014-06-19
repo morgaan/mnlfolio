@@ -1,5 +1,5 @@
 <?
-	/* 
+	/*
 		DESCRIPTION: A very simple layout with the photo on right side and thumbnails on left side
 		AUTHOR: morgan cugerone
 		VERSION: 1.5.4
@@ -19,7 +19,7 @@
 	$layout .="						<td align=\"center\" valign=\"top\">";
 	$layout .="							<table cellspacing=\"4\" cellpadding=\"0\">";
 	$layout .="								<tr>";
-	
+
 	foreach ($photosThumbs['photoset']['photo'] as $photo) {
 
 		$thumbPhotoInfo = $f->photos_getInfo($photo['id'],NULL);
@@ -27,10 +27,10 @@
 		$style="thumb";
 		if($photoid == $photo['id'])
 		$style="thumbselected";
-	
+
 	$layout .="									<td class='$style'>";
 	$layout .="										<a class='$style' href=\"javascript:show($photo[id],$setPage);\">";
-	$layout .="											<img class='$style' "."src=" . $f->buildPhotoURL($thumbPhotoInfo, "Square").">";
+	$layout .="											<img class='$style' "."src=" . $f->buildPhotoURL($photo, "Square").">";
 	$layout .="										</a>";
 	$layout .="									</td>";
 
@@ -49,16 +49,16 @@
 	$layout .="					<!-- START: THUMBNAILS NAVIGATION COMMANDS -->";
 	$layout .="					<tr>";
 	$layout .="						<td class=\"thumbnailsNavigationControls\" align=\"left\" valign=\"top\">&nbsp;";
-	if($showPreviousThumbnailsPage == "true") {	
+	if($showPreviousThumbnailsPage == "true") {
 		$layout .="							<a href=\"javascript:previousSetPage();\">";
 		$layout .="								$previousThumbnailsPageControlLabel &nbsp;&nbsp;";
 		$layout .="							</a>";
-	}	
+	}
 	if($showNextThumbnailsPage == "true") {
 		$layout .="							<a href=\"javascript:nextSetPage();\">";
 		$layout .="								$nextThumbnailsPageControlLabel";
 		$layout .="							</a>";
-	}	
+	}
 	$layout .="						</td>";
 	$layout .="					</tr>";
 	$layout .="					<!-- END: THUMBNAILS NAVIGATION COMMANDS -->";
@@ -80,10 +80,10 @@
 	$layout .="							<a href=\"javascript:nextPhoto();\">";
 	$layout .="								<div class=\"photo\" style=\"width:".$widthImg."px; height:".$heightImg."px;\">";
 	if($ratio < 1) {
-	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
 	}
 	else {
-	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
 	}
 	$layout .="								</div>";
 	$layout .="							</a>";
@@ -111,7 +111,7 @@
 	$layout .="										<a href=\"javascript:nextPhoto();\">";
 	$layout .="											$nextPhotoControlLabel";
 	$layout .="										</a>";
-	}	
+	}
 	$layout .="									</td>";
 	$layout .="								</tr>";
 	$layout .="							</table>";
@@ -147,5 +147,5 @@
 	$layout .="		<!-- END: FIRST LINE = THUMBNAILS PANEL + PHOTO PANEL -->";
 	$layout .="	</table>";
 	$layout .="</center>";
-	
+
 ?>

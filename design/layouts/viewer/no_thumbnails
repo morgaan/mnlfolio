@@ -1,5 +1,5 @@
 <?
-	/* 
+	/*
 		DESCRIPTION: A very simple layout with the photo on middle and no thumbnails panel
 		AUTHOR: morgan cugerone
 		VERSION: 1.5.4
@@ -26,10 +26,10 @@
 	$layout .="							<a href=\"javascript:nextPhoto();\">";
 	$layout .="								<div class=\"photo\" style=\"width:".$widthImg."px; height:".$heightImg."px;\">";
 	if($ratio < 1) {
-	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
 	}
 	else {
-	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo, $photoFormat) . "\">";	
+	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
 	}
 	$layout .="								</div>";
 	$layout .="							</a>";
@@ -95,5 +95,5 @@
 	$layout .="		<!-- END: FIRST LINE = PHOTO PANEL -->";
 	$layout .="	</table>";
 	$layout .="</center>";
-	
+
 ?>

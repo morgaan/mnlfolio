@@ -1,0 +1,98 @@
+<?
+	/*
+		DESCRIPTION: A very simple layout with the photo on middle and no thumbnails panel BUT with a link to the voyez-vous newsletter
+		AUTHOR: morgan cugerone
+	*/
+
+	$layout = "";
+
+	$layout .="<center>";
+	$layout .="	<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">";
+	$layout .="		<!-- START: FIRST LINE = PHOTO PANEL -->";
+	$layout .="		<tr>";
+
+	$layout .="			<!-- START: FIRST COLUMN = PHOTO PANEL -->";
+	if($ratio < 1) {
+		$layout .="			<td align=\"center\" valign=\"top\" width=\"$widthImg\" height=\"$nGUIHeight\">";
+	}
+	else {
+		$layout .="			<td align=\"center\" valign=\"top\" width=\"$nGUIWidth\" height=\"$nGUIHeight\">";
+	}
+	$layout .="				<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" align=\"center\">";
+	$layout .="					<!-- START: PHOTO -->";
+	$layout .="					<tr>";
+	$layout .="						<td align=\"center\" valign=\"top\">";
+	$layout .="							<a href=\"javascript:nextPhoto();\">";
+	$layout .="								<div class=\"photo\" style=\"width:".$widthImg."px; height:".$heightImg."px;\">";
+	if($ratio < 1) {
+	$layout .="									<img style=\"max-width:".$maxWidthImg."px;\" class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
+	}
+	else {
+	$layout .="									<img class=\"photo\" border=\"0\" "."src=\"" . $f->buildPhotoURL($photoInfo['photo'], $photoFormat) . "\">";
+	}
+	$layout .="								</div>";
+	$layout .="							</a>";
+	$layout .="						</td>";
+	$layout .="					</tr>";
+	$layout .="					<!-- END: PHOTO -->";
+	$layout .="					<!-- START: PHOTO INFOS -->";
+	$layout .="					<tr>";
+	$layout .="						<td align=\"center\" valign=\"top\">";
+	$layout .="							<!-- START: PREVIOUS COMMAND + PHOTO TITLE + NEXT COMMAND -->";
+	$layout .="							<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\" width=\"100%\">";
+	$layout .="								<tr>";
+	$layout .="									<td class=\"photoNavigationControls\" align=\"left\" valign=\"top\" width=\"15%\">";
+	if($showPreviousPhoto == "true") {
+	$layout .="										<a href=\"javascript:previousPhoto();\">";
+	$layout .="											$previousPhotoControlLabel";
+	$layout .="										</a>";
+	}
+	$layout .="									</td>";
+	$layout .="									<td align=\"center\" valign=\"top\" class=\"photoTitle\" width=\"70%\">";
+	$layout .="										$photoTitle";
+	$layout .="									</td>";
+	$layout .="									<td class=\"photoNavigationControls\" align=\"right\" valign=\"top\" width=\"15%\">";
+	if($showNextPhoto == "true") {
+	$layout .="										<a href=\"javascript:nextPhoto();\">";
+	$layout .="											$nextPhotoControlLabel";
+	$layout .="										</a>";
+	}
+	$layout .="									</td>";
+	$layout .="								</tr>";
+	$layout .="							</table>";
+	$layout .="							<!-- END: PREVIOUS COMMAND + PHOTO TITLE + NEXT COMMAND -->";
+	$layout .="						</td>";
+	$layout .="					</tr>";
+	$layout .="					<tr>";
+	$layout .="						<!-- START: PHOTO DESCRIPTION -->";
+	$layout .="						<td align=\"left\" valign=\"top\" class=\"photoDescription\">";
+	if($displayDownloadLink == "true")
+	{
+	$layout .="						<!-- START: DOWNLOAD LINK -->";
+	$layout .="							<center><a href=\"dl.php?p=".$photoStaticUrlForDownload."\">$downloadLinkLabel</a></center><br/>";
+	$layout .="						<!-- END: DOWNLOAD LINK -->";
+	}
+	$layout .="<pre style=\"white-space: pre-line;font-family: inherit\">";
+	$layout .="$photoDescription";
+	$layout .="</pre>";
+	$layout .="						</td>";
+	$layout .="						<!-- END: PHOTO DESCRIPTION -->";
+	$layout .="					</tr>";
+	$layout .="					<!-- END: PHOTO INFOS -->";
+	$layout .="					<tr>";
+	$layout .="					 <td align=\"".$photoLinkToFlickrAlignment."\" valign=\"top\">";
+	$layout .="					  <a href=\"".$photoPage."\" target=\"_blank\">";
+	$layout .="					   <img title=\"".$photoLinkToFlickrLabel."\" src=\"design/images/fgrey.png\" onmouseover=\"this.src='design/images/fcolor.png'\" onmouseout=\"this.src='design/images/fgrey.png'\" border=\"0\" />";
+	$layout .="					  </a>";
+	$layout .="					 </td>";
+	$layout .="					</tr>";
+	$layout .="				</table>";
+	$layout .="			</td>";
+	$layout .="			<!-- END: FIRST COLUMN = PHOTO PANEL -->";
+
+	$layout .="		</tr>";
+	$layout .="		<!-- END: FIRST LINE = PHOTO PANEL -->";
+	$layout .="	</table>";
+	$layout .="<a href=\"newsletter.html\" class=\"contact\">S'inscrire à la newsletter</a></center>";
+
+?>

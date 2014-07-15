@@ -92,6 +92,6 @@ $strApiSecret="";
 $strPerms="read";
 $strAuthTokens="";
 
-$strVersion="1.6.0";
+$strVersion="1.6.1";
 
 ?>

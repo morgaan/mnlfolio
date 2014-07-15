@@ -1024,7 +1024,8 @@ function reinitSetsCache()
 			$f = $objectsInstances[$account];
 			$setInfo = $f->photosets_getInfo($set);
 			array_push($selectedSetsTitles, $setInfo['title']);
-			array_push($selectedSetsThumbnails, $f->buildPhotoURL($f->photos_getInfo($setInfo['primary'])["photo"], "square"));
+			$photoInfo = $f->photos_getInfo($setInfo['primary']);
+			array_push($selectedSetsThumbnails, $f->buildPhotoURL($photoInfo["photo"], "square"));
 		}
 	}
 	setTypedConf("SelectedSetsTitles", implode("@@", $selectedSetsTitles));
